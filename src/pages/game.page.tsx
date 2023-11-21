@@ -36,6 +36,7 @@ export const GamePage = ({
   const atkBtnState = useSelector((state: any) => state.app.game.attackBtnState)
   const secondTurn = useSelector((state: any) => state.app.game.secondTurn)
   const thirdTurn = useSelector((state: any) => state.app.game.thirdTurn)
+  const user = useSelector((state:any) => state.userModule)
 
   const inventoryOpened = useSelector(
     (state: any) => state.app.game.inventoryOpened,
@@ -88,6 +89,7 @@ export const GamePage = ({
     if (global.wall === 0) {
       return
     }
+    if(!user) return
     onCharacter()
   }
   const dispatch = useDispatch<any>()
