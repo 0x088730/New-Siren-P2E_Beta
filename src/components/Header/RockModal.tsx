@@ -79,9 +79,9 @@ const RockModal = ({
                 style={{
                   position: "relative",
                   top: '40px',
-                  left: "180px",
-                  width: '90px',
-                  height: '40px',
+                  left: "160px",
+                  width: '120px',
+                  height: '55px',
                   background: "url(/assets/images/meat_title.png)",
                   backgroundSize: 'cover',
                 }}
@@ -89,12 +89,12 @@ const RockModal = ({
               <div
                 className='well-back'
                 style={{
-                  width: '340px',
-                  height: '270px',
+                  width: '290px',
+                  height: '220px',
                   background: "url(/assets/images/meat.png)",
                   backgroundSize: 'cover',
                   margin: 'auto',
-                  marginTop: '20px',
+                  marginTop: '40px',
                 }}
               ></div>
               <Box
