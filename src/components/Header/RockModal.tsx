@@ -48,7 +48,7 @@ const RockModal = ({
   useEffect(() => {
     setRemainedTime(timer)
   }, [timer])
-  
+
 
   return (
     <>
@@ -75,12 +75,23 @@ const RockModal = ({
           />
           <Grid container>
             <Grid item xs={12} sm={12} md={12}>
+              <div 
+                style={{
+                  position: "relative",
+                  top: '40px',
+                  left: "180px",
+                  width: '90px',
+                  height: '40px',
+                  background: "url(/assets/images/meat_title.png)",
+                  backgroundSize: 'cover',
+                }}
+              ></div>
               <div
                 className='well-back'
                 style={{
-                  width: '300px',
-                  height: '300px',
-                  background: "url(/assets/images/well.png)",
+                  width: '340px',
+                  height: '270px',
+                  background: "url(/assets/images/meat.png)",
                   backgroundSize: 'cover',
                   margin: 'auto',
                   marginTop: '20px',
