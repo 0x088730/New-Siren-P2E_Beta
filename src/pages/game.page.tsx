@@ -88,7 +88,7 @@ export const GamePage = ({
     if (global.wall === 0) {
       return
     }
-    onCharacter()
+    // onCharacter()
   }
   const dispatch = useDispatch<any>()
   // const [openAccount, setOpenAccount] = useState(showAccount)
