@@ -72,7 +72,7 @@ const MiningModal = ({
   const [withdrawableBcsAmount, setWithdrawableBcsAmount] = useState<number>(0)
   const [value, setValue] = React.useState(0)
 
-  const [btnType, setBtnType] = React.useState('')
+  const [btnType, setBtnType] = React.useState('Start')
   const [upgradeTab, setUpgradeTab] = React.useState(false)
   const [remainedTime, setRemainedTime] = React.useState(0)
   const [isCooldownStarted, setIsCooldownStarted] = useState(false)
