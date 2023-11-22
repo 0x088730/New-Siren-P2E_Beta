@@ -98,7 +98,7 @@ const MiningModal = ({
       setBtnType("BUY")
     }
   }, [])
-  
+
   useEffect(() => {
     if (isCooldownStarted) {
       dispatch(
@@ -111,6 +111,7 @@ const MiningModal = ({
           else if (cooldownSec <= 0) {
             setRemainedTime(0);
             setBtnType("Claim");
+            setIsCooldownStarted(false)
           }
           else {
             setRemainedTime(cooldownSec)
