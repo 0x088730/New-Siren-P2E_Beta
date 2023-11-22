@@ -105,6 +105,7 @@ const MiningModal = ({
         let cooldownSec = res.data
         console.log(cooldownSec)
         if (cooldownSec === 999999) {
+          // if(miningStatus === false) return
           // setBtnType('Start')
         }
         else if (cooldownSec <= 0) {
