@@ -68,18 +68,13 @@ const MiningModal = ({
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
-  const [bcsAmount, setBCSAmount] = useState(0)
   const [withdrawableBcsAmount, setWithdrawableBcsAmount] = useState<number>(0)
-  const [value, setValue] = React.useState(0)
 
-  const [btnType, setBtnType] = React.useState('Upgrade')
+  const [btnType, setBtnType] = React.useState('Start')
   const [upgradeTab, setUpgradeTab] = React.useState(false)
   const [remainedTime, setRemainedTime] = React.useState(0)
   const [isCooldownStarted, setIsCooldownStarted] = useState(false)
 
-  const [displayLevel, setDisplayLevel] = useState(-1)
-
-  const [upgradeErrorFlag, setUpgradeErrorFlag] = useState(false)
   var convertSecToHMS = (number: number) => {
     const hours = Math.floor(number / 3600)
       .toString()
@@ -92,9 +87,7 @@ const MiningModal = ({
     return formattedTime
   }
   useEffect(() => {
-    console.log(user.miningStatus)
     if (user.miningStatus === false) {
-      console.log("setr")
       setBtnType("BUY")
     }
   }, [])
@@ -124,59 +117,23 @@ const MiningModal = ({
       const bcsPrice = 1
       const maxAmount =
         (checkPremium(user.premium).isPremium ? 10 : 5) / bcsPrice
-      // console.log(
-      //   `bcs price is ${bcsPrice}`,
-      //   'withdrew Siren amount: ',
-      //   withdrewsirenAmount,
-      //   ' and withdrawable bcs amount is ',
-      //   maxAmount,
-      // )
       setWithdrawableBcsAmount(maxAmount - Math.floor(withdrewsirenAmount / 10))
     })()
   }, [user.withdraws])
 
-
   const onButtonClick = async () => {
-    console.log(btnType)
     if (btnType === "BUY") {
       dispatch(
         getMiningStatus(address, (res: any) => {
           console.log(res)
+          setBtnType("Start")
         })
       )
     } else {
       if (remainedTime > 0) {
         return
       }
-      if (btnType === 'Upgrade') {
-        if (sirenAmount < ((displayLevel - 1) * 1200 + 2000)) {
-          alert("you don't have eough siren")
-        }
-        else {
-          dispatch(buyLevel(address, (res: any) => {
-            if (res.success === true) {
-              if (res.data === false) {
-                return
-              }
-              else {
-                if (address !== '' && upgradeTab)
-                  dispatch(
-                    checkUpgradeAvailable(address, (res: any) => {
-                      if (res.data === false)
-                        setUpgradeErrorFlag(true)
-                    }
-                    )
-                  )
-                setUpgradeErrorFlag(false)
-                setLevelState(displayLevel)
-                global.level = displayLevel
-                setSirenAmount(sirenAmount - ((displayLevel - 1) * 1200 + 2000))
-                setBtnType('Start')
-              }
-            }
-          }))
-        }
-      } else if (btnType === 'Start') {
+      if (btnType === 'Start') {
         dispatch(
           setCooldown(address, 'level-up', true, (res: any) => {
             if (res.data > 0)
@@ -186,8 +143,6 @@ const MiningModal = ({
               }
           }),
         )
-
-
       } else if (btnType === 'Claim') {
         dispatch(
           checkCooldown(address, 'level-up', (res: any) => {
@@ -215,71 +170,6 @@ const MiningModal = ({
       }
     }
   }
-  const onFarmTab = () => {
-    if (remainedTime > 0 || btnType === 'Claim') return
-    setBtnType('Start')
-
-    setUpgradeTab(false)
-
-  }
-  const onUpgradeTab = () => {
-    if (remainedTime > 0 || btnType === 'Claim') return
-    setBtnType('Upgrade')
-    setUpgradeTab(true)
-  }
-  useEffect(() => {
-    if (address !== '' && upgradeTab)
-      dispatch(
-        checkUpgradeAvailable(address, (res: any) => {
-          if (res.data === false)
-            setUpgradeErrorFlag(true)
-        }
-        )
-      )
-  }, [upgradeTab])
-  useEffect(() => {
-    setContent(levelState)
-  }, [upgradeTab, levelState])
-  const setContent = (lvl: number) => {
-    switch (lvl) {
-      case 0:
-        if (upgradeTab === true) { setDisplayLevel(0); setBtnType('') }
-        else { setDisplayLevel(1); setBtnType('Buy') }
-        break
-      case 1:
-
-      case 2:
-        if (upgradeTab === true) { setDisplayLevel(lvl + 1); setBtnType('Upgrade'); }
-        else { setDisplayLevel(lvl); checkAndSet(); }
-        break
-      case 3:
-        if (upgradeTab === true) { setDisplayLevel(lvl); setBtnType('Limit') }
-        else { setDisplayLevel(3); checkAndSet() }
-        break
-    }
-  }
-  const checkAndSet = () => {
-    dispatch(
-      checkCooldown(address, 'level-up', (res: any) => {
-        let cooldownSec = res.data
-
-        if (cooldownSec === 999999) {
-          if (levelState === 0) setBtnType('Buy')
-          else setBtnType('Start')
-        }
-        else if (cooldownSec <= 0) {
-
-
-          setBtnType('Claim')
-        }
-        else {
-          setRemainedTime(cooldownSec)
-          setIsCooldownStarted(true)
-        }
-
-      }),
-    )
-  }
   const style = {
     position: 'absolute' as const,
     top: '50%',
@@ -294,7 +184,6 @@ const MiningModal = ({
     <>
       <Modal
         open={open}
-        // open={true}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -335,7 +224,6 @@ const MiningModal = ({
                   marginTop: '8%',
                   color: '#e7e1e1',
                   lineHeight: '100%',
-                  //WebkitTextFillColor: '#e7e1e1',
                 }}
               >
                 <p>DRAGON PLACE{upgradeTab && ' UPGRADE'}</p>
@@ -385,7 +273,6 @@ const MiningModal = ({
                       marginTop: "-20px"
                     }}
                   >
-                    {/* width={upgradeTab?20:30} */}
                     <p>YOU WILL RECEIVE:</p>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <div
@@ -419,47 +306,6 @@ const MiningModal = ({
                   </Stack>
                 </Grid>
               }
-              {/* {upgradeTab ?
-                <Grid item xs={4} sx={{ padding: '0 !important' }}>
-                  <Stack
-                    sx={{
-                      fontFamily: 'Anime Ace',
-                      fontSize: upgradeTab ? '14px' : '20px',
-                      width: upgradeTab ? '100%' : '200%',
-                      marginLeft: upgradeTab ? '0px' : "-50%",
-                      fontWeight: 'bold',
-                      color: '#e7e1e1',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <p>LEVEL 2:</p>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}><img src='assets/images/basket.png' width={upgradeTab ? 20 : 30}></img><p>300 SIREN PER 5H</p></div>
-                    <p>10 RES PER 5H</p>
-                    {upgradeTab && <p>PRICE: 3200 SIREN</p>}
-                  </Stack>
-                </Grid> : null
-              }
-              {upgradeTab ?
-                <Grid item xs={4} sx={{ padding: '0 !important' }}>
-                  <Stack
-                    sx={{
-                      fontFamily: 'Anime Ace',
-                      fontSize: upgradeTab ? '14px' : '20px',
-                      width: upgradeTab ? '100%' : '200%',
-                      marginLeft: upgradeTab ? '0px' : "-50%",
-                      fontWeight: 'bold',
-                      color: '#e7e1e1',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <p>LEVEL 3:</p>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}><img src='assets/images/coin.png' width={upgradeTab ? 20 : 30}></img><p>400 SIREN PER 5H</p></div>
-
-                    <p>20 RES PER 5H</p>
-                    {upgradeTab && <p>PRICE: 4400 SIREN</p>}
-                  </Stack>
-                </Grid> : null
-              } */}
             </Grid>
             <Box
               sx={{
@@ -516,10 +362,6 @@ const MiningModal = ({
             }}>
               <p>25 DRG</p>
             </div>
-            {/* : null */}
-
-            {/* } */}
-
             <Box
               sx={{
                 display: 'flex',
@@ -539,8 +381,6 @@ const MiningModal = ({
                 <img src='assets/images/alert_.png' style={{ marginTop: "-9px" }} width={upgradeTab ? 20 : 30}></img>
                 <p>ONCE YOU BUY IT YOU CAN RUN IT AN INFINITE NUMBER OF TIMES</p>
               </div>
-
-
             </Box>
           </Box>
         </Box>

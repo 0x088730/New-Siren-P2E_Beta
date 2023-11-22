@@ -145,7 +145,7 @@ export function checkCooldown(address: any, type: string, cb: any) {
 export function getMiningStatus(address: any, cb: any) {
   return async (dispatch: any) => {
     
-
+    console.log("req")
     const res = await api(`user/getMiningStatus`, 'post', {
       walletAddress: address,
     })
