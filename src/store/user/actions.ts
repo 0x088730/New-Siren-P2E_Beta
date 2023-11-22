@@ -142,6 +142,21 @@ export function checkCooldown(address: any, type: string, cb: any) {
     })
   }
 }
+export function getMiningStatus(address: any, cb: any) {
+  return async (dispatch: any) => {
+    
+
+    const res = await api(`user/getMiningStatus`, 'post', {
+      walletAddress: address,
+    })
+    cb(res)
+    console.log("res....................",res)
+    dispatch({
+      type: CHECK_COOLDOWN_SUCCESS,
+      payload: { data: res },
+    })
+  }
+}
 export function levelupHunter(address: any,  cb: any) {
   return async (dispatch: any) => {
     

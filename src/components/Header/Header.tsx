@@ -157,7 +157,7 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
           style={{ width: '25px', marginRight: '10px' }}
           src="/images/res_Siren.png"
         />
-        {`Siren: ${Siren}`}
+        {`DRG: ${Siren}`}
       </p>
       <p
         className={styles.resource}
@@ -179,7 +179,7 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
           style={{ width: '20px', marginRight: '10px' }}
           src="/images/res_egg.png"
         />
-        {`Res: ${eggs}`}
+        {`EGG: ${eggs}`}
       </p>
     </Box>
   }
