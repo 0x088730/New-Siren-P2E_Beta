@@ -2,6 +2,10 @@
   font-family: Anime Ace;
   src: url('./fonts/anime-ace/animeace.ttf');
 }
+@font-face {
+  font-family: CubicPixel;
+  src: url('./fonts/CubicPixel/CubicPixel.otf');
+}
 
 .Main {
   /* background-color: #001512; */

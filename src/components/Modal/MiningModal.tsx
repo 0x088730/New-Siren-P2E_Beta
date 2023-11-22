@@ -41,7 +41,7 @@ interface Props {
   egg: any
   onExchange: any
   onExchangeEgg: any
-  levelState:number
+  levelState: number
   setLevelState: any
 }
 
@@ -75,9 +75,9 @@ const MiningModal = ({
   const [remainedTime, setRemainedTime] = React.useState(0)
   const [isCooldownStarted, setIsCooldownStarted] = useState(false)
 
-  const [displayLevel,setDisplayLevel] = useState(-1)
+  const [displayLevel, setDisplayLevel] = useState(-1)
 
-  const [upgradeErrorFlag,setUpgradeErrorFlag] = useState(false)
+  const [upgradeErrorFlag, setUpgradeErrorFlag] = useState(false)
   var convertSecToHMS = (number: number) => {
     const hours = Math.floor(number / 3600)
       .toString()
@@ -93,7 +93,7 @@ const MiningModal = ({
     if (isCooldownStarted) {
       var cooldownInterval = setInterval(() => {
         setRemainedTime((prevTime) => {
-          if( prevTime ===1 ){
+          if (prevTime === 1) {
             setBtnType('Claim')
           }
           if (prevTime === 0) {
@@ -108,9 +108,9 @@ const MiningModal = ({
 
     return () => clearInterval(cooldownInterval)
   }, [isCooldownStarted])
-  
+
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       // console.log('user withdraws changed', user.withdraws.length)
       const withdrewsirenAmount = getWithdrewSirenAmount(user.withdraws) // Siren
       // const bcsPrice = await getBcsPrice();
@@ -130,154 +130,154 @@ const MiningModal = ({
 
 
   const onButtonClick = async () => {
-    if(remainedTime>0){
+    if (remainedTime > 0) {
       return
     }
-    if (btnType === 'Upgrade') { 
-      if(sirenAmount<((displayLevel-1)*1200+2000)){
+    if (btnType === 'Upgrade') {
+      if (sirenAmount < ((displayLevel - 1) * 1200 + 2000)) {
         alert("you don't have eough siren")
       }
-      else{
+      else {
         dispatch(buyLevel(address, (res: any) => {
           // if(res.data==='false1'){
           //   setUpgradeError1Flag(true)
           //   return
           // }
           // else 
-          if(res.success===true){
-            if(res.data===false){
+          if (res.success === true) {
+            if (res.data === false) {
               return
             }
             else {
-              if(address!==''&&upgradeTab)
-              dispatch(
-                checkUpgradeAvailable(address,(res:any)=>{
-                  if(res.data===false)
-                    setUpgradeErrorFlag(true)
-                }
+              if (address !== '' && upgradeTab)
+                dispatch(
+                  checkUpgradeAvailable(address, (res: any) => {
+                    if (res.data === false)
+                      setUpgradeErrorFlag(true)
+                  }
+                  )
                 )
-              )
-                setUpgradeErrorFlag(false)
-                setLevelState(displayLevel)
-                global.level=displayLevel
-                setSirenAmount(sirenAmount-((displayLevel-1)*1200+2000))
-                setBtnType('Start')
+              setUpgradeErrorFlag(false)
+              setLevelState(displayLevel)
+              global.level = displayLevel
+              setSirenAmount(sirenAmount - ((displayLevel - 1) * 1200 + 2000))
+              setBtnType('Start')
             }
           }
         }))
       }
     } else if (btnType === 'Buy') {
-      if(sirenAmount<((displayLevel-1)*1200+2000)){
+      if (sirenAmount < ((displayLevel - 1) * 1200 + 2000)) {
         alert("you don't have eough siren")
       }
-      else{
+      else {
         dispatch(buyLevel(address, (res: any) => {
-            setLevelState(displayLevel)
-            global.level=displayLevel
-            setSirenAmount(sirenAmount-((displayLevel-1)*1200+2000))
-            setBtnType('Start')
+          setLevelState(displayLevel)
+          global.level = displayLevel
+          setSirenAmount(sirenAmount - ((displayLevel - 1) * 1200 + 2000))
+          setBtnType('Start')
         }))
       }
     } else if (btnType === 'Start') {
-          dispatch(
-            setCooldown(address, 'level-up', true, (res: any) => {
-              if(res.data>0)
-              if (!isCooldownStarted) {
-                setRemainedTime(res.data)
-                setIsCooldownStarted(true)
-              }
-            }),
-          )
-        
-      
+      dispatch(
+        setCooldown(address, 'level-up', true, (res: any) => {
+          if (res.data > 0)
+            if (!isCooldownStarted) {
+              setRemainedTime(res.data)
+              setIsCooldownStarted(true)
+            }
+        }),
+      )
+
+
     } else if (btnType === 'Claim') {
       dispatch(
         checkCooldown(address, 'level-up', (res: any) => {
           console.log("request======", res)
           let cooldownSec = res.data
           console.log(cooldownSec)
-          if( cooldownSec === 999999){
+          if (cooldownSec === 999999) {
             setBtnType('Start')
           }
-          else if(cooldownSec<=0){
-            dispatch(claimSiren(address,(res:any)=>{
+          else if (cooldownSec <= 0) {
+            dispatch(claimSiren(address, (res: any) => {
               setSirenAmount(res.data.siren)
               setEggs(res.data.eggs)
               setBtnType('Start')
             }))
-           
+
           }
-          else{
+          else {
             setRemainedTime(cooldownSec)
             setIsCooldownStarted(true)
           }
-          
+
         }),
       )
     }
   }
-  const onFarmTab  = ()=>{
-    if(remainedTime>0||btnType==='Claim') return
+  const onFarmTab = () => {
+    if (remainedTime > 0 || btnType === 'Claim') return
     setBtnType('Start')
 
     setUpgradeTab(false)
 
   }
-  const onUpgradeTab = ()=>{
-    if(remainedTime>0||btnType==='Claim') return
+  const onUpgradeTab = () => {
+    if (remainedTime > 0 || btnType === 'Claim') return
     setBtnType('Upgrade')
     setUpgradeTab(true)
   }
-  useEffect(()=>{
-    if(address!==''&&upgradeTab)
-    dispatch(
-      checkUpgradeAvailable(address,(res:any)=>{
-        if(res.data===false)
-          setUpgradeErrorFlag(true)
-      }
+  useEffect(() => {
+    if (address !== '' && upgradeTab)
+      dispatch(
+        checkUpgradeAvailable(address, (res: any) => {
+          if (res.data === false)
+            setUpgradeErrorFlag(true)
+        }
+        )
       )
-    )
-  },[upgradeTab])
-  useEffect(()=>{
+  }, [upgradeTab])
+  useEffect(() => {
     setContent(levelState)
-  },[upgradeTab,levelState])
-  const setContent = (lvl:number)=>{
-    switch(lvl){
+  }, [upgradeTab, levelState])
+  const setContent = (lvl: number) => {
+    switch (lvl) {
       case 0:
-        if(upgradeTab===true) { setDisplayLevel(0); setBtnType('') }
-        else  { setDisplayLevel(1); setBtnType('Buy') }
+        if (upgradeTab === true) { setDisplayLevel(0); setBtnType('') }
+        else { setDisplayLevel(1); setBtnType('Buy') }
         break
       case 1:
-        
+
       case 2:
-        if(upgradeTab===true) { setDisplayLevel(lvl+1); setBtnType('Upgrade') ; }
-        else  { setDisplayLevel(lvl); checkAndSet(); }
+        if (upgradeTab === true) { setDisplayLevel(lvl + 1); setBtnType('Upgrade'); }
+        else { setDisplayLevel(lvl); checkAndSet(); }
         break
       case 3:
-        if(upgradeTab===true) { setDisplayLevel(lvl); setBtnType('Limit') }
-        else  { setDisplayLevel(3); checkAndSet() }
+        if (upgradeTab === true) { setDisplayLevel(lvl); setBtnType('Limit') }
+        else { setDisplayLevel(3); checkAndSet() }
         break
     }
   }
-  const checkAndSet=()=>{
+  const checkAndSet = () => {
     dispatch(
       checkCooldown(address, 'level-up', (res: any) => {
         let cooldownSec = res.data
-        
-        if( cooldownSec === 999999){
-          if(levelState===0) setBtnType('Buy')
+
+        if (cooldownSec === 999999) {
+          if (levelState === 0) setBtnType('Buy')
           else setBtnType('Start')
         }
-        else if(cooldownSec<=0){
+        else if (cooldownSec <= 0) {
 
 
           setBtnType('Claim')
         }
-        else{
+        else {
           setRemainedTime(cooldownSec)
           setIsCooldownStarted(true)
         }
-        
+
       }),
     )
   }
@@ -329,9 +329,9 @@ const MiningModal = ({
             <Box>
               <div
                 style={{
-                  fontFamily: 'Anime Ace',
+                  fontFamily: 'CubicPixel',
                   fontWeight: 'bold',
-                  fontSize: '30px',
+                  fontSize: '40px',
                   textAlign: 'center',
                   marginTop: '8%',
                   color: '#e7e1e1',
@@ -339,7 +339,7 @@ const MiningModal = ({
                   //WebkitTextFillColor: '#e7e1e1',
                 }}
               >
-                <p>TOWER{upgradeTab&&' UPGRADE'}</p>
+                <p>DRAGON PLACE{upgradeTab && ' UPGRADE'}</p>
               </div>
             </Box>
             <Grid
@@ -357,57 +357,62 @@ const MiningModal = ({
                 <Grid item xs={4} sx={{ padding: '0 !important' }}>
                   <Stack
                     sx={{
-                      fontFamily: 'Anime Ace',
-                      fontSize: upgradeTab?'14px':'20px',
-                      width: upgradeTab?'100%':'200%',
-                      marginLeft: upgradeTab?'0px':"-50%",
+                      fontFamily: 'CubicPixel',
+                      fontSize: upgradeTab ? '14px' : '20px',
+                      width: upgradeTab ? '100%' : '200%',
+                      marginLeft: upgradeTab ? '0px' : "-50%",
                       fontWeight: 'bold',
                       color: '#e7e1e1',
                       textAlign: 'center',
+                      marginTop:"20px"
                     }}
                   >
-                    <p>LEVEL 1:</p>
-                    <div style={{display:'flex', justifyContent:'center'}}><img src='assets/images/coin.png' width={upgradeTab?20:30}></img><p>200 SIREN PER 5H</p></div>
+                    <p>YOU WILL RECEIVE:</p>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}><img src='assets/images/basket.png' width={upgradeTab ? 20 : 30}></img><p>200 SIREN PER 5H</p></div>
 
-                    {upgradeTab&&<p>PRICE: 2000 SIREN</p>}
+                    {upgradeTab && <p>PRICE: 2000 SIREN</p>}
                   </Stack>
-                </Grid> : 
+                </Grid> :
                 <Grid item xs={4} sx={{ padding: '0 !important' }}>
                   <Stack
                     sx={{
-                      fontFamily: 'Anime Ace',
-                      fontSize: '20px',
+                      fontFamily: 'CubicPixel',
+                      fontSize: '30px',
                       width: '200%',
                       marginLeft: "-50%",
                       fontWeight: 'bold',
                       color: '#e7e1e1',
                       textAlign: 'center',
+                      marginTop:"-20px"
                     }}
                   >
-                    <p>LEVEL 1:</p>
-                    <div style={{display:'flex', justifyContent:'center'}}><img src='assets/images/coin.png' width={upgradeTab?20:30}></img><p>200 SIREN PER 5H</p></div>
+                    {/* width={upgradeTab?20:30} */}
+                    <p>YOU WILL RECEIVE:</p>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                      <img src='assets/images/basket.png' width={"150px"}></img>
+                      <img src='assets/images/basket.png' width={"150px"}></img>
+                    </div>
 
-                    {upgradeTab&&<p>PRICE: 2000 SIREN</p>}
                   </Stack>
                 </Grid>
               }
-              {upgradeTab ?
+              {/* {upgradeTab ?
                 <Grid item xs={4} sx={{ padding: '0 !important' }}>
                   <Stack
                     sx={{
                       fontFamily: 'Anime Ace',
-                      fontSize: upgradeTab?'14px':'20px',
-                      width: upgradeTab?'100%':'200%',
-                      marginLeft:upgradeTab?'0px':"-50%",
+                      fontSize: upgradeTab ? '14px' : '20px',
+                      width: upgradeTab ? '100%' : '200%',
+                      marginLeft: upgradeTab ? '0px' : "-50%",
                       fontWeight: 'bold',
                       color: '#e7e1e1',
                       textAlign: 'center',
                     }}
                   >
                     <p>LEVEL 2:</p>
-                    <div style={{display:'flex', justifyContent:'center'}}><img src='assets/images/coin.png' width={upgradeTab?20:30}></img><p>300 SIREN PER 5H</p></div>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}><img src='assets/images/basket.png' width={upgradeTab ? 20 : 30}></img><p>300 SIREN PER 5H</p></div>
                     <p>10 RES PER 5H</p>
-                    {upgradeTab&&<p>PRICE: 3200 SIREN</p>}
+                    {upgradeTab && <p>PRICE: 3200 SIREN</p>}
                   </Stack>
                 </Grid> : null
               }
@@ -416,44 +421,46 @@ const MiningModal = ({
                   <Stack
                     sx={{
                       fontFamily: 'Anime Ace',
-                      fontSize: upgradeTab?'14px':'20px',
-                      width: upgradeTab?'100%':'200%',
-                      marginLeft:upgradeTab?'0px':"-50%",
+                      fontSize: upgradeTab ? '14px' : '20px',
+                      width: upgradeTab ? '100%' : '200%',
+                      marginLeft: upgradeTab ? '0px' : "-50%",
                       fontWeight: 'bold',
                       color: '#e7e1e1',
                       textAlign: 'center',
                     }}
                   >
                     <p>LEVEL 3:</p>
-                    <div style={{display:'flex', justifyContent:'center'}}><img src='assets/images/coin.png' width={upgradeTab?20:30}></img><p>400 SIREN PER 5H</p></div>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}><img src='assets/images/coin.png' width={upgradeTab ? 20 : 30}></img><p>400 SIREN PER 5H</p></div>
 
                     <p>20 RES PER 5H</p>
-                    {upgradeTab&&<p>PRICE: 4400 SIREN</p>}
+                    {upgradeTab && <p>PRICE: 4400 SIREN</p>}
                   </Stack>
                 </Grid> : null
-              }
+              } */}
             </Grid>
             <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'space-evenly',
               }}
-            >{(levelState!==0||upgradeTab===false)&&
+            >{(levelState !== 0 || upgradeTab === false) &&
               <Button
                 onClick={() => onButtonClick()}
                 sx={{
                   width: '200px',
+                  marginTop: "35px"
+
                 }}
               >
                 <img alt="" src="/assets/images/big-button.png" />
                 <p
                   style={{
                     position: 'absolute',
-                    fontFamily: 'Anime Ace',
+                    fontFamily: 'CubicPixel',
                     fontSize: '14px',
                     textAlign: 'center',
                     color: '#e7e1e1',
-                    
+
                   }}
                 >
                   {(remainedTime === 0 ? btnType : convertSecToHMS(remainedTime))}
@@ -461,94 +468,56 @@ const MiningModal = ({
               </Button>
               }
             </Box>
-            
+
             {upgradeTab ?
-              <div  style={{
-                fontFamily: 'Anime Ace',
+              <div style={{
+                fontFamily: 'CubicPixel',
                 fontSize: '14px',
                 fontWeight: 'bold',
                 color: '#e7e1e1',
-                display:'flex',
-                justifyContent:'center'
+                display: 'flex',
+                justifyContent: 'center'
               }}>
-                <img src="assets/images/alert.png" style={{ width: '30px', height: 'auto' }}/>
-                <p>Lvl{levelState===1?5:levelState===2?10:''}+ character required for upgrade.</p>
+                <img src="assets/images/alert.png" style={{ width: '30px', height: 'auto' }} />
+                <p>Lvl{levelState === 1 ? 5 : levelState === 2 ? 10 : ''}+ character required for upgrade.</p>
               </div> : null
             }
 
-            {!upgradeTab ?
-              <div  style={{
-                fontFamily: 'Anime Ace',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                color: '#e7e1e1',
-                textAlign: 'center',
-              }}>
-                <p>PRICE: 2000 SIREN</p>
-              </div> : null
-            }
+            {/* {!upgradeTab ? */}
+            <div style={{
+              fontFamily: 'CubicPixel',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              color: '#e7e1e1',
+              textAlign: 'center',
+            }}>
+              <p>25 DRG</p>
+            </div>
+            {/* : null */}
+
+            {/* } */}
 
             <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
                 position: 'absolute',
-                bottom:'10%',
-                width:'100%'
+                bottom: '10%',
+                width: '100%'
               }}
             >
-              <Button
-                onClick={() => onFarmTab()}
-                sx={{
-                  width: '140px',
-                  padding: '0',
-                }}
-              >
-                {upgradeTab === true ? (
-                  <img alt="" src="/assets/images/tabbutton1.png" />
-                ) : (
-                  <img alt="" src="/assets/images/tabbutton2.png" />
-                )}
-                <p
-                  style={{
-                    position: 'absolute',
-                    fontFamily: 'Anime Ace',
-                    fontWeight: 'bold',
-                    marginLeft: '30px',
-                    fontSize: '14px',
-                    textAlign: 'center',
-                    color: '#752d01',
-                  }}
-                >
-                  FARM
-                </p>
-              </Button>
-              <Button
-                onClick={() => onUpgradeTab()}
-                sx={{
-                  width: '140px',
-                  padding: '0',
-                }}
-              >
-                {upgradeTab === false ? (
-                  <img alt="" src="/assets/images/tabbutton1.png" />
-                ) : (
-                  <img alt="" src="/assets/images/tabbutton2.png" />
-                )}
-                <p
-                  style={{
-                    position: 'absolute',
-                    fontFamily: 'Anime Ace',
-                    fontWeight: 'bold',
-                    marginLeft: '30px',
-                    fontSize: '14px',
-                    textAlign: 'center',
-                    color: '#752d01',
-                  }}
-                >
-                  UPGRADE
-                </p>
-              </Button>
+              <div style={{
+                fontFamily: 'CubicPixel',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                color: '#e7e1e1',
+                textAlign: 'center', display: 'flex', justifyContent: 'center'
+              }}>
+                <img src='assets/images/alert_.png' style={{marginTop:"-9px"}} width={upgradeTab ? 20 : 30}></img>
+                <p>ONCE YOU BUY IT YOU CAN RUN IT AN INFINITE NUMBER OF TIMES</p>
+              </div>
+
+
             </Box>
           </Box>
         </Box>
