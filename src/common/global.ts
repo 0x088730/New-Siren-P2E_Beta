@@ -56,6 +56,7 @@ export interface UserProfile {
   currentCharacterName: string | ''
   hunterLevel:number
   attacking: boolean
+  miningStatus: boolean
 }
 
 export let global: UserProfile = {
@@ -106,7 +107,8 @@ export let global: UserProfile = {
   characters: [],
   currentCharacterName: '',
   hunterLevel:0,
-  attacking: false
+  attacking: false,
+  miningStatus: false
 }
 
 export const changeItem = (resp: any) => {

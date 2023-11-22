@@ -61,6 +61,7 @@ const MiningModal = ({
 
   const { connected, chainID, address, connect } = useWeb3Context()
   const { user } = useSelector((state: any) => state.userModule)
+  console.log(user)
   const dispatch = useDispatch<any>()
 
   const handleOpen = () => setOpen(true)
@@ -463,7 +464,7 @@ const MiningModal = ({
 
                   }}
                 >
-                  {(remainedTime === 0 ? btnType : convertSecToHMS(remainedTime))}
+                  {user.miningStatus === false ? "BUY" : (remainedTime === 0 ? btnType : convertSecToHMS(remainedTime))}
                 </p>
               </Button>
               }

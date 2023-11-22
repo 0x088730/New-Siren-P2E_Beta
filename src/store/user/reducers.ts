@@ -12,6 +12,7 @@ const initialState: LoginState = {
     stakedBirds: [],
     miningModule: null,
     miningRequest: 0,
+    miningStatus: false,
     goldMine: null,
     goldMineRequest: 0,
     uraniumMine: null,
@@ -47,6 +48,7 @@ export function userReducer(
       user.stakedBirds = data.stakedBirds ? data.stakedBirds : user.stakedBirds
       user.miningModule = data.miningModule ? data.miningModule : user.miningModule
       user.miningRequest = data.miningRequest ? data.miningRequest : user.miningRequest
+      user.miningStatus = data.miningStatus ? data.miningStatus : user.miningStatus
       user.goldMine = data.goldMine ? data.goldMine : user.goldMine
       user.goldMineRequest = data.goldMineRequest ? data.goldMineRequest : user.goldMineRequest
       user.uraniumMine = data.uraniumMine ? data.uraniumMine : user.uraniumMine
@@ -76,6 +78,7 @@ export function userReducer(
       user.miningModule = data.miningModule? data.miningModule : user.miningModule
       user.opendPlace = data.opendPlace? data.opendPlace : user.opendPlace
       user.miningRequest = data.miningRequest? data.miningRequest : user.miningRequest
+      user.miningStatus = data.miningStatus ? data.miningStatus : user.miningStatus
       user.stakedDiamond = data.stakedDiamond? data.stakedDiamond : user.stakedDiamond
       user.stakedBirds = data.stakedBirds? data.stakedBirds : user.stakedBirds
       user.goldMine = data.goldMine? data.goldMine : user.goldMine
