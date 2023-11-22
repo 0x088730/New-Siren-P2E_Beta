@@ -5,6 +5,7 @@ import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import SvgTitle, { Text } from "react-native-svg";
 
 import {
   ADMIN_WALLET_ADDRESS,
@@ -68,12 +69,19 @@ const MiningModal = ({
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
+  const [bcsAmount, setBCSAmount] = useState(0)
   const [withdrawableBcsAmount, setWithdrawableBcsAmount] = useState<number>(0)
+  const [value, setValue] = React.useState(0)
 
   const [btnType, setBtnType] = React.useState('Start')
   const [upgradeTab, setUpgradeTab] = React.useState(false)
   const [remainedTime, setRemainedTime] = React.useState(0)
   const [isCooldownStarted, setIsCooldownStarted] = useState(false)
+
+  const [displayLevel, setDisplayLevel] = useState(-1)
+
+  const [upgradeErrorFlag, setUpgradeErrorFlag] = useState(false)
+  const [miningStatus, setMiningStatus] = useState(user.miningStatus);
 
   var convertSecToHMS = (number: number) => {
     const hours = Math.floor(number / 3600)
@@ -91,8 +99,26 @@ const MiningModal = ({
       setBtnType("BUY")
     }
   }, [])
+  
   useEffect(() => {
     if (isCooldownStarted) {
+      // dispatch(
+      //   checkCooldown(address, 'level-up', (res: any) => {
+      //     let cooldownSec = res.data
+      //     console.log(cooldownSec)
+      //     if (cooldownSec === 999999) {
+      //       setBtnType('Start')
+      //     }
+      //     else if (cooldownSec <= 0) {
+      //       setRemainedTime(0);
+      //       setBtnType("Claim");
+      //     }
+      //     else {
+      //       setRemainedTime(cooldownSec)
+      //       setIsCooldownStarted(true)
+      //     }
+      //   }),
+      // )
       var cooldownInterval = setInterval(() => {
         setRemainedTime((prevTime) => {
           if (prevTime === 1) {
@@ -107,7 +133,6 @@ const MiningModal = ({
         })
       }, 1000)
     }
-
     return () => clearInterval(cooldownInterval)
   }, [isCooldownStarted])
 
@@ -123,11 +148,11 @@ const MiningModal = ({
 
   const onButtonClick = async () => {
     if (btnType === "BUY") {
-      console.log("click")
       dispatch(
         getMiningStatus(address, (res: any) => {
-            setBtnType("Start")
-            setSirenAmount(res.data.Siren)
+          setBtnType("Start")
+          setMiningStatus(true)
+          setSirenAmount(res.data.Siren)
         })
       )
     } else {
@@ -137,36 +162,24 @@ const MiningModal = ({
       if (btnType === 'Start') {
         dispatch(
           setCooldown(address, 'level-up', true, (res: any) => {
-            if (res.data > 0)
+            if (res.data)
               if (!isCooldownStarted) {
-                setRemainedTime(res.data)
+                setSirenAmount(res.data);
+                setRemainedTime(30)
                 setIsCooldownStarted(true)
               }
           }),
         )
       } else if (btnType === 'Claim') {
-        dispatch(
-          checkCooldown(address, 'level-up', (res: any) => {
-            let cooldownSec = res.data
-            if (cooldownSec === 999999) {
-              setBtnType('Start')
-            }
-            else if (cooldownSec <= 0) {
-              dispatch(claimSiren(address, (res: any) => {
-                setSirenAmount(res.data.siren)
-                setEggs(res.data.eggs)
-                setBtnType('Start')
-              }))
-            }
-            else {
-              setRemainedTime(cooldownSec)
-              setIsCooldownStarted(true)
-            }
-          }),
-        )
+        dispatch(claimSiren(address, (res: any) => {
+          setSirenAmount(res.data.siren)
+          setEggs(res.data.eggs)
+          setBtnType('Start')
+        }))
       }
     }
   }
+
   const style = {
     position: 'absolute' as const,
     top: '50%',
@@ -237,79 +250,57 @@ const MiningModal = ({
                 justifyContent: 'center',
               }}
             >
-              {upgradeTab ?
-                <Grid item xs={4} sx={{ padding: '0 !important' }}>
-                  <Stack
-                    sx={{
-                      fontFamily: 'CubicPixel',
-                      fontSize: upgradeTab ? '14px' : '20px',
-                      width: upgradeTab ? '100%' : '200%',
-                      marginLeft: upgradeTab ? '0px' : "-50%",
-                      fontWeight: 'bold',
-                      color: '#e7e1e1',
-                      textAlign: 'center',
-                      marginTop: "20px"
-                    }}
-                  >
-                    <p>YOU WILL RECEIVE:</p>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}><img src='assets/images/basket.png' width={upgradeTab ? 20 : 30}></img><p>200 SIREN PER 5H</p></div>
-
-                    {upgradeTab && <p>PRICE: 2000 SIREN</p>}
-                  </Stack>
-                </Grid> :
-                <Grid item xs={4} sx={{ padding: '0 !important' }}>
-                  <Stack
-                    sx={{
-                      fontFamily: 'CubicPixel',
-                      fontSize: '30px',
-                      width: '200%',
-                      marginLeft: "-50%",
-                      fontWeight: 'bold',
-                      color: '#e7e1e1',
-                      textAlign: 'center',
-                      marginTop: "-20px"
-                    }}
-                  >
-                    <p>YOU WILL RECEIVE:</p>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                      <div
-                        style={{
-                          width: '100px', height: '100px',
-                          lineHeight: '1',
-                          backgroundImage: 'radial-gradient(farthest-corner at 30px 70px,#71923c, #ebd8c2 )',
-                          padding: '20px',
-                          margin: "10px",
-                          border: "3px solid black",
-                          borderRadius: '23px',
-                          fontSize: "smaller"
-                        }}
-                      >
-                        <p>50<br />DRG</p>
-                      </div>
-                      <div
-                        style={{
-                          width: '100px', height: '100px',
-                          backgroundImage: 'radial-gradient(farthest-corner at 30px 70px,#71923c, #ebd8c2 )',
-                          padding: '10px',
-                          margin: "10px",
-                          border: "3px solid black",
-                          borderRadius: '23px'
-                        }}
-                      >
-                        <img src='assets/images/egg.png' width={"80px"} />
-                      </div>
+              <Grid item xs={4} sx={{ padding: '0 !important' }}>
+                <Stack
+                  sx={{
+                    fontFamily: 'CubicPixel',
+                    fontSize: '30px',
+                    width: '200%',
+                    marginLeft: "-50%",
+                    fontWeight: 'bold',
+                    color: '#e7e1e1',
+                    textAlign: 'center',
+                    marginTop: "-20px"
+                  }}
+                >
+                  <p>YOU WILL RECEIVE:</p>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div
+                      style={{
+                        width: '100px', height: '100px',
+                        lineHeight: '1',
+                        backgroundImage: 'radial-gradient(farthest-corner at 30px 70px,#71923c, #ebd8c2 )',
+                        padding: '20px',
+                        margin: "10px",
+                        border: "3px solid black",
+                        borderRadius: '23px',
+                        fontSize: "smaller"
+                      }}
+                    >
+                      <p>50<br />DRG</p>
                     </div>
-
-                  </Stack>
-                </Grid>
-              }
+                    <div
+                      style={{
+                        width: '100px', height: '100px',
+                        backgroundImage: 'radial-gradient(farthest-corner at 30px 70px,#71923c, #ebd8c2 )',
+                        padding: '10px',
+                        margin: "10px",
+                        border: "3px solid black",
+                        borderRadius: '23px'
+                      }}
+                    >
+                      <img src='assets/images/egg.png' width={"80px"} />
+                    </div>
+                  </div>
+                </Stack>
+              </Grid>
             </Grid>
             <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'space-evenly',
               }}
-            >{(levelState !== 0 || upgradeTab === false) &&
+            >
               <Button
                 onClick={() => onButtonClick()}
                 sx={{
@@ -329,27 +320,11 @@ const MiningModal = ({
 
                   }}
                 >
-                  {user.miningStatus === false ? "BUY" : (remainedTime === 0 ? btnType : convertSecToHMS(remainedTime))}
+                  {/* {user.miningStatus === false ? "BUY" : btnType} */}
+                  {miningStatus === false ? "BUY" : (remainedTime === 0 ? btnType : convertSecToHMS(remainedTime))}
                 </p>
               </Button>
-              }
             </Box>
-
-            {upgradeTab ?
-              <div style={{
-                fontFamily: 'CubicPixel',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                color: '#e7e1e1',
-                display: 'flex',
-                justifyContent: 'center'
-              }}>
-                <img src="assets/images/alert.png" style={{ width: '30px', height: 'auto' }} />
-                <p>Lvl{levelState === 1 ? 5 : levelState === 2 ? 10 : ''}+ character required for upgrade.</p>
-              </div> : null
-            }
-
-            {/* {!upgradeTab ? */}
             <div style={{
               fontFamily: 'CubicPixel',
               fontSize: '22px',
@@ -357,7 +332,7 @@ const MiningModal = ({
               color: '#e7e1e1',
               textAlign: 'center',
             }}>
-              <p>{user.miningStatus === false ? "500 DRG" : "25 DRG"}</p>
+              <p>{miningStatus === false ? "500 DRG" : "25 DRG"}</p>
             </div>
             <Box
               sx={{
