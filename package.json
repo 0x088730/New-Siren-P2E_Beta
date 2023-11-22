@@ -25,6 +25,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-jazzicon": "^1.0.4",
+    "react-native": "^0.72.7",
+    "react-native-svg": "^14.0.0",
     "react-numeric-input": "^2.2.3",
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.3.0",

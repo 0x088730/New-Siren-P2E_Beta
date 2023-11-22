@@ -17,6 +17,7 @@ export interface LoginInfo {
   stakedBirds: any
   miningModule: any
   miningRequest: Number
+  miningStatus: Boolean
   goldMine: any
   goldMineRequest: Number
   uraniumMine: any
