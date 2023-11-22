@@ -5,7 +5,6 @@ import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-// import SvgTitle, { Text } from "react-native-svg";
 
 import {
   ADMIN_WALLET_ADDRESS,
@@ -23,7 +22,7 @@ import {
   resourceRequest,
   setCooldown,
   withdrawRequest,
-getMiningStatus,
+  getMiningStatus,
 } from '../../store/user/actions'
 import { onShowAlert } from '../../store/utiles/actions'
 import { checkPremium } from '../../utils/checkPremium'
@@ -81,7 +80,7 @@ const MiningModal = ({
   const [displayLevel, setDisplayLevel] = useState(-1)
 
   const [upgradeErrorFlag, setUpgradeErrorFlag] = useState(false)
-const [miningStatus, setMiningStatus] = useState(user.miningStatus);
+  const [miningStatus, setMiningStatus] = useState(user.miningStatus);
 
   var convertSecToHMS = (number: number) => {
     const hours = Math.floor(number / 3600)
@@ -94,49 +93,33 @@ const [miningStatus, setMiningStatus] = useState(user.miningStatus);
     const formattedTime = `${minutes}:${seconds}`/*${hours}:*/
     return formattedTime
   }
-useEffect(() => {
+  useEffect(() => {
     if (user.miningStatus === false) {
       setBtnType("BUY")
     }
   }, [])
   useEffect(() => {
     dispatch(
-        checkCooldown(address, 'level-up', (res: any) => {
-          let cooldownSec = res.data
-          console.log(cooldownSec)
-          if (cooldownSec === 999999) {
-            setBtnType('Start')
-          }
-          else if (cooldownSec <= 0) {
-            setRemainedTime(0);
-            setBtnType("Claim");
-          }
-          else {
-            setRemainedTime(cooldownSec)
-            setIsCooldownStarted(true)
-          }
-        }),
-      )
+      checkCooldown(address, 'level-up', (res: any) => {
+        let cooldownSec = res.data
+        console.log(cooldownSec)
+        if (cooldownSec === 999999) {
+          setBtnType('Start')
+        }
+        else if (cooldownSec <= 0) {
+          setRemainedTime(0);
+          setBtnType("Claim");
+        }
+        else {
+          setRemainedTime(cooldownSec)
+          setIsCooldownStarted(true)
+        }
+      }),
+    )
   }, [address])
   useEffect(() => {
     if (isCooldownStarted) {
-// dispatch(
-      //   checkCooldown(address, 'level-up', (res: any) => {
-      //     let cooldownSec = res.data
-      //     console.log(cooldownSec)
-      //     if (cooldownSec === 999999) {
-      //       setBtnType('Start')
-      //     }
-      //     else if (cooldownSec <= 0) {
-      //       setRemainedTime(0);
-      //       setBtnType("Claim");
-      //     }
-      //     else {
-      //       setRemainedTime(cooldownSec)
-      //       setIsCooldownStarted(true)
-      //     }
-      //   }),
-      // )
+
       var cooldownInterval = setInterval(() => {
         setRemainedTime((prevTime) => {
           if (prevTime === 1) {
@@ -163,12 +146,12 @@ useEffect(() => {
       const bcsPrice = 1
       const maxAmount =
         (checkPremium(user.premium).isPremium ? 10 : 5) / bcsPrice
-            setWithdrawableBcsAmount(maxAmount - Math.floor(withdrewsirenAmount / 10))
+      setWithdrawableBcsAmount(maxAmount - Math.floor(withdrewsirenAmount / 10))
     })()
   }, [user.withdraws])
 
   const onButtonClick = async () => {
-if (btnType === "BUY") {
+    if (btnType === "BUY") {
       dispatch(
         getMiningStatus(address, (res: any) => {
           setBtnType("Start")
@@ -177,29 +160,29 @@ if (btnType === "BUY") {
         })
       )
     } else {
-    if (remainedTime > 0) {
-      return
-    }
-    if (btnType === 'Start') {
-      console.log("setCooldown");
-      dispatch(
-        setCooldown(address, 'level-up', true, (res: any) => {
+      if (remainedTime > 0) {
+        return
+      }
+      if (btnType === 'Start') {
+        console.log("setCooldown");
+        dispatch(
+          setCooldown(address, 'level-up', true, (res: any) => {
 
-          if (res.data)
-            if (!isCooldownStarted) {
-              setSirenAmount(res.data);
+            if (res.data)
+              if (!isCooldownStarted) {
+                setSirenAmount(res.data);
                 setRemainedTime(30)
-              setIsCooldownStarted(true)
-            }
-        }),
-      )
-    } else if (btnType === 'Claim') {
-                  dispatch(claimSiren(address, (res: any) => {
-              setSirenAmount(res.data.siren)
-              setEggs(res.data.eggs)
-              setBtnType('Start')
-            }))
-}
+                setIsCooldownStarted(true)
+              }
+          }),
+        )
+      } else if (btnType === 'Claim') {
+        dispatch(claimSiren(address, (res: any) => {
+          setSirenAmount(res.data.siren)
+          setEggs(res.data.eggs)
+          setBtnType('Start')
+        }))
+      }
     }
   }
 
@@ -217,7 +200,7 @@ if (btnType === "BUY") {
     <>
       <Modal
         open={open}
-                onClose={handleClose}
+        onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -257,7 +240,7 @@ if (btnType === "BUY") {
                   marginTop: '8%',
                   color: '#e7e1e1',
                   lineHeight: '100%',
-                                  }}
+                }}
               >
                 <p>DRAGON PLACE{upgradeTab && ' UPGRADE'}</p>
               </div>
@@ -273,22 +256,22 @@ if (btnType === "BUY") {
                 justifyContent: 'center',
               }}
             >
-                              <Grid item xs={4} sx={{ padding: '0 !important' }}>
-                  <Stack
-                    sx={{
-                      fontFamily: 'CubicPixel',
-                      fontSize: '30px',
-                      width: '200%',
-                      marginLeft: "-50%",
-                      fontWeight: 'bold',
-                      color: '#e7e1e1',
-                      textAlign: 'center',
-                      marginTop: "-20px"
-                    }}
-                  >
-                                        <p>YOU WILL RECEIVE:</p>
-                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                      <div
+              <Grid item xs={4} sx={{ padding: '0 !important' }}>
+                <Stack
+                  sx={{
+                    fontFamily: 'CubicPixel',
+                    fontSize: '30px',
+                    width: '200%',
+                    marginLeft: "-50%",
+                    fontWeight: 'bold',
+                    color: '#e7e1e1',
+                    textAlign: 'center',
+                    marginTop: "-20px"
+                  }}
+                >
+                  <p>YOU WILL RECEIVE:</p>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div
                       style={{
                         width: '100px', height: '100px',
                         lineHeight: '1',
@@ -302,7 +285,7 @@ if (btnType === "BUY") {
                     >
                       <p>50<br />DRG</p>
                     </div>
-<div
+                    <div
                       style={{
                         width: '100px', height: '100px',
                         backgroundImage: 'radial-gradient(farthest-corner at 30px 70px,#71923c, #ebd8c2 )',
@@ -315,8 +298,8 @@ if (btnType === "BUY") {
                       <img src='assets/images/egg.png' width={"80px"} />
                     </div>
                   </div>
-                  </Stack>
-                </Grid>
+                </Stack>
+              </Grid>
             </Grid>
             <Box
               sx={{
@@ -347,7 +330,7 @@ if (btnType === "BUY") {
                   {miningStatus === false ? "BUY" : (remainedTime === 0 ? btnType : convertSecToHMS(remainedTime))}
                 </p>
               </Button>
-                          </Box>
+            </Box>
             <div style={{
               fontFamily: 'CubicPixel',
               fontSize: '22px',
@@ -357,7 +340,7 @@ if (btnType === "BUY") {
             }}>
               <p>{miningStatus === false ? "500 DRG" : "25 DRG"}</p>
             </div>
-                        <Box
+            <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
