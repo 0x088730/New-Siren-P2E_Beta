@@ -37,11 +37,11 @@ export function getResources(address: any, ref: any, cb: any) {
   }
 }
 
-export function startHunterUpgradeCooldown(address: any,userCount:number,  cb: any) {
+export function startHunterUpgradeCooldown(address: any, userCount: number, cb: any) {
   return async (dispatch: any) => {
     const res = await api(`user/start/hunter-upgrade-cooldown`, 'post', {
       walletAddress: address,
-      userCount:userCount
+      userCount: userCount
     })
     cb(res)
     dispatch({
@@ -66,7 +66,7 @@ export function stakeDiamond(
         position: index,
         diamond: item,
       })
-      
+
       cb(res)
       dispatch({
         type: RESOURCE_CHANGE_SUCCESS,
@@ -115,7 +115,7 @@ export function swapResources(address: any, level: Number, cb: any) {
     })
   }
 }
-export function buyLevel(address: any,  cb: any) {
+export function buyLevel(address: any, cb: any) {
   return async (dispatch: any) => {
     const res = await api(`user/buy/level`, 'post', {
       walletAddress: address,
@@ -129,8 +129,6 @@ export function buyLevel(address: any,  cb: any) {
 }
 export function checkCooldown(address: any, type: string, cb: any) {
   return async (dispatch: any) => {
-    
-
     const res = await api(`user/check/cooldown`, 'post', {
       walletAddress: address,
       type: type,
@@ -144,22 +142,20 @@ export function checkCooldown(address: any, type: string, cb: any) {
 }
 export function getMiningStatus(address: any, cb: any) {
   return async (dispatch: any) => {
-    
-    console.log("req")
+
     const res = await api(`user/getMiningStatus`, 'post', {
       walletAddress: address,
     })
     cb(res)
-    console.log("res....................",res)
     dispatch({
       type: CHECK_COOLDOWN_SUCCESS,
       payload: { data: res },
     })
   }
 }
-export function levelupHunter(address: any,  cb: any) {
+export function levelupHunter(address: any, cb: any) {
   return async (dispatch: any) => {
-    
+
 
     const res = await api(`user/levelup/hunter`, 'post', {
       walletAddress: address,
@@ -208,8 +204,6 @@ export function claimHunter(address: any, cb: any) {
   }
 }
 export function setCooldown(address: any, type: string, value: boolean, cb: any) {
-  console.log("request>>>>>>")
-
   return async (dispatch: any) => {
     const res = await api(`user/set/cooldown`, 'post', {
       walletAddress: address,

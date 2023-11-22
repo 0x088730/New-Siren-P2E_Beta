@@ -123,10 +123,11 @@ const MiningModal = ({
 
   const onButtonClick = async () => {
     if (btnType === "BUY") {
+      console.log("click")
       dispatch(
         getMiningStatus(address, (res: any) => {
-          console.log(res)
-          setBtnType("Start")
+            setBtnType("Start")
+            setSirenAmount(res.data.Siren)
         })
       )
     } else {
@@ -146,9 +147,7 @@ const MiningModal = ({
       } else if (btnType === 'Claim') {
         dispatch(
           checkCooldown(address, 'level-up', (res: any) => {
-            console.log("request======", res)
             let cooldownSec = res.data
-            console.log(cooldownSec)
             if (cooldownSec === 999999) {
               setBtnType('Start')
             }
@@ -158,13 +157,11 @@ const MiningModal = ({
                 setEggs(res.data.eggs)
                 setBtnType('Start')
               }))
-
             }
             else {
               setRemainedTime(cooldownSec)
               setIsCooldownStarted(true)
             }
-
           }),
         )
       }
@@ -360,7 +357,7 @@ const MiningModal = ({
               color: '#e7e1e1',
               textAlign: 'center',
             }}>
-              <p>25 DRG</p>
+              <p>{user.miningStatus === false ? "500 DRG" : "25 DRG"}</p>
             </div>
             <Box
               sx={{
