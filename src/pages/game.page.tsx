@@ -89,7 +89,6 @@ export const GamePage = ({
     if (global.wall === 0) {
       return
     }
-    if(!user) return
     onCharacter()
   }
   const dispatch = useDispatch<any>()
