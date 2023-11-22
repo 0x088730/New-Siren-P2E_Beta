@@ -101,8 +101,8 @@ export default class Game extends Phaser.Scene {
   }
 
   character() {
-    this.characterWidget.gemChange()
-    this.characterWidget.gemBuild()
+    // this.characterWidget.gemChange()
+    // this.characterWidget.gemBuild()
     store.dispatch(setCharacterStatus(true))
     this.characterWidget.showStatus(true)
   }
