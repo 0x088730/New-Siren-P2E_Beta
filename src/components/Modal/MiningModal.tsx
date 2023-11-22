@@ -5,7 +5,6 @@ import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import SvgTitle, { Text } from "react-native-svg";
 
 import {
   ADMIN_WALLET_ADDRESS,
@@ -102,38 +101,38 @@ const MiningModal = ({
   
   useEffect(() => {
     if (isCooldownStarted) {
-      // dispatch(
-      //   checkCooldown(address, 'level-up', (res: any) => {
-      //     let cooldownSec = res.data
-      //     console.log(cooldownSec)
-      //     if (cooldownSec === 999999) {
-      //       setBtnType('Start')
-      //     }
-      //     else if (cooldownSec <= 0) {
-      //       setRemainedTime(0);
-      //       setBtnType("Claim");
-      //     }
-      //     else {
-      //       setRemainedTime(cooldownSec)
-      //       setIsCooldownStarted(true)
-      //     }
-      //   }),
-      // )
-      var cooldownInterval = setInterval(() => {
-        setRemainedTime((prevTime) => {
-          if (prevTime === 1) {
-            setBtnType('Claim')
+      dispatch(
+        checkCooldown(address, 'level-up', (res: any) => {
+          let cooldownSec = res.data
+          console.log(cooldownSec)
+          if (cooldownSec === 999999) {
+            setBtnType('Start')
           }
-          if (prevTime === 0) {
-            clearInterval(cooldownInterval)
-            setIsCooldownStarted(false)
-            return 0
+          else if (cooldownSec <= 0) {
+            setRemainedTime(0);
+            setBtnType("Claim");
           }
-          return prevTime - 1
-        })
-      }, 1000)
+          else {
+            setRemainedTime(cooldownSec)
+            setIsCooldownStarted(true)
+          }
+        }),
+      )
+      // var cooldownInterval = setInterval(() => {
+      //   setRemainedTime((prevTime) => {
+      //     if (prevTime === 1) {
+      //       setBtnType('Claim')
+      //     }
+      //     if (prevTime === 0) {
+      //       clearInterval(cooldownInterval)
+      //       setIsCooldownStarted(false)
+      //       return 0
+      //     }
+      //     return prevTime - 1
+      //   })
+      // }, 1000)
     }
-    return () => clearInterval(cooldownInterval)
+    // return () => clearInterval(cooldownInterval)
   }, [isCooldownStarted])
 
   useEffect(() => {

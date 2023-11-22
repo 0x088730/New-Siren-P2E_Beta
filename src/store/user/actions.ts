@@ -211,7 +211,6 @@ export function setCooldown(address: any, type: string, value: boolean, cb: any)
       value: value
     })
     cb(res)
-    console.log("res...........", res)
     dispatch({
       type: SET_COOLDOWN_SUCCESS,
       payload: { data: res },
