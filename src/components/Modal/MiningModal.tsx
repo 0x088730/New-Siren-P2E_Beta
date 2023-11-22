@@ -61,6 +61,7 @@ const MiningModal = ({
 
   const { connected, chainID, address, connect } = useWeb3Context()
   const { user } = useSelector((state: any) => state.userModule)
+  console.log("user", user)
   const dispatch = useDispatch<any>()
 
   const handleOpen = () => setOpen(true)
@@ -69,6 +70,11 @@ const MiningModal = ({
   const [bcsAmount, setBCSAmount] = useState(0)
   const [withdrawableBcsAmount, setWithdrawableBcsAmount] = useState<number>(0)
   const [value, setValue] = React.useState(0)
+  const [miningStatus, setMiningStatus] = useState(false);
+  console.log(miningStatus)
+  useEffect(() => {
+    setMiningStatus(user.miningStatus);
+  }, [user])
 
   const [btnType, setBtnType] = React.useState('Upgrade')
   const [upgradeTab, setUpgradeTab] = React.useState(false)
@@ -364,7 +370,7 @@ const MiningModal = ({
                       fontWeight: 'bold',
                       color: '#e7e1e1',
                       textAlign: 'center',
-                      marginTop:"20px"
+                      marginTop: "20px"
                     }}
                   >
                     <p>YOU WILL RECEIVE:</p>
@@ -383,14 +389,38 @@ const MiningModal = ({
                       fontWeight: 'bold',
                       color: '#e7e1e1',
                       textAlign: 'center',
-                      marginTop:"-20px"
+                      marginTop: "-20px"
                     }}
                   >
                     {/* width={upgradeTab?20:30} */}
                     <p>YOU WILL RECEIVE:</p>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                      <img src='assets/images/basket.png' width={"150px"}></img>
-                      <img src='assets/images/basket.png' width={"150px"}></img>
+                      <div
+                        style={{
+                          width: '100px', height: '100px',
+                          lineHeight: '1',
+                          backgroundImage: 'radial-gradient(farthest-corner at 30px 70px,#71923c, #ebd8c2 )',
+                          padding: '20px',
+                          margin: "10px",
+                          border: "3px solid black",
+                          borderRadius: '23px',
+                          fontSize: "smaller"
+                        }}
+                      >
+                        <p>50<br/>DRG</p>
+                      </div>
+                      <div
+                        style={{
+                          width: '100px', height: '100px',
+                          backgroundImage: 'radial-gradient(farthest-corner at 30px 70px,#71923c, #ebd8c2 )',
+                          padding: '10px',
+                          margin: "10px",
+                          border: "3px solid black",
+                          borderRadius: '23px'
+                        }}
+                      >
+                        <img src='assets/images/egg.png' width={"80px"} />
+                      </div>
                     </div>
 
                   </Stack>
@@ -448,7 +478,7 @@ const MiningModal = ({
                 onClick={() => onButtonClick()}
                 sx={{
                   width: '200px',
-                  marginTop: "35px"
+                  marginTop: "30px"
 
                 }}
               >
@@ -457,13 +487,13 @@ const MiningModal = ({
                   style={{
                     position: 'absolute',
                     fontFamily: 'CubicPixel',
-                    fontSize: '14px',
+                    fontSize: '25px',
                     textAlign: 'center',
                     color: '#e7e1e1',
 
                   }}
                 >
-                  {(remainedTime === 0 ? btnType : convertSecToHMS(remainedTime))}
+                  {miningStatus === false ? "BUY" : (remainedTime === 0 ? btnType : convertSecToHMS(remainedTime))}
                 </p>
               </Button>
               }
@@ -486,7 +516,7 @@ const MiningModal = ({
             {/* {!upgradeTab ? */}
             <div style={{
               fontFamily: 'CubicPixel',
-              fontSize: '14px',
+              fontSize: '22px',
               fontWeight: 'bold',
               color: '#e7e1e1',
               textAlign: 'center',
@@ -502,18 +532,18 @@ const MiningModal = ({
                 display: 'flex',
                 justifyContent: 'center',
                 position: 'absolute',
-                bottom: '10%',
+                bottom: '6%',
                 width: '100%'
               }}
             >
               <div style={{
                 fontFamily: 'CubicPixel',
-                fontSize: '14px',
+                fontSize: '20px',
                 fontWeight: 'bold',
                 color: '#e7e1e1',
                 textAlign: 'center', display: 'flex', justifyContent: 'center'
               }}>
-                <img src='assets/images/alert_.png' style={{marginTop:"-9px"}} width={upgradeTab ? 20 : 30}></img>
+                <img src='assets/images/alert_.png' style={{ marginTop: "-9px" }} width={upgradeTab ? 20 : 30}></img>
                 <p>ONCE YOU BUY IT YOU CAN RUN IT AN INFINITE NUMBER OF TIMES</p>
               </div>
 
