@@ -30,12 +30,12 @@ import InforModal from './InforModal'
 interface HeaderProps {
   showAccount: any
   setShowAccount: any
-  Siren: any
+  Drg: any
   eggs: any
   resource: any
 }
 
-const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderProps) => {
+const Header = ({ showAccount, setShowAccount, Drg, eggs, resource }: HeaderProps) => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const ref = searchParams.get('ref')
@@ -103,7 +103,7 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
 
   const headerList = () => {
     return <Box
-      className={styles.Siren}
+      className={styles.Drg}
       sx={{ display: 'flex', alignItems: 'center' }}
     >
       {!ispremium && (
@@ -155,9 +155,9 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
         <img
           alt=""
           style={{ width: '25px', marginRight: '10px' }}
-          src="/images/res_Siren.png"
+          src="/images/res_Drg.png"
         />
-        {`DRG: ${Siren}`}
+        {`DRG: ${Drg}`}
       </p>
       <p
         className={styles.resource}
@@ -199,7 +199,7 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
         {headerList()}
 
         <Box
-          className={styles.Siren}
+          className={styles.Drg}
           sx={{ display: 'flex', alignItems: 'center' }}
         >
           <Link to="/" className="button muted-button">

@@ -17,7 +17,7 @@ import {
   buyLevel,
   checkCooldown,
   checkUpgradeAvailable,
-  claimSiren,
+  claimDrg,
   /* checkWithdrawableReqeust,  */ depositRequest,
   resourceRequest,
   setCooldown,
@@ -28,7 +28,7 @@ import { onShowAlert } from '../../store/utiles/actions'
 import { checkPremium } from '../../utils/checkPremium'
 // import { Withdraw } from "../../store/user/action-types";
 // import api from '../../utils/callApi';
-import { getBcsPrice, getWithdrewSirenAmount } from '../../utils/user'
+import { getBcsPrice, getWithdrewDrgAmount } from '../../utils/user'
 import { global } from '../../common/global'
 import { setDefaultResultOrder } from 'dns'
 import userEvent from '@testing-library/user-event'
@@ -36,9 +36,9 @@ import userEvent from '@testing-library/user-event'
 interface Props {
   open: boolean
   setOpen: any
-  sirenAmount: number
+  drgAmount: number
   resource: any
-  setSirenAmount: any
+  setDrgAmount: any
   setEggs: any
   egg: any
   onExchange: any
@@ -50,9 +50,9 @@ interface Props {
 const MiningModal = ({
   open,
   setOpen,
-  sirenAmount,
+  drgAmount,
   resource,
-  setSirenAmount,
+  setDrgAmount,
   setEggs,
   egg,
   onExchange,
@@ -143,12 +143,12 @@ const MiningModal = ({
   useEffect(() => {
     ; (async () => {
       // console.log('user withdraws changed', user.withdraws.length)
-      const withdrewsirenAmount = getWithdrewSirenAmount(user.withdraws) // Siren
+      const withdrewdrgAmount = getWithdrewDrgAmount(user.withdraws) // Drg
       // const bcsPrice = await getBcsPrice();
       const bcsPrice = 1
       const maxAmount =
         (checkPremium(user.premium).isPremium ? 10 : 5) / bcsPrice
-      setWithdrawableBcsAmount(maxAmount - Math.floor(withdrewsirenAmount / 10))
+      setWithdrawableBcsAmount(maxAmount - Math.floor(withdrewdrgAmount / 10))
     })()
   }, [user.withdraws])
 
@@ -158,7 +158,7 @@ const MiningModal = ({
         getMiningStatus(address, (res: any) => {
           setBtnType("Start")
           setMiningStatus(true)
-          setSirenAmount(res.data.Siren)
+          setDrgAmount(res.data.Drg)
         })
       )
     } else {
@@ -172,15 +172,15 @@ const MiningModal = ({
 
             if (res.data)
               if (!isCooldownStarted) {
-                setSirenAmount(res.data);
+                setDrgAmount(res.data);
                 setRemainedTime(30)
                 setIsCooldownStarted(true)
               }
           }),
         )
       } else if (btnType === 'Claim') {
-        dispatch(claimSiren(address, (res: any) => {
-          setSirenAmount(res.data.siren)
+        dispatch(claimDrg(address, (res: any) => {
+          setDrgAmount(res.data.drg)
           setEggs(res.data.eggs)
           setBtnType('Start')
         }))

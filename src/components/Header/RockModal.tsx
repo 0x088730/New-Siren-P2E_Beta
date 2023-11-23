@@ -148,7 +148,7 @@ const RockModal = ({
                     textAlign: 'center',
                   }}
                 >
-                  PRICE: 20 SIREN<br></br>
+                  PRICE: 20 DRG<br></br>
                 </h2>
               </Box>
             </Grid>

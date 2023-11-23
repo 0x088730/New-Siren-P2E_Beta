@@ -42,7 +42,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const userModule = useSelector((state: any) => state.userModule)
   const { user } = userModule
 
-  const [Siren, setSiren] = useState(userModule.user.Siren)
+  const [Drg, setDrg] = useState(userModule.user.Drg)
   const [eggs, setEggs] = useState(userModule.user.eggs)
   const [resource, setResource] = useState(userModule.user.resource)
   const [wallLevelState, setWallLevelState] = useState(userModule.user.wall)
@@ -108,7 +108,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   const showModal = (index: any) => {
-    if (Siren < 20) {
+    if (Drg < 20) {
       return
     }
     setSelectedIndex(index)
@@ -124,7 +124,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
     dispatch(
       stakeDiamond(address, selectedIndex, cooldown, (res: any) => {
         if (res.success === false) return
-        setSiren(res.data)
+        setDrg(res.data)
         handleClose()
         coolDownStatus(cooldown)
       }),
@@ -157,7 +157,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   }
 
   const setBirdItem = (index: any, item: any) => {
-    if (Siren < 20) return
+    if (Drg < 20) return
     dispatch(
       stakeBird(address, index, (res: any) => {
         if (res.success === false) return
@@ -219,7 +219,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
       upgradeWall(address, (res: any) => {
         setWallLevelState(res.wall)
         global.wall = res.wall
-        setSiren(res.Siren)
+        setDrg(res.Drg)
       }),
     )
     setOpenUpgradeWall(false)
@@ -332,7 +332,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
         <Header
           showAccount={showAccount}
           setShowAccount={setShowAccount}
-          Siren={Siren}
+          Drg={Drg}
           eggs={eggs}
           resource={resource}
         />
@@ -376,7 +376,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
                         color="success"
                         onClick={(e) => onRockStart(item)}
                       >
-                        20 Siren
+                        20 Drg
                       </Button>
                     </Box>
                   </Box>
@@ -490,7 +490,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
                         </p>
                       </Box>
                       <Box>
-                        <p>Price per day: 100 siren,</p>
+                        <p>Price per day: 100 drg,</p>
                         <p>Chance; LVL 1 = 40% LVL 2 = 65%</p>
                         <p>Amount: 150 resources</p>
                       </Box>
@@ -548,7 +548,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
                       <Box>
                         <p>
                           If you haven't hired a support and your buildings are
-                          broken you will need to pay 120 siren to fix the
+                          broken you will need to pay 120 drg to fix the
                           buildings.
                         </p>
                       </Box>
@@ -563,9 +563,9 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
         <ExchangeModal
           open={openSwap}
           setOpen={setOpenSwap}
-          Siren={Siren}
+          Drg={Drg}
           egg={eggs}
-          setSiren={setSiren}
+          setDrg={setDrg}
           setEgg={setEggs}
         />
         <UpgradeWallModal
@@ -593,8 +593,8 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
         <MiningModal
           open={openMining}
           setOpen={setOpenMining}
-          sirenAmount={Siren}
-          setSirenAmount={setSiren}
+          drgAmount={Drg}
+          setDrgAmount={setDrg}
           resource={resource}
           egg={eggs}
           setEggs={setEggs}

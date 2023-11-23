@@ -179,9 +179,9 @@ export function checkUpgradeAvailable(address: any, cb: any) {
     })
   }
 }
-export function claimSiren(address: any, cb: any) {
+export function claimDrg(address: any, cb: any) {
   return async (dispatch: any) => {
-    const res = await api(`user/claim/siren`, 'post', {
+    const res = await api(`user/claim/drg`, 'post', {
       walletAddress: address,
     })
     cb(res)

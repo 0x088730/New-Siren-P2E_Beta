@@ -180,11 +180,11 @@ const ExchangeModal = ({
                         style={textFieldStyle}
                       />
                     <Box>
-                      <p>You will receive {swapAmount * 5} Siren</p>
+                      <p>You will receive {swapAmount * 5} Drg</p>
                       {ispremium && (
                         <p>
                           Premium bonus + {Math.floor((swapAmount * 3) / 2)}{' '}
-                          Siren
+                          Drg
                         </p>
                       )}
                     </Box>
@@ -241,11 +241,11 @@ const ExchangeModal = ({
                         error={egg < swapEggAmount ? true : false}
                       />
                       <Box>
-                        <p>You will receive {swapEggAmount * 30} Siren</p>
+                        <p>You will receive {swapEggAmount * 30} Drg</p>
                         {ispremium && (
                           <p>
                             Premium bonus + {Math.floor(swapEggAmount * 9)}{' '}
-                            Siren
+                            Drg
                           </p>
                         )}
                       </Box>

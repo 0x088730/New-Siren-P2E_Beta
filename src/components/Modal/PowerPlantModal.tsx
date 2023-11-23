@@ -222,7 +222,7 @@ const PowerPlantModal = ({ open, setOpen }: Props) => {
               }}
             >
               {' '}
-              <AllInclusiveIcon /> Earn: 9000Siren
+              <AllInclusiveIcon /> Earn: 9000Drg
             </p>
             <p
               style={{
@@ -278,7 +278,7 @@ const PowerPlantModal = ({ open, setOpen }: Props) => {
                           color="primary"
                           onClick={(e) => onRequestMining()}
                         >
-                          {POWER_PLANT.REQUEST} Siren
+                          {POWER_PLANT.REQUEST} Drg
                         </Button>
                       </>
                     )}

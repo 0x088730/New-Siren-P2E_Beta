@@ -3,7 +3,7 @@ import { GET_RESOURCES_SUCCESS, RESOURCE_CHANGE_SUCCESS } from './action-types'
 
 const initialState: LoginState = {
   user: {
-    Siren: 0,
+    Drg: 0,
     resource: 0,
     eggs: 0,
     premium: '0',
@@ -39,7 +39,7 @@ export function userReducer(
       const { data } = action.payload
       const { user } = { ...state }
 
-      user.Siren = data.Siren ? data.Siren : user.Siren
+      user.Drg = data.Drg ? data.Drg : user.Drg
       user.resource = data.resource ? data.resource : user.resource
       user.eggs = data.eggs ? data.eggs : user.eggs
       user.premium = data.premium ? data.premium : user.premium
@@ -71,7 +71,7 @@ export function userReducer(
       const { data } = action.payload
       const { user } = { ...state }
       
-      user.Siren = data.Siren? data.Siren : user.Siren
+      user.Drg = data.Drg? data.Drg : user.Drg
       user.resource = data.resource? data.resource : user.resource
       user.eggs = data.eggs? data.eggs : user.eggs
       user.premium = data.premium? data.premium : user.premium

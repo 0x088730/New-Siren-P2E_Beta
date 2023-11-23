@@ -23,7 +23,7 @@ import { onShowAlert } from '../../store/utiles/actions'
 import { checkPremium } from '../../utils/checkPremium'
 // import { Withdraw } from "../../store/user/action-types";
 // import api from '../../utils/callApi';
-import { getBcsPrice, getWithdrewSirenAmount } from '../../utils/user'
+import { getBcsPrice, getWithdrewDrgAmount } from '../../utils/user'
 
 interface Props {
   open: boolean
@@ -50,25 +50,25 @@ const DepositModal = ({
   const handleClose = () => setOpen(false)
 
   const [bcsAmount, setBCSAmount] = useState(320)
-  const [SirenAmount, setSirenAmount] = useState(0)
+  const [drgAmount, setDrgAmount] = useState(0)
   const [withdrawableBcsAmount, setWithdrawableBcsAmount] = useState<number>(0)
 
   useEffect(() => {
     ; (async () => {
       // console.log('user withdraws changed', user.withdraws.length)
-      const withdrewSirenAmount = getWithdrewSirenAmount(user.withdraws) // Siren
+      const withdrewDrgAmount = getWithdrewDrgAmount(user.withdraws) // Drg
       // const bcsPrice = await getBcsPrice();
       const bcsPrice = 1
       const maxAmount =
         (checkPremium(user.premium).isPremium ? 10 : 5) / bcsPrice
       console.log(
         `bcs price is ${bcsPrice}`,
-        'withdrew Siren amount: ',
-        withdrewSirenAmount,
+        'withdrew Drg amount: ',
+        withdrewDrgAmount,
         ' and withdrawable bcs amount is ',
         maxAmount,
       )
-      setWithdrawableBcsAmount(maxAmount - Math.floor(withdrewSirenAmount / 10))
+      setWithdrawableBcsAmount(maxAmount - Math.floor(withdrewDrgAmount / 10))
     })()
   }, [user.withdraws])
 
@@ -94,7 +94,7 @@ const DepositModal = ({
 
     if (e.target.value < 0) return
 
-    setSirenAmount(e.target.value)
+    setDrgAmount(e.target.value)
   }
 
   const onResource = async () => {
@@ -140,14 +140,12 @@ const DepositModal = ({
   }
 
   const onWithdraw = async () => {
-    if (SirenAmount < 10) {
-      alert("minimal withdraw amount is 300Siren");
+    if (drgAmount < 10) {
+      alert("minimal withdraw amount is 300Drg");
       return
     }
 
-    // const res = await checkWithdrawableReqeust(address, SirenAmount)
-    // console.log(res)
-    if (withdrawableBcsAmount * 10 <= SirenAmount) {
+    if (withdrawableBcsAmount * 10 <= drgAmount) {
       dispatch(
         onShowAlert(
           `you can withdraw only ${checkPremium(user.premium) ? 10 : 5
@@ -165,7 +163,7 @@ const DepositModal = ({
     dispatch(
       withdrawRequest(
         address,
-        SirenAmount,
+        drgAmount,
         // transaction.transactionHash,
         (res: any) => {
           // console.log('callback')
@@ -287,7 +285,7 @@ const DepositModal = ({
                       onChange={onChangeAmount}
                     />
                   </div>
-                  <p style={{textAlign: 'center'}}>You will receive <br/> {Number(bcsAmount)} Siren</p>
+                  <p style={{textAlign: 'center'}}>You will receive <br/> {Number(bcsAmount)} Drg</p>
                   <p
                     style={{
                       color: '#770909',
@@ -342,16 +340,16 @@ const DepositModal = ({
                   }}
                 >
                   <div style={{marginTop: '0px', textAlign:"left"}}>
-                    <div style={{fontFamily: 'Anime Ace', color: '#ffe86b', fontSize: '16px', margin: '2px 20px'}}>SIREN</div>
+                    <div style={{fontFamily: 'Anime Ace', color: '#ffe86b', fontSize: '16px', margin: '2px 20px'}}>DRG</div>
                     <TextField
                       sx={{ mr: 1, textAlign: 'right', borderColor: 'white', width: '100%', borderRadius: '5px', backgroundColor: 'white'}}
-                      name="Siren"
-                      value={SirenAmount}
+                      name="Drg"
+                      value={drgAmount}
                       size='small'
                       onChange={onChangeEggAmount}
                     />
                   </div>                  
-                  <p style={{textAlign: 'center'}}>You will receive <br/> {Math.floor(SirenAmount / 10)} BCS</p>
+                  <p style={{textAlign: 'center'}}>You will receive <br/> {Math.floor(drgAmount / 10)} BCS</p>
                   <p
                     style={{
                       color: '#770909',

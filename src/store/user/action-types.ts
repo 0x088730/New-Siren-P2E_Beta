@@ -8,7 +8,7 @@ export interface Withdraw {
 }
 
 export interface LoginInfo {
-  Siren: Number
+  Drg: Number
   resource: Number
   eggs: Number
   premium: any
