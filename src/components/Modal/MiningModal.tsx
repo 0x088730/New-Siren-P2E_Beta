@@ -354,10 +354,10 @@ const MiningModal = ({
                 fontSize: '20px',
                 fontWeight: 'bold',
                 color: '#e7e1e1',
-                textAlign: 'center', display: 'flex', justifyContent: 'center'
+                textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center'
               }}>
-                <img src='assets/images/alert_.png' style={{ marginTop: "-9px" }} width={upgradeTab ? 20 : 30}></img>
-                <p>ONCE YOU BUY IT YOU CAN RUN IT AN INFINITE NUMBER OF TIMES</p>
+                <img src='assets/images/alert_.png' style={{ marginTop: "-9px", width: "30px", height: "30px" }}></img>
+                <p style={{textShadow: '1px 1px black'}}>ONCE YOU BUY IT YOU CAN RUN IT AN INFINITE NUMBER OF TIMES</p>
               </div>
             </Box>
           </Box>

@@ -232,7 +232,7 @@ const ConvertModal = ({
                                                 fontSize: "smaller"
                                             }}
                                         >
-                                            <p>50~150<br />DRG</p>
+                                            <p style={{textShadow: '2px 2px black'}}>50~150<br />DRG</p>
                                         </div>
                                     </div>
                                 </Stack>
@@ -324,7 +324,7 @@ const ConvertModal = ({
                                         display: 'flex', justifyContent: 'center', alignItems: 'center'
                                     }}>
                                     <img src='assets/images/meat.png' width={"50px"} />
-                                    <p style={{ position: 'absolute', top: '15px', fontSize: '25px' }}>x{needMeat}</p>
+                                    <p style={{ position: 'absolute', top: '15px', fontSize: '25px', textShadow: '2px 2px black' }}>x{needMeat}</p>
                                 </div>
                                 <div
                                     style={{
@@ -337,7 +337,7 @@ const ConvertModal = ({
                                         display: 'flex', justifyContent: 'center', alignItems: 'center'
                                     }}>
                                     <img src='assets/images/egg.png' width={"50px"} />
-                                    <p style={{ position: 'absolute', top: '15px', fontSize: '25px' }}>x{needEgg}</p>
+                                    <p style={{ position: 'absolute', top: '15px', fontSize: '25px', textShadow: '2px 2px black' }}>x{needEgg}</p>
                                 </div>
                             </div>
                         </Box>
