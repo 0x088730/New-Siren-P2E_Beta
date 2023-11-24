@@ -1,10 +1,7 @@
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import { Box, Grid, Button, Typography, Stack } from '@mui/material'
 import Modal from '@mui/material/Modal'
-import { width } from '@mui/system'
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import ExchangeModal from '../../components/Header/ExchangeModal'
 import Header from '../../components/Header/Header'
@@ -14,26 +11,19 @@ import MiningModal from '../../components/Modal/MiningModal'
 import { STAKE_TIMER } from '../../hooks/constants'
 import { useWeb3Context } from '../../hooks/web3Context'
 import {
-  claimBird,
   claimDiamond,
-  stakeBird,
   stakeDiamond,
   swapEggs,
   swapResources,
   upgradeWall,
   checkCooldown,
-  claimDrg,
-  convertDrg,
-  setCooldown
 } from '../../store/user/actions'
-import { showMinutes } from '../../utils/timer'
 
 import styles from './Main.module.scss'
 import UpgradeWallModal from '../../components/Header/UpgradeWallModal'
 import { global } from '../../common/global'
 import RockModal from '../../components/Header/RockModal'
-import { NONE } from 'phaser'
-import { transform } from 'typescript'
+import ConvertModal from '../../components/Modal/ConvertModal'
 
 interface MainProps {
   showAccount: any
@@ -50,52 +40,25 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const [eggs, setEggs] = useState(userModule.user.eggs)
   const [resource, setResource] = useState(userModule.user.resource)
   const [wallLevelState, setWallLevelState] = useState(userModule.user.wall)
-  const [needMeat, setNeedMeat] = useState(5);
-  const [needEgg, setNeedEgg] = useState(1);
-  const [btnStatus, setBtnStatus] = useState(false);
-  const [convertTimeRemained, setConvertTimeRemained] = useState(0);
-  const [convertCooldown, setConvertCooldown] = useState(false);
-  const [convertBtn, setConvertBtn] = useState("Start");
 
   const [openInstruction, setOpenInstruction] = useState(false)
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  })
-
-  useEffect(() => {
-    if (user.resource < needMeat || user.eggs < needEgg) {
-      setBtnStatus(false);
-    } else {
-      setBtnStatus(true)
-    }
-  }, [openBird])
 
   useEffect(() => {
     if (global.wall === 0) {
       history.back();
     }
-    const handleWindowResize = () => {
-      setWindowSize({ width: window.innerWidth, height: window.innerHeight })
-    }
-
-    window.addEventListener('resize', handleWindowResize)
-
-    return () => {
-      window.removeEventListener('resize', handleWindowResize)
-    }
   })
 
   const TEST_MODE = true
   const { connected, chainID, address, connect } = useWeb3Context()
-  
+
   const [openSwap, setOpenSwap] = useState(false)
   const [openUpgradeWall, setOpenUpgradeWall] = useState(false)
   const [openRock, setOpenRock] = useState(false)
   const [openDeposit, setOpenDeposit] = useState(false)
   const [openMining, setOpenMining] = useState(false)
   const [levelState, setLevelState] = React.useState(global.level)
-  
+
 
   const [btnTitle, setBtnTitle] = useState("START")
   const [items, setItems] = useState([
@@ -115,20 +78,8 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
     { item: 0, timer: 0 },
   ])
   const diamonds = [1, 2]
-
   const [selectedIndex, setSelectedIndex] = useState(0)
 
-  var convertSecToHMS = (number: number) => {
-    const hours = Math.floor(number / 3600)
-      .toString()
-      .padStart(2, '0')
-    const minutes = Math.floor((number % 3600) / 60)
-      .toString()
-      .padStart(2, '0')
-    const seconds = (number % 60).toString().padStart(2, '0')
-    const formattedTime = `${minutes}:${seconds}`/*${hours}:*/
-    return formattedTime
-  }
   const showModal = (index: any) => {
     if (Drg < 20) {
       return
@@ -176,82 +127,6 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
     )
   }
 
-  const onConvert = () => {
-    if (convertCooldown === false) {
-      if (convertBtn === "Start") {
-        dispatch(
-          setCooldown(address, 'convertor', true, (res: any) => {
-            setResource(res.data.resource);
-            setEggs(res.data.eggs);
-            setConvertCooldown(true);
-            setConvertTimeRemained(30);
-          })
-        )
-      } else if (convertBtn === "Claim") {
-        dispatch(convertDrg(address, (res: any) => {
-          setDrg(res.data.drg)
-          setConvertBtn('Start')
-        }))
-        setConvertBtn('Start')
-        setConvertCooldown(false)
-        setOpenBird(false)
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (convertCooldown) {
-      var convertCldInterval = setInterval(() => {
-        setConvertTimeRemained((prevTime) => {
-          if (prevTime === 1) {
-            setConvertBtn('Claim')
-          }
-          if (prevTime === 0) {
-            clearInterval(convertCldInterval)
-            setConvertCooldown(false)
-            return 0
-          }
-          return prevTime - 1
-        })
-      }, 1000)
-    }
-
-    return () => clearInterval(convertCldInterval)
-  }, [convertCooldown])
-
-  useEffect(() => {
-    dispatch(
-      checkCooldown(address, 'convertor', (res: any) => {
-        let cooldownSec = res.data
-        if (cooldownSec === 999999) {
-          // if(miningStatus === false) return
-          // setBtnType('Start')
-        }
-        else if (cooldownSec <= 0) {
-          setConvertTimeRemained(0);
-          setConvertBtn("Claim");
-        }
-        else {
-          setConvertTimeRemained(cooldownSec)
-          setConvertCooldown(true)
-        }
-      }),
-    )
-  }, [openBird])
-
-  const setBirdItem = (index: any, item: any) => {
-    if (Drg < 20) return
-    dispatch(
-      stakeBird(address, index, (res: any) => {
-        if (res.success === false) return
-        const _items = [...birds]
-        _items[index].item = item
-        _items[index].timer = STAKE_TIMER
-        setBirds(_items)
-      }),
-    )
-  }
-
   const onRockClaim = () => {
     if (items[selectedIndex].counting !== 0 && items[selectedIndex].timer === 0) {
       setOpenRock(false)
@@ -269,20 +144,6 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
         if (typeof res.data.resource === 'number') setResource(res.data.resource)
         setItems(_items)
         setBtnTitle("START")
-      }),
-    )
-  }
-
-  const onClaimBird = (e: any, index: number) => {
-    e.stopPropagation()
-
-    dispatch(
-      claimBird(address, index, (res: any) => {
-        if (res.success === false) return
-        const _items = [...birds]
-        _items[index].item = 0
-        _items[index].timer = 0
-        setBirds(_items)
       }),
     )
   }
@@ -468,206 +329,16 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
           </Box>
         </Modal>
 
-        <Modal
-          open={openBird}
-          // open={true}
-          onClose={handleBirdClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <img alt="" src="/images/support/support_md_bg.png" />
-
-            <img
-              alt=""
-              src="/images/support/support_md_close_btn.png"
-              style={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                width: '6%',
-                transform: 'translate(26%, -27%)',
-                cursor: 'pointer',
-                zIndex: 5,
-              }}
-              onClick={handleBirdClose}
-            />
-
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-              }}
-            >
-              <Box>
-                <div
-                  style={{
-                    fontFamily: 'CubicPixel',
-                    fontWeight: 'bold',
-                    fontSize: '40px',
-                    textAlign: 'center',
-                    marginTop: '8%',
-                    color: '#e7e1e1',
-                    lineHeight: '100%',
-                  }}
-                >
-                  <p>CONVERTER</p>
-                </div>
-              </Box>
-              <Grid
-                container
-                spacing={3}
-                sx={{
-                  padding: '8% 6% 20% 8%',
-                  width: '100%',
-                  height: '36%',
-                  margin: 0,
-                  justifyContent: 'center',
-                }}
-              >
-                <Grid item xs={4} sx={{ padding: '0 !important' }}>
-                  <Stack
-                    sx={{
-                      fontFamily: 'CubicPixel',
-                      fontSize: '30px',
-                      width: '200%',
-                      marginLeft: "-50%",
-                      fontWeight: 'bold',
-                      color: '#e7e1e1',
-                      textAlign: 'center',
-                      marginTop: "-20px"
-                    }}
-                  >
-                    <p>YOU WILL RECEIVE:</p>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                      <div
-                        style={{
-                          width: '100px', height: '100px',
-                          lineHeight: '1',
-                          backgroundImage: 'radial-gradient(farthest-corner at 30px 70px,#71923c, #ebd8c2 )',
-                          padding: '23px 0',
-                          margin: "10px",
-                          border: "3px solid black",
-                          borderRadius: '23px',
-                          fontSize: "smaller"
-                        }}
-                      >
-                        <p>50~150<br />DRG</p>
-                      </div>
-                    </div>
-                  </Stack>
-                </Grid>
-              </Grid>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-evenly',
-                }}
-              >
-                {
-                  btnStatus === true ?
-                    <Button
-                      onClick={() => onConvert()}
-                      sx={{
-                        width: '200px',
-                        marginTop: "30px",
-
-                      }}
-                    >
-                      <img alt="" src="/assets/images/big-button.png" />
-                      <p
-                        style={{
-                          position: 'absolute',
-                          fontFamily: 'CubicPixel',
-                          fontSize: '25px',
-                          textAlign: 'center',
-                          color: '#e7e1e1',
-
-                        }}
-                      >
-                        {convertTimeRemained === 0 ? convertBtn : convertSecToHMS(convertTimeRemained)}
-                      </p>
-                    </Button>
-                    :
-                    <Button
-                      sx={{
-                        width: '200px',
-                        marginTop: "30px",
-                      }}
-                      disabled
-                    >
-                      <img alt="" src="/assets/images/big-button.png" />
-                      <p
-                        style={{
-                          position: 'absolute',
-                          fontFamily: 'CubicPixel',
-                          fontSize: '25px',
-                          textAlign: 'center',
-                          color: '#e7e1e1',
-
-                        }}
-                      >
-                        Start
-                      </p>
-                    </Button>
-                }
-              </Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  position: 'absolute',
-                  bottom: '6%',
-                  width: '100%'
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: 'CubicPixel',
-                    fontSize: '30px',
-                    fontWeight: 'bold',
-                    color: '#e7e1e1',
-                    textAlign: 'center',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }}>
-                  <p>NEED FOR START:</p>
-                  <div
-                    style={{
-                      width: "70px", height: '55px',
-                      border: '1px solid black',
-                      borderRadius: '25px',
-                      backgroundColor: '#f670ec',
-                      padding: '5px',
-                      marginLeft: '10px',
-                      display: 'flex', justifyContent: 'center', alignItems: 'center'
-                    }}>
-                    <img src='assets/images/meat.png' width={"50px"} />
-                    <p style={{ position: 'absolute', top: '15px', fontSize: '25px' }}>x{needMeat}</p>
-                  </div>
-                  <div
-                    style={{
-                      width: "70px", height: '55px',
-                      border: '1px solid black',
-                      borderRadius: '25px',
-                      backgroundColor: '#f670ec',
-                      padding: '5px',
-                      marginLeft: '10px',
-                      display: 'flex', justifyContent: 'center', alignItems: 'center'
-                    }}>
-                    <img src='assets/images/egg.png' width={"50px"} />
-                    <p style={{ position: 'absolute', top: '15px', fontSize: '25px' }}>x{needEgg}</p>
-                  </div>
-                </div>
-              </Box>
-            </Box>
-          </Box>
-        </Modal >
-
+        <ConvertModal
+          openBird={openBird}
+          setOpenBird={setOpenBird}
+          Drg={Drg}
+          setDrg={setDrg}
+          eggs={eggs}
+          setEggs={setEggs}
+          resource={resource}
+          setResource={setResource}
+        />
         <ExchangeModal
           open={openSwap}
           setOpen={setOpenSwap}
