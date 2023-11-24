@@ -70,12 +70,13 @@ const ConvertModal = ({
     }, [openBird])
     const onConvert = () => {
         if (convertCooldown === false) {
+            setConvertCooldown(true);
+
             if (convertBtn === "Start") {
                 dispatch(
                     setCooldown(address, 'convertor', true, (res: any) => {
                         setResource(res.data.resource);
                         setEggs(res.data.eggs);
-                        setConvertCooldown(true);
                         setConvertTimeRemained(30);
                     })
                 )
