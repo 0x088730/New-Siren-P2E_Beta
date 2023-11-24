@@ -166,7 +166,6 @@ const MiningModal = ({
         return
       }
       if (btnType === 'Start') {
-        console.log("setCooldown");
         dispatch(
           setCooldown(address, 'level-up', true, (res: any) => {
 
@@ -278,7 +277,7 @@ const MiningModal = ({
                         width: '100px', height: '100px',
                         lineHeight: '1',
                         backgroundImage: 'radial-gradient(farthest-corner at 30px 70px,#71923c, #ebd8c2 )',
-                        padding: '20px',
+                        padding: '23px 0',
                         margin: "10px",
                         border: "3px solid black",
                         borderRadius: '23px',

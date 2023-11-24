@@ -172,7 +172,7 @@ const ExchangeModal = ({
                       <TextField
                         sx={{ mr: 1, textAlign: 'right'}}
                         name="resource"
-                        label="Water"
+                        label="Meat"
                         value={swapAmount}
                         type="number"
                         onChange={onChangeAmount}

@@ -191,6 +191,18 @@ export function claimDrg(address: any, cb: any) {
     })
   }
 }
+export function convertDrg(address: any, cb: any) {
+  return async (dispatch: any) => {
+    const res = await api(`user/convert/drg`, 'post', {
+      walletAddress: address,
+    })
+    cb(res)
+    dispatch({
+      type: CLAIM_SIREN_SUCCESS,
+      payload: { data: res },
+    })
+  }
+}
 export function claimHunter(address: any, cb: any) {
   return async (dispatch: any) => {
     const res = await api(`user/claim/hunter`, 'post', {

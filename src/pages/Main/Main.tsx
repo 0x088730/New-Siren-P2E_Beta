@@ -21,7 +21,10 @@ import {
   swapEggs,
   swapResources,
   upgradeWall,
-  checkCooldown
+  checkCooldown,
+  claimDrg,
+  convertDrg,
+  setCooldown
 } from '../../store/user/actions'
 import { showMinutes } from '../../utils/timer'
 
@@ -42,18 +45,31 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const userModule = useSelector((state: any) => state.userModule)
   const { user } = userModule
 
+  const [openBird, setOpenBird] = React.useState(false)
   const [Drg, setDrg] = useState(userModule.user.Drg)
   const [eggs, setEggs] = useState(userModule.user.eggs)
   const [resource, setResource] = useState(userModule.user.resource)
   const [wallLevelState, setWallLevelState] = useState(userModule.user.wall)
-
-  // const resource = userModule.user.resource
+  const [needMeat, setNeedMeat] = useState(5);
+  const [needEgg, setNeedEgg] = useState(1);
+  const [btnStatus, setBtnStatus] = useState(false);
+  const [convertTimeRemained, setConvertTimeRemained] = useState(0);
+  const [convertCooldown, setConvertCooldown] = useState(false);
+  const [convertBtn, setConvertBtn] = useState("Start");
 
   const [openInstruction, setOpenInstruction] = useState(false)
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
   })
+
+  useEffect(() => {
+    if (user.resource < needMeat || user.eggs < needEgg) {
+      setBtnStatus(false);
+    } else {
+      setBtnStatus(true)
+    }
+  }, [openBird])
 
   useEffect(() => {
     if (global.wall === 0) {
@@ -71,20 +87,15 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   })
 
   const TEST_MODE = true
-  const MIN_SCREEN = 1200
-  const navigate = useNavigate()
   const { connected, chainID, address, connect } = useWeb3Context()
-  // const { connected, address, connect } = {
-  //   connected: true,
-  //   address: 123,
-  //   connect: () => {},
-  // }
+  
   const [openSwap, setOpenSwap] = useState(false)
   const [openUpgradeWall, setOpenUpgradeWall] = useState(false)
   const [openRock, setOpenRock] = useState(false)
   const [openDeposit, setOpenDeposit] = useState(false)
   const [openMining, setOpenMining] = useState(false)
   const [levelState, setLevelState] = React.useState(global.level)
+  
 
   const [btnTitle, setBtnTitle] = useState("START")
   const [items, setItems] = useState([
@@ -107,6 +118,17 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
 
   const [selectedIndex, setSelectedIndex] = useState(0)
 
+  var convertSecToHMS = (number: number) => {
+    const hours = Math.floor(number / 3600)
+      .toString()
+      .padStart(2, '0')
+    const minutes = Math.floor((number % 3600) / 60)
+      .toString()
+      .padStart(2, '0')
+    const seconds = (number % 60).toString().padStart(2, '0')
+    const formattedTime = `${minutes}:${seconds}`/*${hours}:*/
+    return formattedTime
+  }
   const showModal = (index: any) => {
     if (Drg < 20) {
       return
@@ -120,7 +142,6 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   }
 
   const onRockStart = (cooldown: any) => {
-    console.log("cooldown")
     dispatch(
       stakeDiamond(address, selectedIndex, cooldown, (res: any) => {
         if (res.success === false) return
@@ -153,8 +174,70 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
         }
       }),
     )
-
   }
+
+  const onConvert = () => {
+    if (convertCooldown === false) {
+      if (convertBtn === "Start") {
+        dispatch(
+          setCooldown(address, 'convertor', true, (res: any) => {
+            setResource(res.data.resource);
+            setEggs(res.data.eggs);
+            setConvertCooldown(true);
+            setConvertTimeRemained(30);
+          })
+        )
+      } else if (convertBtn === "Claim") {
+        dispatch(convertDrg(address, (res: any) => {
+          setDrg(res.data.drg)
+          setConvertBtn('Start')
+        }))
+        setConvertBtn('Start')
+        setConvertCooldown(false)
+        setOpenBird(false)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (convertCooldown) {
+      var convertCldInterval = setInterval(() => {
+        setConvertTimeRemained((prevTime) => {
+          if (prevTime === 1) {
+            setConvertBtn('Claim')
+          }
+          if (prevTime === 0) {
+            clearInterval(convertCldInterval)
+            setConvertCooldown(false)
+            return 0
+          }
+          return prevTime - 1
+        })
+      }, 1000)
+    }
+
+    return () => clearInterval(convertCldInterval)
+  }, [convertCooldown])
+
+  useEffect(() => {
+    dispatch(
+      checkCooldown(address, 'convertor', (res: any) => {
+        let cooldownSec = res.data
+        if (cooldownSec === 999999) {
+          // if(miningStatus === false) return
+          // setBtnType('Start')
+        }
+        else if (cooldownSec <= 0) {
+          setConvertTimeRemained(0);
+          setConvertBtn("Claim");
+        }
+        else {
+          setConvertTimeRemained(cooldownSec)
+          setConvertCooldown(true)
+        }
+      }),
+    )
+  }, [openBird])
 
   const setBirdItem = (index: any, item: any) => {
     if (Drg < 20) return
@@ -229,7 +312,6 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const handleOpen = () => setOpenRock(true)
   const handleClose = () => setOpen(false)
 
-  const [openBird, setOpenBird] = React.useState(false)
   const handleBirdOpen = () => setOpenBird(true)
   const handleBirdClose = () => setOpenBird(false)
   let timer: any = null
@@ -394,171 +476,197 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
+            <img alt="" src="/images/support/support_md_bg.png" />
+
+            <img
+              alt=""
+              src="/images/support/support_md_close_btn.png"
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                width: '6%',
+                transform: 'translate(26%, -27%)',
+                cursor: 'pointer',
+                zIndex: 5,
+              }}
+              onClick={handleBirdClose}
+            />
+
             <Box
               sx={{
-                // width: 300,
-                // height: 300,
-                position: 'relative',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
               }}
             >
-              <img alt="" src="/images/support/support_md_bg.png" />
-              <img
-                alt=""
-                src="/images/support/support_md_character.png"
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  height: '145%',
-                  transform: 'translate(-56%, -15%)',
-                }}
-              />
-              <img
-                alt=""
-                src="/images/support/support_md_close_btn.png"
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '6%',
-                  transform: 'translate(26%, -27%)',
-                  cursor: 'pointer',
-                  zIndex: 5,
-                }}
-                onClick={handleBirdClose}
-              />
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                }}
-              >
-                <Grid
-                  container
-                  spacing={2}
-                  sx={{
-                    padding: '6% 6% 6% 12%',
-                    width: '100%',
-                    height: '100%',
-                    margin: 0,
+              <Box>
+                <div
+                  style={{
+                    fontFamily: 'CubicPixel',
+                    fontWeight: 'bold',
+                    fontSize: '40px',
+                    textAlign: 'center',
+                    marginTop: '8%',
+                    color: '#e7e1e1',
+                    lineHeight: '100%',
                   }}
                 >
-                  <Grid item xs={3}></Grid>
-                  <Grid item xs={9} sx={{ padding: '0 !important' }}>
-                    <Stack
-                      spacing={2}
-                      sx={{
-                        fontFamily: 'Marko One, serif',
-                        fontSize: '16px',
-                        textTransform: 'uppercase',
-                        color: '#e7e1e1',
-                        lineHeight: '120%',
-                      }}
-                    >
-                      <Box>
-                        <p
-                          style={{
-                            fontFamily: 'Marko One, serif',
-                            fontSize: '45px',
-                            textTransform: 'uppercase',
-                            textAlign: 'center',
-                            marginRight: '16%',
-                            color: '#e7e1e1',
-                            lineHeight: '100%',
-                          }}
-                        >
-                          Support
-                        </p>
-                      </Box>
-                      <Box>
-                        <p>
-                          hire support to protect your land.
-                          <span
-                            style={{
-                              // color: '#df0c0c',
-                              color: 'rgb(119 9 9)',
-                              fontFamily: 'Nosifer, cursive',
-                            }}
-                          >
-                            if you don't have a support, your buildings have a
-                            50% chance per day to break.
-                          </span>{' '}
-                          Support also can find resources.
-                        </p>
-                      </Box>
-                      <Box>
-                        <p>Price per day: 100 drg,</p>
-                        <p>Chance; LVL 1 = 40% LVL 2 = 65%</p>
-                        <p>Amount: 150 resources</p>
-                      </Box>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-evenly',
+                  <p>CONVERTER</p>
+                </div>
+              </Box>
+              <Grid
+                container
+                spacing={3}
+                sx={{
+                  padding: '8% 6% 20% 8%',
+                  width: '100%',
+                  height: '36%',
+                  margin: 0,
+                  justifyContent: 'center',
+                }}
+              >
+                <Grid item xs={4} sx={{ padding: '0 !important' }}>
+                  <Stack
+                    sx={{
+                      fontFamily: 'CubicPixel',
+                      fontSize: '30px',
+                      width: '200%',
+                      marginLeft: "-50%",
+                      fontWeight: 'bold',
+                      color: '#e7e1e1',
+                      textAlign: 'center',
+                      marginTop: "-20px"
+                    }}
+                  >
+                    <p>YOU WILL RECEIVE:</p>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                      <div
+                        style={{
+                          width: '100px', height: '100px',
+                          lineHeight: '1',
+                          backgroundImage: 'radial-gradient(farthest-corner at 30px 70px,#71923c, #ebd8c2 )',
+                          padding: '23px 0',
+                          margin: "10px",
+                          border: "3px solid black",
+                          borderRadius: '23px',
+                          fontSize: "smaller"
                         }}
                       >
-                        <Button
-                          sx={{
-                            padding: 0,
-                            width: '40%',
-                          }}
-                          href="#outlined-buttons"
-                        >
-                          <img alt="" src="/assets/images/big-button.png" />
-                          <p
-                            style={{
-                              position: 'absolute',
-                              fontFamily: 'Marko One, serif',
-                              fontSize: '16px',
-                              textTransform: 'uppercase',
-                              textAlign: 'center',
-                              color: '#e7e1e1',
-                              lineHeight: '100%',
-                            }}
-                          >
-                            Buy
-                          </p>
-                        </Button>
-                        <Button
-                          sx={{
-                            padding: 0,
-                            width: '40%',
-                          }}
-                          href="#outlined-buttons"
-                        >
-                          <img alt="" src="/assets/images/big-button.png" />
-                          <p
-                            style={{
-                              position: 'absolute',
-                              fontFamily: 'Marko One, serif',
-                              fontSize: '16px',
-                              textTransform: 'uppercase',
-                              textAlign: 'center',
-                              color: '#e7e1e1',
-                              lineHeight: '100%',
-                            }}
-                          >
-                            Upgrade
-                          </p>
-                        </Button>
-                      </Box>
-                      <Box>
-                        <p>
-                          If you haven't hired a support and your buildings are
-                          broken you will need to pay 120 drg to fix the
-                          buildings.
-                        </p>
-                      </Box>
-                    </Stack>
-                  </Grid>
+                        <p>50~150<br />DRG</p>
+                      </div>
+                    </div>
+                  </Stack>
                 </Grid>
+              </Grid>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-evenly',
+                }}
+              >
+                {
+                  btnStatus === true ?
+                    <Button
+                      onClick={() => onConvert()}
+                      sx={{
+                        width: '200px',
+                        marginTop: "30px",
+
+                      }}
+                    >
+                      <img alt="" src="/assets/images/big-button.png" />
+                      <p
+                        style={{
+                          position: 'absolute',
+                          fontFamily: 'CubicPixel',
+                          fontSize: '25px',
+                          textAlign: 'center',
+                          color: '#e7e1e1',
+
+                        }}
+                      >
+                        {convertTimeRemained === 0 ? convertBtn : convertSecToHMS(convertTimeRemained)}
+                      </p>
+                    </Button>
+                    :
+                    <Button
+                      sx={{
+                        width: '200px',
+                        marginTop: "30px",
+                      }}
+                      disabled
+                    >
+                      <img alt="" src="/assets/images/big-button.png" />
+                      <p
+                        style={{
+                          position: 'absolute',
+                          fontFamily: 'CubicPixel',
+                          fontSize: '25px',
+                          textAlign: 'center',
+                          color: '#e7e1e1',
+
+                        }}
+                      >
+                        Start
+                      </p>
+                    </Button>
+                }
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  position: 'absolute',
+                  bottom: '6%',
+                  width: '100%'
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: 'CubicPixel',
+                    fontSize: '30px',
+                    fontWeight: 'bold',
+                    color: '#e7e1e1',
+                    textAlign: 'center',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <p>NEED FOR START:</p>
+                  <div
+                    style={{
+                      width: "70px", height: '55px',
+                      border: '1px solid black',
+                      borderRadius: '25px',
+                      backgroundColor: '#f670ec',
+                      padding: '5px',
+                      marginLeft: '10px',
+                      display: 'flex', justifyContent: 'center', alignItems: 'center'
+                    }}>
+                    <img src='assets/images/meat.png' width={"50px"} />
+                    <p style={{ position: 'absolute', top: '15px', fontSize: '25px' }}>x{needMeat}</p>
+                  </div>
+                  <div
+                    style={{
+                      width: "70px", height: '55px',
+                      border: '1px solid black',
+                      borderRadius: '25px',
+                      backgroundColor: '#f670ec',
+                      padding: '5px',
+                      marginLeft: '10px',
+                      display: 'flex', justifyContent: 'center', alignItems: 'center'
+                    }}>
+                    <img src='assets/images/egg.png' width={"50px"} />
+                    <p style={{ position: 'absolute', top: '15px', fontSize: '25px' }}>x{needEgg}</p>
+                  </div>
+                </div>
               </Box>
             </Box>
           </Box>
-        </Modal>
+        </Modal >
 
         <ExchangeModal
           open={openSwap}
@@ -755,7 +863,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
         >
           <img
             alt=""
-            style={{position: 'absolute', left: '2%', top: '55%'}}
+            style={{ position: 'absolute', left: '2%', top: '55%' }}
             src={`/images/greentree1.png`}
           />
         </Box>
@@ -768,7 +876,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
         >
           <img
             alt=""
-            style={{position: 'absolute', left: '15%', top: '65%', width: '280px', height: '300px' }}
+            style={{ position: 'absolute', left: '15%', top: '65%', width: '280px', height: '300px' }}
             src={`/images/pinktree.png`}
           />
         </Box>
@@ -781,7 +889,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
         >
           <img
             alt=""
-            style={{position: 'absolute', right: '5%', top: '55%',}}
+            style={{ position: 'absolute', right: '5%', top: '55%', }}
             src={`/images/greentree2.png`}
           />
         </Box>
@@ -794,11 +902,11 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
         >
           <img
             alt=""
-            style={{position: 'absolute', left: '50%', bottom: '-5%',}}
+            style={{ position: 'absolute', left: '50%', bottom: '-5%', }}
             src={`/images/rock.png`}
           />
         </Box>
-      </Box>
+      </Box >
 
       <Box
         className={styles.loginbg}

@@ -50,9 +50,9 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
   energySwapEdit!: Phaser.GameObjects.DOMElement
   energySwapText!: Phaser.GameObjects.Text
   energySwapText1!: Phaser.GameObjects.Text
-  waterText!: Phaser.GameObjects.Text
-  waterText1!: Phaser.GameObjects.Text
-  waterText2!: Phaser.GameObjects.Text
+  meatText!: Phaser.GameObjects.Text
+  meatText1!: Phaser.GameObjects.Text
+  meatText2!: Phaser.GameObjects.Text
   swapAmount!: Number
   swapBtn!: Phaser.GameObjects.Image
   rarityTexts: Phaser.GameObjects.Text[] = []
@@ -196,7 +196,7 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
     }
 
     this.add(
-      (this.waterText = this.scene.add
+      (this.meatText = this.scene.add
         .text(330, -140, `${'YOU HAVE:'}`, {
           font: '30px Anime Ace',
           color: '#fff',
@@ -206,7 +206,7 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
         .setOrigin(0.5, 0.5)),
     )
     this.add(
-      (this.waterText1 = this.scene.add
+      (this.meatText1 = this.scene.add
         .text(500, -140, `${global.resource}`, {
           font: '30px Anime Ace',
           color: '#00c7df',
@@ -216,8 +216,8 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
         .setOrigin(0.5, 0.5)),
     )
     this.add(
-      (this.waterText2 = this.scene.add
-        .text(640, -140, `${'WATER'}`, {
+      (this.meatText2 = this.scene.add
+        .text(640, -140, `${'MEAT'}`, {
           font: '30px Anime Ace',
           color: '#fff',
           stroke: '#000',
@@ -228,7 +228,7 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
 
     this.add(
       (this.energySwapText = this.scene.add
-        .text(440, 120, `${'WATER IS DRAWN FROM WELLS ON YOUR'}`, {
+        .text(440, 120, `${'MEAT IS DRAWN FROM WELLS ON YOUR'}`, {
           font: '18px Anime Ace',
           color: '#fff',
           stroke: '#000',
@@ -260,7 +260,7 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
             return
           }
           if (global.resource < this.swapAmount) {
-            alert('Water is less than Swap Amount!!!')
+            alert('Meat is less than Swap Amount!!!')
             return
           }
           energySwap(
@@ -271,7 +271,7 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
               global.energy = resp.energy
               global.resource = resp.resource
               this.energy.setText(`${global.energy}`)
-              this.waterText1.setText(`${global.resource}`)
+              this.meatText1.setText(`${global.resource}`)
             },
           )
         }),
@@ -494,7 +494,7 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
         global.energy = resp.energy
         global.resource = resp.resource
         this.energy.setText(`${global.energy}`)
-        this.waterText1.setText(`${global.resource}`)
+        this.meatText1.setText(`${global.resource}`)
       },
     )
   }
@@ -568,9 +568,9 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
         this.energySwapText1.setVisible(false)
         // this.energySwapEdit.setVisible(false)
         this.siren3.setVisible(false)
-        this.waterText.setVisible(false)
-        this.waterText1.setVisible(false)
-        this.waterText2.setVisible(false)
+        this.meatText.setVisible(false)
+        this.meatText1.setVisible(false)
+        this.meatText2.setVisible(false)
         this.swapBtn.setVisible(false)
         const inputElement = document.getElementById("swapAmountInput") as HTMLElement
         inputElement.style.display = "none"
@@ -609,9 +609,9 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
         this.energySwapText.setVisible(false)
         // this.energySwapEdit.setVisible(false)
         this.energySwapText1.setVisible(false)
-        this.waterText.setVisible(false)
-        this.waterText1.setVisible(false)
-        this.waterText2.setVisible(false)
+        this.meatText.setVisible(false)
+        this.meatText1.setVisible(false)
+        this.meatText2.setVisible(false)
         this.swapBtn.setVisible(false)
         const inputElement = document.getElementById("swapAmountInput") as HTMLElement
         inputElement.style.display = "none"
@@ -628,9 +628,9 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
         // this.energySwapEdit.setVisible(false)
         this.energySwapText.setVisible(false)
         this.energySwapText1.setVisible(false)
-        this.waterText.setVisible(false)
-        this.waterText1.setVisible(false)
-        this.waterText2.setVisible(false)
+        this.meatText.setVisible(false)
+        this.meatText1.setVisible(false)
+        this.meatText2.setVisible(false)
         this.swapBtn.setVisible(false)
         const inputElement = document.getElementById("swapAmountInput") as HTMLElement
         inputElement.style.display = "none"
@@ -646,24 +646,24 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
         // this.energySwapEdit.setVisible(false)
         this.energySwapText.setVisible(false)
         this.energySwapText1.setVisible(false)
-        this.waterText.setVisible(false)
-        this.waterText1.setVisible(false)
-        this.waterText2.setVisible(false)
+        this.meatText.setVisible(false)
+        this.meatText1.setVisible(false)
+        this.meatText2.setVisible(false)
         this.swapBtn.setVisible(false)
         const inputElement = document.getElementById("swapAmountInput") as HTMLElement
         inputElement.style.display = "none"
         break
       }
       case 5: {
-        //waterSwap
+        //meatSwap
         this.setGemList(false)
         this.setWeaponList(false)
         // this.energySwapEdit.setVisible(true)
         this.energySwapText.setVisible(true)
         this.energySwapText1.setVisible(true)
-        this.waterText.setVisible(true)
-        this.waterText1.setVisible(true)
-        this.waterText2.setVisible(true)
+        this.meatText.setVisible(true)
+        this.meatText1.setVisible(true)
+        this.meatText2.setVisible(true)
         this.background.setVisible(true)
         this.swapBtn.setVisible(true)
         const inputElement = document.getElementById("swapAmountInput") as HTMLElement

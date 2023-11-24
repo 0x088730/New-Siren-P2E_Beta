@@ -168,7 +168,7 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, resource }: HeaderProp
           style={{ width: '25px', marginRight: '10px' }}
           src="/images/res_res.png"
         />
-        {`Water: ${resource}`}
+        {`Meat: ${resource}`}
       </p>
       <p
         className={styles.resource}
