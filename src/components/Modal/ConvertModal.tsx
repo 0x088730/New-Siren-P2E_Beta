@@ -276,7 +276,7 @@ const ConvertModal = ({
                                         }}
                                         disabled
                                     >
-                                        <img alt="" src="/assets/images/big-button.png" style={{ opacity: '0.7' }} />
+                                        <img alt="" src="/assets/images/big-button-disable.png" style={{ opacity: '0.7' }} />
                                         <p
                                             style={{
                                                 position: 'absolute',

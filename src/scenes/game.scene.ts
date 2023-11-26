@@ -102,30 +102,30 @@ export default class Game extends Phaser.Scene {
   }
 
   character() {
-    this.loader()
-    console.log("reading.....................", this.characterWidget)
+    // this.loader()
+    // console.log("reading.....................", this.characterWidget)
 
-    // if(this.characterWidget) {
-    //   this.characterWidget.gemChange()
-    //   this.characterWidget.gemBuild()
-    //   store.dispatch(setCharacterStatus(true))
-    //   this.characterWidget.showStatus(true)
-    // }
+    if(this.characterWidget) {
+      this.characterWidget.gemChange()
+      this.characterWidget.gemBuild()
+      store.dispatch(setCharacterStatus(true))
+      this.characterWidget.showStatus(true)
+    }
   }
 
-  loader() {
-    console.log("click load")
-    // this.scene.add("loading", Loading);
-    // this.scene.start("loading");
+  // loader() {
+  //   console.log("click load")
+  //   // this.scene.add("loading", Loading);
+  //   // this.scene.start("loading");
 
-    this.time.addEvent({
-      delay: 3000,
-      callback: () => {
-        this.scene.stop("loading");
-      },
-    })
+  //   this.time.addEvent({
+  //     delay: 3000,
+  //     callback: () => {
+  //       this.scene.stop("loading");
+  //     },
+  //   })
 
-  }
+  // }
 
   room() {
     store.dispatch(setTurnFormat())
