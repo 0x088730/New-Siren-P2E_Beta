@@ -13,6 +13,8 @@ import {
 } from '../../store/user/actions'
 import { useWeb3Context } from '../../hooks/web3Context'
 import { global } from '../../common/global'
+import "./modal.css"
+import SelectEggModal from './selectEggModal'
 
 interface Props {
   open: any
@@ -36,7 +38,7 @@ const ExchangeModal = ({
   const userModule = useSelector((state: any) => state.userModule)
   const [openCharacterChoose, setOpenChraracterChoose] = useState(false)
   const [selectedCharacterIndex, setSelectedCharacterIndex] = useState(-1)
-  const [selectedCharacterList, setSelectedCharacterList] = useState([-1,-1,-1])
+  const [selectedCharacterList, setSelectedCharacterList] = useState([-1, -1, -1])
   const [claimBar, setClaimBar] = useState([-1, -1, true])
   const [selectedCharacter, setSelectedCharacter] = useState(-1)
 
@@ -46,32 +48,42 @@ const ExchangeModal = ({
   const [isCooldownStarted, setIsCooldownStarted] = useState(false)
   const dispatch = useDispatch<any>()
   const [btnType, setBtnType] = useState('Start')
+  const [cooldownCount, setCooldownCount] = useState(0);
+  const [eggModalOpen, setEggModalOpen] = useState(false);
+
   var convertSecToHMS = (number: number) => {
-    const hours = Math.floor(number / 3600)
+    const toTime = Math.floor(number % 30)
+    const hours = Math.floor(toTime / 3600)
       .toString()
       .padStart(2, '0')
-    const minutes = Math.floor((number % 3600) / 60)
+    const minutes = Math.floor((toTime % 3600) / 60)
       .toString()
       .padStart(2, '0')
-    const seconds = (number % 60).toString().padStart(2, '0')
+    const seconds = (toTime % 60).toString().padStart(2, '0')
     const formattedTime = `${minutes}:${seconds}` /*${hours}:*/
     return formattedTime
   }
 
   const onBtnClick = () => {
-    if(remainedTime>0)
-    return
+    if (remainedTime > 0)
+      return
     if (btnType === 'Start') {
-      let userCount=selectedCharacterList.filter(characterNo=>characterNo!==-1).length
-      if(userCount===0){
-        alert("Select Character")
+      if (cooldownCount === 0) {
+        alert("Input Count of Eggs")
+        return
+      }
+      if(egg < cooldownCount || egg <= 0) {
+        alert("Not Enough Drg")
         return
       }
       dispatch(
-        startHunterUpgradeCooldown(address,userCount, (resp: any) => {
-          if (resp.data === true) {
-            setRemainedTime(30)
+        startHunterUpgradeCooldown(address, cooldownCount, (resp: any) => {
+          console.log("user.repdata==>", resp.data);
+          if (resp.data !== undefined || resp.data !== null) {
+            setRemainedTime(30 * cooldownCount)
             setIsCooldownStarted(true)
+            console.log("user.eggs==>", resp.data);
+            setEgg(resp.data)
           }
         }),
       )
@@ -79,13 +91,7 @@ const ExchangeModal = ({
       dispatch(
         claimHunter(address, (resp: any) => {
           setBtnType('Start')
-          if(claimBar[0]!==-1&&claimBar[0]!==-2)
-            setDrg(Drg+claimBar[0])
-          if(claimBar[1]!==-1&&claimBar[1]!==-2)
-            setEgg(egg+claimBar[1])
-
-          setClaimBar([-1, -1, true])
-          
+          setDrg(resp.data.drg);
         }),
       )
     }
@@ -110,15 +116,19 @@ const ExchangeModal = ({
             setBtnType('Claim')
             dispatch(
               checkCooldown(address, 'hunter-level-up', (res: any) => {
-                let cooldownSec = res.data
+                let cooldownSec = res.data.time;
+                console.log(res.data.count)
+                if(Number.isNaN(res.data.count) || res.data.count === undefined) {
+                  setCooldownCount(0)
+                  return
+                }
+                setCooldownCount(res.data.count);
                 if (cooldownSec === false) {
                   setRemainedTime(-1)
                   setIsCooldownStarted(false)
 
                   setBtnType('Start')
                 } else if (cooldownSec <= 0) {
-                  console.log(res.claim)
-                  setClaimBar([res.claim.drg, res.claim.egg, res.claim.claim])
                   setRemainedTime(-1)
                   setIsCooldownStarted(false)
 
@@ -132,7 +142,7 @@ const ExchangeModal = ({
           }
           if (prevTime === 0) {
 
-           
+
             return 0
           }
           return prevTime - 1
@@ -146,7 +156,13 @@ const ExchangeModal = ({
     if (open === true)
       dispatch(
         checkCooldown(address, 'hunter-level-up', (res: any) => {
-          let cooldownSec = res.data
+          let cooldownSec = res.data.time
+          console.log(res.data.count)
+          if(Number.isNaN(res.data.count) || res.data.count === undefined) {
+            setCooldownCount(0)
+            return
+          }
+          setCooldownCount(res.data.count);
           if (cooldownSec === false) {
             setRemainedTime(-1)
             setIsCooldownStarted(false)
@@ -154,7 +170,6 @@ const ExchangeModal = ({
             setBtnType('Start')
           } else if (cooldownSec <= 0) {
             setBtnType('Claim')
-            setClaimBar([res.claim.drg, res.claim.egg, res.claim.claim])
             setRemainedTime(-1)
             setIsCooldownStarted(false)
 
@@ -165,60 +180,6 @@ const ExchangeModal = ({
         }),
       )
   }, [open, dispatch])
-
-  const onUpgradeLevel = ()=>{
-    if(btnType!=="Start"||remainedTime>=0){
-      alert("please get claim first")
-      return
-    }
-    if(Drg<3000+upgradeLevel*2000){
-      alert("you need more drg")
-      return
-
-    }
-    if(upgradeLevel===0&&global.wall<2){
-      alert("you have to reach level 2 of wall")
-      return
-
-    }
-    else if(upgradeLevel===1&&global.wall<3){
-      alert("you have to reach level 3 of wall")
-      return
-
-    }
-    dispatch(levelupHunter(address,(resp:any)=>{
-      if(resp.data===true) 
-        if(upgradeLevel===0){
-          setDrg(Drg-3000)
-        }
-        else if(upgradeLevel===1){
-          setDrg(Drg-5000)
-        }
-        setUpgradeLevel(upgradeLevel + 1)
-    }))
-    
-  }
-  // const [ispremium, setIsPremium] = useState(false)
-  // useEffect(() => {
-  //   const date = new Date()
-
-  //   const expiredTime = new Date(userModule.user.premium)
-  //   // console.log("--->", userModule.user.premium, expiredTime, "<---");
-  //   // let curTime = new Date();
-  //   expiredTime.setMonth(expiredTime.getMonth() + 1)
-
-  //   // console.log(expiredTime, date);
-
-  //   const curSec = date.getTime() + date.getTimezoneOffset() * 60 * 1000
-  //   const endSec = expiredTime.getTime()
-
-  //   if (endSec > curSec) {
-  //     setIsPremium(true)
-  //     // console.log("is premium...");
-  //   } else {
-  //     setIsPremium(false)
-  //   }
-  // }, [userModule.user.premium])
 
   const style = {
     position: 'absolute' as const,
@@ -235,7 +196,6 @@ const ExchangeModal = ({
     <>
       <Modal
         open={open}
-        // open={true}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -267,359 +227,93 @@ const ExchangeModal = ({
             }}
           >
             <Box>
-              <p
+              <div
                 style={{
-                  fontFamily: 'Marko One, serif',
-                  fontSize: '35px',
-                  textTransform: 'uppercase',
+                  fontFamily: 'CubicPixel',
+                  fontWeight: 'bold',
+                  fontSize: '40px',
                   textAlign: 'center',
                   marginTop: '8%',
                   color: '#e7e1e1',
                   lineHeight: '100%',
                 }}
               >
-                Hunting Lodge
-              </p>
+                <p>MINE TOWN</p>
+              </div>
             </Box>
             <Grid
               container
-              spacing={2}
+              spacing={3}
               sx={{
-                padding: '0 6%',
+                padding: '8% 6% 20% 8%',
                 width: '100%',
-                height: '40%',
+                height: '36%',
                 margin: 0,
+                justifyContent: 'center',
               }}
             >
-              <Grid
-                item
-                xs={4}
-                sx={{
-                  padding: '0 !important',
-                  position: 'relative',
-                  height: '100%',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-                onClick={() => {
-                  setSelectedCharacterIndex(0)
-                  setOpenChraracterChoose(true)
+              <div
+                style={{
+                  fontFamily: 'CubicPixel',
+                  fontSize: '30px',
+                  fontWeight: 'bold',
+                  color: '#e7e1e1',
+                  width: "50%",
+                  textAlign: "center"
                 }}
               >
-                <img
-                  src="/assets/images/character_bar.png"
-                  alt=""
-                  style={{
-                    position: 'relative',
-                    padding: '10px',
-                    height: '100%',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                />
-                
-                {selectedCharacterList[0]!==-1&&<img
-                  src={`/assets/images/characters/avatar/${selectedCharacterList[0]}.png`}
-                  alt=""
-                  style={{
-                    position: 'absolute',
-                    top: -15,
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    padding: '30%',
-                    zIndex: '20',
-                    height: '115%',
-                    width: '120%',
-                  }}
-                />}
-              </Grid>
-              <Grid
-                item
-                xs={4}
-                sx={{
-                  padding: '0 !important',
-                  position: 'relative',
-                  height: '100%',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-                onClick={() => {
-                  if (upgradeLevel >= 1) {
-                    setSelectedCharacterIndex(1)
-                    setOpenChraracterChoose(true)
-                  }
-                }}
-              >
-                <img
-                  src={`/assets/images/${
-                    upgradeLevel >= 1 ? 'character_bar' : 'character_bar1'
-                  }.png`}
-                  alt=""
-                  style={{
-                    position: 'relative',
-                    padding: '10px',
-                    height: '100%',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                />
-                {upgradeLevel >= 1 && selectedCharacterList[1]!==-1&&(
-                  <img
-                    src={`/assets/images/characters/avatar/${selectedCharacterList[1]}.png`}
-                    alt=""
-                    style={{
-                      position: 'absolute',
-                    top: -15,
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    padding: '30%',
-                    zIndex: '20',
-                    height: '115%',
-                    width: '120%',
-                    }}
-                  />
-                )}
-                {upgradeLevel === 0 && (
-                  <div
-                  style={{
-                    textAlign: 'center',
-                    fontSize: 11,
-                    top: '50%',
-                    color: 'white',
-                    position: 'absolute'
-                  }}
-                >
-                  <Button
+                <p>SELECT DRAGONS</p>
+                <Grid
+                  container
+                  spacing={1}
                   sx={{
-                    position: 'relative',
-                    padding: '10px',
-                    height: '100%',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
+                    width: '100%',
+                    height: '36%',
+                    margin: 0,
+                    justifyContent: 'center',
                   }}
                 >
-                  <img src="/assets/images/upgrade btn.png" alt="" />
-                  <p
-                    style={{
-                      position: 'absolute',
-                      fontFamily: 'Anime Ace',
-                      fontSize: '15px',
-                      textAlign: 'center',
-                      color: '#e7e1e1',
-                    }}onClick={onUpgradeLevel}
-                  >Upgrade </p>
-                  
-                    </Button>
-                  <p>3000 DRG</p>
-                  <p>NEED 2 LVL WALL</p>
-                </div>
-                )}
-              </Grid>
-              <Grid
-                item
-                xs={4}
-                sx={{
-                  padding: '0 !important',
-                  position: 'relative',
-                  height: '100%',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-                onClick={() => {
-                  if (upgradeLevel >= 2) {
-                    setSelectedCharacterIndex(2)
-                    setOpenChraracterChoose(true)
-                  }
+                  <div className='selectBtn' onClick={() => alert()}>+</div>
+                  <div className='selectBtn' onClick={() => alert()}>+</div>
+                  <div className='selectBtn' onClick={() => alert()}>+</div>
+                </Grid>
+              </div>
+              <div
+                style={{
+                  fontFamily: 'CubicPixel',
+                  fontSize: '30px',
+                  fontWeight: 'bold',
+                  color: '#e7e1e1',
+                  width: "50%",
+                  textAlign: "center"
                 }}
               >
-                <img
-                  src={`/assets/images/${
-                    upgradeLevel >= 2 ? 'character_bar' : 'character_bar1'
-                  }.png`}
-                  alt=""
-                  style={{
-                    position: 'relative',
-                    padding: '10px',
-                    height: '100%',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                />
-                {upgradeLevel >= 2 && selectedCharacterList[2]!==-1&&(
-                  <img
-                    src={`/assets/images/characters/avatar/${selectedCharacterList[2]}.png`}
-                    alt=""
+                <p>
+                  SELECT EGGS
+                  <span
+                    id="eggNum"
                     style={{
-                      position: 'absolute',
-                    top: -15,
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    padding: '30%',
-                    zIndex: '20',
-                    height: '115%',
-                    width: '120%',
-                    }}
-                  />
-                )}
-                {upgradeLevel === 1 && (
-                  <div
-                  style={{
-                    textAlign: 'center',
-                    fontSize: 11,
-                    top: '50%',
-                    color: 'white',
-                    position: 'absolute'
-                  }}
-                >
-                  <Button
-                  sx={{
-                    position: 'relative',
-                    padding: '10px',
-                    height: '100%',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <img src="/assets/images/upgrade btn.png" alt="" />
-                  <p
-                    style={{
-                      position: 'absolute',
-                      fontFamily: 'Anime Ace',
-                      fontSize: '15px',
-                      textAlign: 'center',
-                      color: '#e7e1e1',
-                    }}onClick={onUpgradeLevel}
-                  >Upgrade </p>
-                  
-                    </Button>
-                  <p>3000 DRG</p>
-                  <p>NEED 3 LVL WALL</p>
-                </div>
-                )}
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              spacing={2}
-              sx={{
-                padding: '0 6%',
-                width: '100%',
-                height: '20%',
-                margin: 0,
-                alignItems: 'center',
-              }}
-            >
-              <Grid
-                item
-                xs={5}
-                sx={{ padding: '0 !important', position: 'relative' }}
-              >
-                <Box sx={{ textAlign: 'center', color: 'white' }}>
-                  <p>Can Be Found:</p>
-                </Box>
-              </Grid>
-              <Grid
-                item
-                xs={7}
-                sx={{
-                  padding: '0 !important',
-                  position: 'relative',
-                  display: 'flex',
-                }}
-              >
-                <Button
-                  sx={{
-                    width: '33.33%',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <img src="/assets/images/roomBtn.png" alt="" />
-                  <p
-                    style={{
-                      position: 'absolute',
-                      fontFamily: 'Anime Ace',
-                      fontSize: '8px',
-                      textAlign: 'center',
-                      color: '#e7e1e1',
+                      position: "absolute",
+                      fontSize: "35px",
+                      visibility: "visible",
                     }}
                   >
-                    {claimBar[0]===-1?'100-550':claimBar[0]!==-2?claimBar[0] : ''}<br/>
-                    {claimBar[0]!==-2&& 'DRG'}
-                  </p>
-                </Button>
-                <Button
+                    &nbsp;&nbsp;{cooldownCount}
+                  </span>
+                </p>
+                <Grid
+                  container
+                  spacing={3}
                   sx={{
-                    width: '33.33%',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
+                    width: '100%',
+                    height: '36%',
+                    margin: 0,
+                    justifyContent: 'center',
                   }}
                 >
-                  <img src="/assets/images/roomBtn.png" alt="" />
-                  <p
-                    style={{
-                      position: 'absolute',
-                      fontFamily: 'Anime Ace',
-                      fontSize: '8px',
-                      textAlign: 'center',
-                      color: '#e7e1e1',
-                    }}
-                  >
-                    {claimBar[1]===-1?'20-40':claimBar[1]!==-2?claimBar[1] : ''}<br/>
-                    {claimBar[1]!==-2&& 'RES'}
-                  </p>
-                </Button>
-                <Button
-                  sx={{
-                    width: '33.33%',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <img src="/assets/images/roomBtn.png" alt="" />
-                  <p
-                    style={{
-                      position: 'absolute',
-                      fontFamily: 'Anime Ace',
-                      fontSize: '14px',
-                      textAlign: 'center',
-                      color: '#e7e1e1',
-                    }}
-                  >
-                    {claimBar[2] === true ? (
-                      <img
-                        src="assets/item/box-closed.png"
-                        alt=""
-                        style={{ marginLeft: '13px', marginTop: '-10px', width: '70%', height: '80%', padding: '8%' }}
-                      />
-                    ) : (
-                      ''
-                    )}
-                  </p>
-                </Button>
-                <Button
-                  sx={{
-                    width: '33.33%',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <img src="/assets/images/roomBtn.png" alt="" />
-                  <p
-                    style={{
-                      position: 'absolute',
-                      fontFamily: 'Anime Ace',
-                      fontSize: '14px',
-                      textAlign: 'center',
-                      color: '#e7e1e1',
-                    }}
-                  >
-                    {/* {claimBar[2]===true?
-                    <img src="assets/item/box-closed.png" alt="" style={{width:"100%",height:"100%",padding:"8%"}}/>
-                    :""} */}
-                  </p>
-                </Button>
-              </Grid>
+                  <div className='selectBtn' onClick={() => setEggModalOpen(true)}>+</div>
+                </Grid>
+              </div>
             </Grid>
             <Grid
               container
@@ -628,6 +322,7 @@ const ExchangeModal = ({
                 width: '100%',
                 margin: 0,
                 alignItems: 'center',
+
               }}
             >
               <Button
@@ -636,32 +331,88 @@ const ExchangeModal = ({
                   width: '40%',
                   marginLeft: 'auto',
                   marginRight: 'auto',
+                  marginTop: "70px",
                 }}
               >
                 <img alt="" src="/assets/images/big-button.png" />
                 <p
                   style={{
                     position: 'absolute',
-                    fontFamily: 'Anime Ace',
-                    fontSize: '14px',
+                    fontFamily: 'CubicPixel',
+                    fontSize: '28px',
                     textAlign: 'center',
                     color: '#e7e1e1',
+                    letterSpacing: "2px"
                   }}
                 >
                   {remainedTime <= 0 ? btnType : convertSecToHMS(remainedTime)}
                 </p>
               </Button>
+              <div
+                style={{
+                  position: "absolute",
+                  right: '170px',
+                  bottom: '65px',
+                  textAlign: "center"
+                }}
+              >
+                <p style={{
+                  fontFamily: 'CubicPixel',
+                  fontSize: '30px',
+                  fontWeight: 'bold',
+                  color: '#e7e1e1',
+                }}>REWARD</p>
+                <div
+                  className='displayCenter'
+                  style={{
+                    width: '120px', height: '70px',
+                    border: '2px solid #3b5c53',
+                    borderRadius: '23px',
+                    backgroundColor: '#e8ede9',
+                    boxShadow: '2px 2px 5px #33a597',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: 'CubicPixel',
+                      fontSize: '30px',
+                      fontWeight: 'bold',
+                      color: "#ff8a00",
+                      textShadow: '1px 1px black'
+                    }}
+                  >
+                    {10 * cooldownCount}
+                  </span> &nbsp;
+                  <span
+                    style={{
+                      fontFamily: 'CubicPixel',
+                      fontSize: '30px',
+                      fontWeight: 'bold',
+                      color: "#f0f0f0",
+                      textShadow: '1px 1px black'
+                    }}
+                  >
+                    DRG
+                  </span>
+                </div>
+              </div>
             </Grid>
           </Box>
         </Box>
       </Modal>
-      <CharacterChooseModal
+      <SelectEggModal 
+      eggModalOpen={eggModalOpen} 
+      setEggModalOpen={setEggModalOpen}
+      cooldownCount={cooldownCount}
+      setCooldownCount={setCooldownCount}
+      />
+      {/* <CharacterChooseModal
         open={openCharacterChoose}
         setOpen={setOpenChraracterChoose}
         selectedCharacterList={selectedCharacterList}
         selectedCharacterIndex={selectedCharacterIndex}
         setSelectedCharacter={setSelectedCharacter}
-      />
+      /> */}
     </>
   )
 }

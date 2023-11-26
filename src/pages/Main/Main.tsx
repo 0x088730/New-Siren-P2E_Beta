@@ -272,6 +272,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   return (
     <>
       <Box className="Main">
+      {/* <RingLoader color="#36D7B7" loading={true} size={150}  /> */}
         <Header
           showAccount={showAccount}
           setShowAccount={setShowAccount}
