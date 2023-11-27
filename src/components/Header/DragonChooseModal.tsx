@@ -9,7 +9,6 @@ import { buyDragon } from '../../store/user/actions'
 import { useWeb3Context } from '../../hooks/web3Context'
 import { getProfile } from '../../common/api'
 
-
 interface Props {
   dragonChooseModalOpen: any
   setDragonChooseModalOpen: any
@@ -31,6 +30,7 @@ const DragonChooseModal = ({
   const { address } = useWeb3Context();
 
   useEffect(() => {
+    console.log("dragons--->", global.dragons)
     if (global.dragons.length === 1) {
       setBuyedCommonDragon(false);
       setBuyedRareDragon(false);
@@ -62,6 +62,7 @@ const DragonChooseModal = ({
       buyDragon(address, { dragonName: "common", dragonNo: 0 }, (res: any) => {
         if (res.data.name === "common") {
           setBuyedCommonDragon(true);
+          getProfile(address, "dragon")
           setDrg(res.data.drg);
         }
       })
@@ -72,6 +73,7 @@ const DragonChooseModal = ({
       buyDragon(address, { dragonName: "rare", dragonNo: 1 }, (res: any) => {
         if (res.data.name === "rare") {
           setBuyedRareDragon(true);
+          getProfile(address, "dragon")
           setDrg(res.data.drg);
         }
       })
@@ -82,6 +84,7 @@ const DragonChooseModal = ({
       buyDragon(address, { dragonName: "legendery", dragonNo: 2 }, (res: any) => {
         if (res.data.name === "legendery") {
           setBuyedLegenDragon(true);
+          getProfile(address, "dragon")
           setDrg(res.data.drg);
         }
       })
