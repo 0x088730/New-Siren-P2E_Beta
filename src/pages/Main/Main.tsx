@@ -14,7 +14,7 @@ import {
   claimDiamond,
   stakeDiamond,
   swapEggs,
-  swapResources,
+  swapMeats,
   upgradeWall,
   checkCooldown,
 } from '../../store/user/actions'
@@ -39,7 +39,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const [openBird, setOpenBird] = React.useState(false)
   const [Drg, setDrg] = useState(userModule.user.Drg)
   const [eggs, setEggs] = useState(userModule.user.eggs)
-  const [resource, setResource] = useState(userModule.user.resource)
+  const [meat, setMeat] = useState(userModule.user.meat)
   const [wallLevelState, setWallLevelState] = useState(userModule.user.wall)
 
   const [openInstruction, setOpenInstruction] = useState(false)
@@ -138,11 +138,11 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const onClaim = (index: number) => {
     dispatch(
       claimDiamond(address, index, (res: any) => {
-        if (res.success === false) return setResource(resource)
+        if (res.success === false) return setMeat(meat)
         const _items = [...items]
         _items[index].counting = 0
         _items[index].timer = 0
-        if (typeof res.data.resource === 'number') setResource(res.data.resource)
+        if (typeof res.data.meat === 'number') setMeat(res.data.meat)
         setItems(_items)
         setBtnTitle("START")
       }),
@@ -150,7 +150,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   }
 
   const onExchange = (swapAmount: number) => {
-    dispatch(swapResources(address, swapAmount, (res: any) => { }))
+    dispatch(swapMeats(address, swapAmount, (res: any) => { }))
     setOpenSwap(false)
   }
 
@@ -279,7 +279,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
           setShowAccount={setShowAccount}
           Drg={Drg}
           eggs={eggs}
-          resource={resource}
+          meat={meat}
         />
 
         <Modal
@@ -338,8 +338,8 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
           setDrg={setDrg}
           eggs={eggs}
           setEggs={setEggs}
-          resource={resource}
-          setResource={setResource}
+          meat={meat}
+          setMeat={setMeat}
         />
         <ExchangeModal
           open={openSwap}
@@ -366,7 +366,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
         <DepositModal
           open={openDeposit}
           setOpen={setOpenDeposit}
-          resource={resource}
+          meat={meat}
           egg={eggs}
           onExchange={onExchange}
           onExchangeEgg={onExchangeEgg}
@@ -376,7 +376,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
           setOpen={setOpenMining}
           drgAmount={Drg}
           setDrgAmount={setDrg}
-          resource={resource}
+          meat={meat}
           egg={eggs}
           setEggs={setEggs}
           levelState={levelState}

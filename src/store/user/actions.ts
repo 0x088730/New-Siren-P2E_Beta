@@ -14,7 +14,7 @@ import {
   CLAIM_HUNTER_SUCCESS,
   LEVELUP_HUNTER_SUCCESS,
 } from './action-types'
-// import { SWAP_RESOURCES_SUCCESS, SWAP_EGGS_SUCCESS } from "./action-types";
+// import { SWAP_MEATS_SUCCESS, SWAP_EGGS_SUCCESS } from "./action-types";
 // import { STAKE_DIAMOND_SUCCESS, STAKE_BIRD_SUCCESS } from "./action-types";
 // import { CLAIM_DIAMOND_SUCCESS, CLAIM_BIRD_SUCCESS } from "./action-types";
 
@@ -23,7 +23,7 @@ var is_diamond_claiming = false
 var is_bird_staking = false
 var is_bird_claiming = false
 
-export function getResources(address: any, ref: any, cb: any) {
+export function getMeats(address: any, ref: any, cb: any) {
   return async (dispatch: any) => {
     const res = await api(`user`, 'post', {
       walletAddress: address,
@@ -37,11 +37,11 @@ export function getResources(address: any, ref: any, cb: any) {
   }
 }
 
-export function startHunterUpgradeCooldown(address: any, userCount: number, cb: any) {
+export function startMineTownCooldown(address: any, cooldownCount: number, cb: any) {
   return async (dispatch: any) => {
-    const res = await api(`user/start/hunter-upgrade-cooldown`, 'post', {
+    const res = await api(`user/start/mineTown-cooldown`, 'post', {
       walletAddress: address,
-      userCount: userCount
+      cooldownCount: cooldownCount
     })
     cb(res)
     dispatch({
@@ -101,13 +101,12 @@ export function stakeBird(address: any, position: number, cb: any) {
   }
 }
 
-export function swapResources(address: any, level: Number, cb: any) {
+export function swapMeats(address: any, level: Number, cb: any) {
   return async (dispatch: any) => {
-    const res = await api(`user/swap/resource`, 'post', {
+    const res = await api(`user/swap/meat`, 'post', {
       walletAddress: address,
       level: level,
     })
-    console.log("change", res)
     cb(res)
     dispatch({
       type: RESOURCE_CHANGE_SUCCESS,
@@ -115,6 +114,23 @@ export function swapResources(address: any, level: Number, cb: any) {
     })
   }
 }
+
+export function changeResources(address: any, drgAmount: Number, meatAmount: Number, eggAmount: Number, cb: any) {
+  return async (dispatch: any) => {
+    const res = await api(`user/change/resources`, 'post', {
+      walletAddress: address,
+      drgAmount: drgAmount,
+      meatAmount: meatAmount,
+      eggAmount: eggAmount,
+    })
+    cb(res)
+    dispatch({
+      type: RESOURCE_CHANGE_SUCCESS,
+      payload: { data: res },
+    })
+  }
+}
+
 export function buyLevel(address: any, cb: any) {
   return async (dispatch: any) => {
     const res = await api(`user/buy/level`, 'post', {
@@ -321,15 +337,15 @@ export function depositRequest(
   }
 }
 
-export function resourceRequest(
+export function meatRequest(
   address: any,
   cb: any,
 ) {
   return async (dispatch: any) => {
-    const res = await api(`user/resource`, 'post', {
+    const res = await api(`user/meat`, 'post', {
       walletAddress: address,
     })
-    //console.log('get Resource', res)
+    //console.log('get Meat', res)
     cb(res)
     dispatch({
       type: RESOURCE_CHANGE_SUCCESS,
@@ -366,7 +382,24 @@ export function withdrawRequest(
     }
   }
 }
+export function buyDragon(
+  address: any,
+  dragon: any,
+  cb: any,
+) {
+  return async (dispatch: any) => {
+    const res = await api(`user/buy/dragon`, 'post', {
+      walletAddress: address,
+      dragon: dragon,
+    })
 
+    cb(res)
+    dispatch({
+      type: RESOURCE_CHANGE_SUCCESS,
+      payload: { data: res },
+    })
+  }
+}
 export function buyPremium(
   address: any,
   amount: number,
@@ -481,7 +514,7 @@ export function saveDiscord(address: any, discord: string, cb: any) {
   }
 }
 
-export function plantAllResource(address: any, cb?: any) {
+export function plantAllMeat(address: any, cb?: any) {
   return async (dispatch: any) => {
     const res = await api(`user/plant/set`, 'post', {
       walletAddress: address,
@@ -495,12 +528,12 @@ export function plantAllResource(address: any, cb?: any) {
     }
   }
 }
-export function getAllResource(address: any, cb?: any) {
+export function getAllMeat(address: any, cb?: any) {
   return async (dispatch: any) => {
     const res = await api(`user/plant/get`, 'post', {
       walletAddress: address,
     })
-    //console.log('get all resource', res)
+    //console.log('get all meat', res)
     cb(res)
     if (res.success) {
       dispatch({

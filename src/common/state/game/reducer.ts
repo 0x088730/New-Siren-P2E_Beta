@@ -35,11 +35,11 @@ export const gameSlice = createSlice({
     ) => {
       state.inventoryOpened = action.payload
     },
-    setCharacterStatus: (
+    setDragonStatus: (
       state: GameStateProps,
       action: PayloadAction<boolean>,
     ) => {
-      state.characterOpened = action.payload
+      state.dragonOpened = action.payload
     },
     setAddress: (state: GameStateProps, action: PayloadAction<string>) => {
       state.address = action.payload
@@ -80,7 +80,7 @@ export const {
   setAtkBtnState,
   setTurnFormat,
   setInventoryStatus,
-  setCharacterStatus,
+  setDragonStatus,
   increment,
   decrement,
   addExp,

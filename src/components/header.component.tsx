@@ -19,8 +19,8 @@ export const HeaderComponent = ({onModalShow}: HeaderProps) => {
   const inventoryOpened = useSelector(
     (state: any) => state.app.game.inventoryOpened,
   )
-  const characterOpened = useSelector(
-    (state: any) => state.app.game.characterOpened,
+  const dragonOpened = useSelector(
+    (state: any) => state.app.game.dragonOpened,
   )
   const NavItems = [
     {
@@ -54,7 +54,7 @@ export const HeaderComponent = ({onModalShow}: HeaderProps) => {
     }
 
     // dispatch(getProfile(address))
-    getProfile(address, global.currentCharacterName).then(() => {
+    getProfile(address, global.currentDragonName).then(() => {
       setUserRef(global.userRef)
       referalAdd()
     })
@@ -67,7 +67,7 @@ export const HeaderComponent = ({onModalShow}: HeaderProps) => {
 
   return (
     <div>
-      {!inventoryOpened && !characterOpened && (
+      {!inventoryOpened && !dragonOpened && (
         <div className="flex justify-between bg-black/30 p-4 backdrop-blur">
           <div className="flex">
             <div className="flex gap-4 p-3">

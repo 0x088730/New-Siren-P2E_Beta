@@ -10,6 +10,7 @@ interface Props {
     setEggModalOpen: any
     cooldownCount: any
     setCooldownCount: any
+    egg: any
 }
 
 const SelectEggModal = ({
@@ -17,6 +18,7 @@ const SelectEggModal = ({
     setEggModalOpen,
     cooldownCount,
     setCooldownCount,
+    egg,
 }: Props) => {
     const [eggNum, setEggNum] = useState('');
 
@@ -28,6 +30,16 @@ const SelectEggModal = ({
         if(Number.isNaN(num)) {
             alert("Input Number")
             setEggNum("0");
+            return
+        }
+        if(value > 10) {
+            alert("Max: 10 Eggs")
+            setEggNum("0");
+            return
+        }
+        if(value > egg) {
+            alert("Not Enough Eggs")
+            setEggNum(egg);
             return
         }
         setEggNum(value);

@@ -30,9 +30,9 @@ const onInventory = () => {
   game.inventory()
 }
 
-const onCharacter = () => {
+const onDragon = () => {
   const game = phaserGame.scene.keys.game as Game
-  game.character()
+  game.dragon()
 }
 
 const App: React.FC = () => {
@@ -58,7 +58,7 @@ const App: React.FC = () => {
                       onAttack={onAttack}
                       onStart={onStart}
                       onInventory={onInventory}
-                      onCharacter={onCharacter}
+                      onDragon={onDragon}
                     />
                   }
                 />
