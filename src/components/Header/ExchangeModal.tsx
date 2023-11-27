@@ -46,10 +46,11 @@ const ExchangeModal = ({
   const [dragonChooseModalOpen, setDragonChooseModalOpen] = useState(false);
   const [cardNum, setCardNum] = useState("0");
   const [cardImg, setCardImg] = useState({
-    first: '',
-    second: '',
-    third: '',
+    first: {name: '', url: ''},
+    second: {name: '', url: ''},
+    third: {name: '', url: ''},
   });
+  const [rewardValue, setRewardValue] = useState(10);
 
   var convertSecToHMS = (number: number) => {
     const toTime = Math.floor(number % 30)
@@ -64,17 +65,22 @@ const ExchangeModal = ({
     return formattedTime
   }
 
+  // useEffect(() => {
+  //   if (open === true) {
+  //     let count = Math.floor(remainedTime / 30);
+  //     if (count < cooldownCount-1) {
+  //       setRewardAmount((cooldownCount - count) * 10);
+  //     }
+
+  //   }
+  // }, [open])
   useEffect(() => {
-    if (open === true) {
-      let count = Math.floor(remainedTime / 30);
-      setRewardAmount((cooldownCount - count) * 10);
-    }
-  }, [open])
-  useEffect(() => {
+    setRewardValue((Number(cardImg.first.name) + Number(cardImg.second.name) + Number(cardImg.third.name)) *10 )
+    console.log(rewardValue)
     let devideTime = remainedTime % 30;
     let count = Math.floor(remainedTime / 30);
     if (isCooldownStarted === true && devideTime === 0 && count < cooldownCount) {
-      setRewardAmount(rewardAmount + 10);
+      setRewardAmount(rewardAmount + rewardValue);
     }
   }, [remainedTime])
 
@@ -281,9 +287,9 @@ const ExchangeModal = ({
                     justifyContent: 'center',
                   }}
                 >
-                  <div className='selectBtn' onClick={() => dragonChoose("1")} style={{ backgroundImage: cardImg.first }}>+</div>
-                  <div className='selectBtn' onClick={() => dragonChoose("2")} style={{ backgroundImage: cardImg.second }}>+</div>
-                  <div className='selectBtn' onClick={() => dragonChoose("3")} style={{ backgroundImage: cardImg.third }}>+</div>
+                  <div className='selectBtn' onClick={() => dragonChoose("1")} style={{ backgroundImage: cardImg.first.url }}>+</div>
+                  <div className='selectBtn' onClick={() => dragonChoose("2")} style={{ backgroundImage: cardImg.second.url }}>+</div>
+                  <div className='selectBtn' onClick={() => dragonChoose("3")} style={{ backgroundImage: cardImg.third.url }}>+</div>
                 </Grid>
               </div>
               <div
