@@ -11,6 +11,7 @@ import store from '../store'
 import InforModal from '../components/Header/InforModal'
 import { getMeats } from '../store/user/actions'
 import { onShowAlert } from '../store/utiles/actions'
+import DragonModal from '../components/Header/DragonsModal'
 interface HeaderProps {
   showAccount: any
   setShowAccount: Function
@@ -36,7 +37,7 @@ export const GamePage = ({
   const atkBtnState = useSelector((state: any) => state.app.game.attackBtnState)
   const secondTurn = useSelector((state: any) => state.app.game.secondTurn)
   const thirdTurn = useSelector((state: any) => state.app.game.thirdTurn)
-  const user = useSelector((state:any) => state.userModule)
+  const user = useSelector((state: any) => state.userModule)
 
   const inventoryOpened = useSelector(
     (state: any) => state.app.game.inventoryOpened,
@@ -85,12 +86,12 @@ export const GamePage = ({
     onInventory()
   }
 
-  const dragon = () => {
-    if (global.wall === 0) {
-      return
-    }
-    onDragon()
-  }
+  // const dragon = () => {
+  //   if (global.wall === 0) {
+  //     return
+  //   }
+  //   onDragon()
+  // }
   const dispatch = useDispatch<any>()
   // const [openAccount, setOpenAccount] = useState(showAccount)
   const [show, setShow] = useState(false)
@@ -98,6 +99,8 @@ export const GamePage = ({
     setShowAccount(false)
   }
   const { connected, chainID, address, connect } = useWeb3Context()
+  const [dragonModalOpen, setDragonModalOpen] = useState(false);
+
   useEffect(() => {
     if (connected && address !== '') {
       setShow(true)
@@ -144,7 +147,7 @@ export const GamePage = ({
                     </div> */}
                   </div>
                   <div className="btn-ligroup">
-                    <ButtonComponent onClick={dragon}>
+                    <ButtonComponent onClick={() => setDragonModalOpen(true)}>
                       <img
                         src="assets/images/characters.png"
                       />
@@ -277,6 +280,10 @@ export const GamePage = ({
           )}
         </div>
       </div>
+      <DragonModal
+        dragonModalOpen={dragonModalOpen}
+        setDragonModalOpen={setDragonModalOpen}
+      />
     </div>
   )
 }
