@@ -11,10 +11,8 @@ import ClaimWidget from '../widgets/claimWidget'
 import InventoryWidget from '../widgets/inventoryWidget'
 import CharacterWidget from '../widgets/characterWidget'
 import { ENEMY_SPINE, SIREN_SPINE } from '../config/const'
-import { itemModify } from '../common/api'
 import { changeItem, global } from '../common/global'
 import RoomWidget from '../widgets/roomWidget'
-import Loading from './preload'
 
 export default class Game extends Phaser.Scene {
   inventoryWidget!: InventoryWidget
@@ -36,9 +34,35 @@ export default class Game extends Phaser.Scene {
   init() { }
 
   preload() {
+    // var progressBar = this.add.graphics();
+    // var progressBox = this.add.graphics();
+    // progressBox.fillStyle(0x222222, 0.8);
+    // progressBox.fillRect(240, 270, 320, 50);
+
     this.load.setPath('assets/character/spine')
     this.load.spine(SIREN_SPINE, 'siren1/idle/sakura.json', 'siren1/idle/sakura.atlas')
     this.load.setPath('/')
+    // const spinner = this.add.circle(400, 300, 20, 0xff0000);
+    // this.load.on("progress", function (e: any) {
+    //   console.log(e)
+    // })
+    // this.load.on('progress', function (value: any) {
+    //   console.log(value);
+    //   progressBar.clear();
+    //   progressBar.fillStyle(0xffffff, 1);
+    //   progressBar.fillRect(250, 280, 300 * value, 30);
+    // });
+    // this.load.on('complete', () => {
+    //   this.time.addEvent({
+    //     delay: 3000,
+    //     callback: () => {
+    //       progressBar.destroy();
+    //       progressBox.destroy();
+    //     },
+    //   })
+
+    // });
+
   }
 
   create() {
@@ -102,29 +126,12 @@ export default class Game extends Phaser.Scene {
   }
 
   character() {
-    this.loader()
-    console.log("reading.....................", this.characterWidget)
-
-    // if(this.characterWidget) {
-    //   this.characterWidget.gemChange()
-    //   this.characterWidget.gemBuild()
-    //   store.dispatch(setCharacterStatus(true))
-    //   this.characterWidget.showStatus(true)
-    // }
-  }
-
-  loader() {
-    console.log("click load")
-    // this.scene.add("loading", Loading);
-    // this.scene.start("loading");
-
-    this.time.addEvent({
-      delay: 3000,
-      callback: () => {
-        this.scene.stop("loading");
-      },
-    })
-
+    if (this.characterWidget) {
+      this.characterWidget.gemChange()
+      this.characterWidget.gemBuild()
+      store.dispatch(setCharacterStatus(true))
+      this.characterWidget.showStatus(true)
+    }
   }
 
   room() {

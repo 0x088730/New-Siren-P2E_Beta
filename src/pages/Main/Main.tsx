@@ -24,6 +24,7 @@ import UpgradeWallModal from '../../components/Header/UpgradeWallModal'
 import { global } from '../../common/global'
 import RockModal from '../../components/Header/RockModal'
 import ConvertModal from '../../components/Modal/ConvertModal'
+import { RingLoader } from 'react-spinners';
 
 interface MainProps {
   showAccount: any
@@ -272,6 +273,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   return (
     <>
       <Box className="Main">
+      {/* <RingLoader color="#36D7B7" loading={true} size={150}  /> */}
         <Header
           showAccount={showAccount}
           setShowAccount={setShowAccount}
