@@ -16,4 +16,15 @@
     font-family: sans-serif;
     color: black;
     cursor: pointer;
+    background-size: cover;
+}
+.levelTitle {
+    position: relative;
+    top: 130px;
+    color: white;
+    font-size: 20px;
+    font-family: CubicPixel;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-shadow: 3px 3px black;
 }

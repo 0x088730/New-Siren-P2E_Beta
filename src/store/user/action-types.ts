@@ -9,7 +9,7 @@ export interface Withdraw {
 
 export interface LoginInfo {
   Drg: Number
-  resource: Number
+  meat: Number
   eggs: Number
   premium: any
   opendPlace: any
@@ -49,7 +49,7 @@ export const CLAIM_HUNTER_SUCCESS = 'CLAIM_HUNTER_SUCCESS'
 export const CHECK_UPGRADE_AVAILABLE = 'CHECK_UPGRADE_AVAILABLE'
 export const SET_COOLDOWN_SUCCESS = 'SET_COOLDOWN_SUCCESS'
 
-export const SWAP_RESOURCES_SUCCESS = 'SWAP_RESOURCES_SUCCESS'
+export const SWAP_MEATS_SUCCESS = 'SWAP_MEATS_SUCCESS'
 export const SWAP_EGGS_SUCCESS = 'SWAP_EGGS_SUCCESS'
 export const STAKE_DIAMOND_SUCCESS = 'STAKE_DIAMOND_SUCCESS'
 export const STAKE_BIRD_SUCCESS = 'STAKE_BIRD_SUCCESS'
@@ -58,7 +58,7 @@ export const CLAIM_BIRD_SUCCESS = 'CLAIM_BIRD_SUCCESS'
 export const GET_WITHDRAW_AMOUNT = 'GET_WITHDRAW_AMOUNT'
 export const ERROR = 'ERROR'
 
-interface getResources {
+interface getMeats {
   type: typeof GET_RESOURCES_SUCCESS
   payload: {
     data: any
@@ -72,4 +72,4 @@ interface changeSuccess {
   }
 }
 
-export type ActionTypes = getResources | changeSuccess
+export type ActionTypes = getMeats | changeSuccess

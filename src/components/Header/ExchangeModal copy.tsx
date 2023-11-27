@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 interface Props {
   open: any
   setOpen: any
-  resource: any
+  meat: any
   egg: any
   onExchange: any
   onExchangeEgg: any
@@ -17,7 +17,7 @@ interface Props {
 const ExchangeModal = ({
   open,
   setOpen,
-  resource,
+  meat,
   egg,
   onExchange,
   onExchangeEgg,
@@ -54,7 +54,7 @@ const ExchangeModal = ({
   }
 
   const onSwap = () => {
-    if (resource < swapAmount) return
+    if (meat < swapAmount) return
     onExchange(swapAmount)
   }
 
@@ -171,12 +171,12 @@ const ExchangeModal = ({
                   >
                       <TextField
                         sx={{ mr: 1, textAlign: 'right'}}
-                        name="resource"
+                        name="meat"
                         label="Meat"
                         value={swapAmount}
                         type="number"
                         onChange={onChangeAmount}
-                        error={resource < swapAmount ? true : false}
+                        error={meat < swapAmount ? true : false}
                         style={textFieldStyle}
                       />
                     <Box>

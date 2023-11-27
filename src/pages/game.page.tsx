@@ -9,7 +9,7 @@ import { useWeb3Context } from '../hooks/web3Context'
 import { global } from '../common/global'
 import store from '../store'
 import InforModal from '../components/Header/InforModal'
-import { getResources } from '../store/user/actions'
+import { getMeats } from '../store/user/actions'
 import { onShowAlert } from '../store/utiles/actions'
 interface HeaderProps {
   showAccount: any
@@ -17,7 +17,7 @@ interface HeaderProps {
   onStart: any
   onAttack: any
   onInventory: any
-  onCharacter: any
+  onDragon: any
 }
 export const GamePage = ({
   showAccount,
@@ -25,11 +25,11 @@ export const GamePage = ({
   onStart,
   onAttack,
   onInventory,
-  onCharacter,
+  onDragon,
 }: HeaderProps) => {
   // const battle = phaserGame.scene.keys.battle as Battle
   // const game = phaserGame.scene.keys.game as Game
-  // const { onStart, onAttack, onInventory, onCharacter } = props
+  // const { onStart, onAttack, onInventory, onDragon } = props
 
   const gameState = useSelector((state: any) => state.app.game.gameState)
   const turn = useSelector((state: any) => state.app.game.turn)
@@ -41,8 +41,8 @@ export const GamePage = ({
   const inventoryOpened = useSelector(
     (state: any) => state.app.game.inventoryOpened,
   )
-  const characterOpened = useSelector(
-    (state: any) => state.app.game.characterOpened,
+  const dragonOpened = useSelector(
+    (state: any) => state.app.game.dragonOpened,
   )
   const location = useLocation()
   const ref = new URLSearchParams(location.search).get('ref')
@@ -85,11 +85,11 @@ export const GamePage = ({
     onInventory()
   }
 
-  const character = () => {
+  const dragon = () => {
     if (global.wall === 0) {
       return
     }
-    onCharacter()
+    onDragon()
   }
   const dispatch = useDispatch<any>()
   // const [openAccount, setOpenAccount] = useState(showAccount)
@@ -102,7 +102,7 @@ export const GamePage = ({
     if (connected && address !== '') {
       setShow(true)
       dispatch(
-        getResources(address, ref, (res: any) => {
+        getMeats(address, ref, (res: any) => {
           if (!res.success) {
             dispatch(onShowAlert(res.message, 'info'))
           }
@@ -124,7 +124,7 @@ export const GamePage = ({
           {gameState === 0 && (
             <div className="flex flex-col justify-center flex-1 h-full d-flex">
 
-              {!inventoryOpened && !characterOpened && (
+              {!inventoryOpened && !dragonOpened && (
                 <div>
                   <div className="btn-group">
                     {/* <div className="btn-wrapper">
@@ -144,7 +144,7 @@ export const GamePage = ({
                     </div> */}
                   </div>
                   <div className="btn-ligroup">
-                    <ButtonComponent onClick={character}>
+                    <ButtonComponent onClick={dragon}>
                       <img
                         src="assets/images/characters.png"
                       />
@@ -161,7 +161,7 @@ export const GamePage = ({
               )}
             </div>
           )}
-          {gameState === 1 && global.currentCharacterName === 'siren-1' && (
+          {gameState === 1 && global.currentDragonName === 'siren-1' && (
             <>
               <GameHeaderComponent />
               {!turn && atkBtnState && (
@@ -251,7 +251,7 @@ export const GamePage = ({
               )}
             </>
           )}
-          {gameState === 1 && global.currentCharacterName === 'siren-4' && (
+          {gameState === 1 && global.currentDragonName === 'siren-4' && (
             <>
               <GameHeaderComponent />
               {!turn && atkBtnState && (

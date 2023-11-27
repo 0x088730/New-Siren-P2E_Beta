@@ -1,6 +1,6 @@
 import type Phaser from 'phaser'
 
-export const createCharacterAnims = (
+export const createDragonAnims = (
   anims: Phaser.Animations.AnimationManager,
 ) => {
   const animsFrameRate = 15

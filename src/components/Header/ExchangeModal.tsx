@@ -4,17 +4,18 @@ import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import CharacterChooseModal from './CharacterChooseModal'
+
 import {
   checkCooldown,
   claimHunter,
   levelupHunter,
-  startHunterUpgradeCooldown,
+  startMineTownCooldown,
 } from '../../store/user/actions'
 import { useWeb3Context } from '../../hooks/web3Context'
 import { global } from '../../common/global'
 import "./modal.css"
 import SelectEggModal from './selectEggModal'
+import DragonChooseModal from './DragonChooseModal'
 
 interface Props {
   open: any
@@ -35,21 +36,20 @@ const ExchangeModal = ({
 }: Props) => {
   const { connected, chainID, address, connect } = useWeb3Context()
 
-  const userModule = useSelector((state: any) => state.userModule)
-  const [openCharacterChoose, setOpenChraracterChoose] = useState(false)
-  const [selectedCharacterIndex, setSelectedCharacterIndex] = useState(-1)
-  const [selectedCharacterList, setSelectedCharacterList] = useState([-1, -1, -1])
-  const [claimBar, setClaimBar] = useState([-1, -1, true])
-  const [selectedCharacter, setSelectedCharacter] = useState(-1)
-
-  const [upgradeLevel, setUpgradeLevel] = useState(global.hunterLevel)
-
   const [remainedTime, setRemainedTime] = React.useState(0)
   const [isCooldownStarted, setIsCooldownStarted] = useState(false)
   const dispatch = useDispatch<any>()
   const [btnType, setBtnType] = useState('Start')
   const [cooldownCount, setCooldownCount] = useState(0);
+  const [rewardAmount, setRewardAmount] = useState(0);
   const [eggModalOpen, setEggModalOpen] = useState(false);
+  const [dragonChooseModalOpen, setDragonChooseModalOpen] = useState(false);
+  const [cardNum, setCardNum] = useState("0");
+  const [cardImg, setCardImg] = useState({
+    first: '',
+    second: '',
+    third: '',
+  });
 
   var convertSecToHMS = (number: number) => {
     const toTime = Math.floor(number % 30)
@@ -64,6 +64,20 @@ const ExchangeModal = ({
     return formattedTime
   }
 
+  useEffect(() => {
+    if (open === true) {
+      let count = Math.floor(remainedTime / 30);
+      setRewardAmount((cooldownCount - count) * 10);
+    }
+  }, [open])
+  useEffect(() => {
+    let devideTime = remainedTime % 30;
+    let count = Math.floor(remainedTime / 30);
+    if (isCooldownStarted === true && devideTime === 0 && count < cooldownCount) {
+      setRewardAmount(rewardAmount + 10);
+    }
+  }, [remainedTime])
+
   const onBtnClick = () => {
     if (remainedTime > 0)
       return
@@ -72,13 +86,12 @@ const ExchangeModal = ({
         alert("Input Count of Eggs")
         return
       }
-      if(egg < cooldownCount || egg <= 0) {
+      if (egg < cooldownCount || egg <= 0) {
         alert("Not Enough Drg")
         return
       }
       dispatch(
-        startHunterUpgradeCooldown(address, cooldownCount, (resp: any) => {
-          console.log("user.repdata==>", resp.data);
+        startMineTownCooldown(address, cooldownCount, (resp: any) => {
           if (resp.data !== undefined || resp.data !== null) {
             setRemainedTime(30 * cooldownCount)
             setIsCooldownStarted(true)
@@ -88,6 +101,7 @@ const ExchangeModal = ({
         }),
       )
     } else if (btnType === 'Claim') {
+      setRewardAmount(0);
       dispatch(
         claimHunter(address, (resp: any) => {
           setBtnType('Start')
@@ -100,14 +114,6 @@ const ExchangeModal = ({
   //  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false)
   useEffect(() => {
-    if (selectedCharacterIndex >= 0) {
-      let temp = selectedCharacterList
-      temp[selectedCharacterIndex] = selectedCharacter
-
-      setSelectedCharacterList([...temp])
-    }
-  }, [selectedCharacter])
-  useEffect(() => {
     if (isCooldownStarted) {
       var cooldownInterval = setInterval(() => {
         setRemainedTime((prevTime) => {
@@ -117,8 +123,7 @@ const ExchangeModal = ({
             dispatch(
               checkCooldown(address, 'hunter-level-up', (res: any) => {
                 let cooldownSec = res.data.time;
-                console.log(res.data.count)
-                if(Number.isNaN(res.data.count) || res.data.count === undefined) {
+                if (Number.isNaN(res.data.count) || res.data.count === undefined) {
                   setCooldownCount(0)
                   return
                 }
@@ -157,8 +162,7 @@ const ExchangeModal = ({
       dispatch(
         checkCooldown(address, 'hunter-level-up', (res: any) => {
           let cooldownSec = res.data.time
-          console.log(res.data.count)
-          if(Number.isNaN(res.data.count) || res.data.count === undefined) {
+          if (Number.isNaN(res.data.count) || res.data.count === undefined) {
             setCooldownCount(0)
             return
           }
@@ -181,6 +185,10 @@ const ExchangeModal = ({
       )
   }, [open, dispatch])
 
+  const dragonChoose = (order: any) => {
+    setCardNum(order);
+    setDragonChooseModalOpen(true);
+  }
   const style = {
     position: 'absolute' as const,
     top: '50%',
@@ -273,9 +281,9 @@ const ExchangeModal = ({
                     justifyContent: 'center',
                   }}
                 >
-                  <div className='selectBtn' onClick={() => alert()}>+</div>
-                  <div className='selectBtn' onClick={() => alert()}>+</div>
-                  <div className='selectBtn' onClick={() => alert()}>+</div>
+                  <div className='selectBtn' onClick={() => dragonChoose("1")} style={{ backgroundImage: cardImg.first }}>+</div>
+                  <div className='selectBtn' onClick={() => dragonChoose("2")} style={{ backgroundImage: cardImg.second }}>+</div>
+                  <div className='selectBtn' onClick={() => dragonChoose("3")} style={{ backgroundImage: cardImg.third }}>+</div>
                 </Grid>
               </div>
               <div
@@ -311,7 +319,7 @@ const ExchangeModal = ({
                     justifyContent: 'center',
                   }}
                 >
-                  <div className='selectBtn' onClick={() => setEggModalOpen(true)}>+</div>
+                  <div className='selectBtn' onClick={() => egg === 0 ? alert("Not Enough Eggs") : setEggModalOpen(true)}>+</div>
                 </Grid>
               </div>
             </Grid>
@@ -381,7 +389,7 @@ const ExchangeModal = ({
                       textShadow: '1px 1px black'
                     }}
                   >
-                    {10 * cooldownCount}
+                    {rewardAmount}
                   </span> &nbsp;
                   <span
                     style={{
@@ -400,19 +408,21 @@ const ExchangeModal = ({
           </Box>
         </Box>
       </Modal>
-      <SelectEggModal 
-      eggModalOpen={eggModalOpen} 
-      setEggModalOpen={setEggModalOpen}
-      cooldownCount={cooldownCount}
-      setCooldownCount={setCooldownCount}
+      <SelectEggModal
+        eggModalOpen={eggModalOpen}
+        setEggModalOpen={setEggModalOpen}
+        cooldownCount={cooldownCount}
+        setCooldownCount={setCooldownCount}
+        egg={egg}
       />
-      {/* <CharacterChooseModal
-        open={openCharacterChoose}
-        setOpen={setOpenChraracterChoose}
-        selectedCharacterList={selectedCharacterList}
-        selectedCharacterIndex={selectedCharacterIndex}
-        setSelectedCharacter={setSelectedCharacter}
-      /> */}
+      <DragonChooseModal
+        dragonChooseModalOpen={dragonChooseModalOpen}
+        setDragonChooseModalOpen={setDragonChooseModalOpen}
+        cardNum={cardNum}
+        setDrg={setDrg}
+        cardImg={cardImg}
+        setCardImg={setCardImg}
+      />
     </>
   )
 }

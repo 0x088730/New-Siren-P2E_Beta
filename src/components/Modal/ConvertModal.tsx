@@ -20,8 +20,8 @@ interface Props {
     setDrg: any
     eggs: any
     setEggs: any
-    resource: any
-    setResource: any
+    meat: any
+    setMeat: any
 }
 
 const ConvertModal = ({
@@ -31,8 +31,8 @@ const ConvertModal = ({
     setDrg,
     eggs,
     setEggs,
-    resource,
-    setResource,
+    meat,
+    setMeat,
 }: Props) => {
 
     const { address } = useWeb3Context()
@@ -62,7 +62,7 @@ const ConvertModal = ({
     }
 
     useEffect(() => {
-        if (resource >= needMeat && eggs >= needEgg || convertCooldown === true || convertBtn === "Claim") {
+        if (meat >= needMeat && eggs >= needEgg || convertCooldown === true || convertBtn === "Claim") {
             setBtnStatus(true);
             return;
         }
@@ -75,7 +75,7 @@ const ConvertModal = ({
             if (convertBtn === "Start") {
                 dispatch(
                     setCooldown(address, 'convertor', true, (res: any) => {
-                        setResource(res.data.resource);
+                        setMeat(res.data.meat);
                         setEggs(res.data.eggs);
                         setConvertTimeRemained(30);
                     })

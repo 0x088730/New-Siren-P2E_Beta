@@ -6,7 +6,7 @@ const initialState: UserProfile = {
   walletAddress: '',
   exp: 0,
   level: 0,
-  characters: [
+  dragons: [
       {
           outfit: '',
           items: [
@@ -38,7 +38,7 @@ export const profileSlice = createSlice({
       state.walletAddress = action.payload.walletAddress
       state.exp = action.payload.exp
       state.level = action.payload.level  
-      state.characters = action.payload.characters
+      state.dragons = action.payload.dragons
     })
     // When our request is rejected:
     // - store the 'rejected' state as the status for the corresponding pokemon name
@@ -46,7 +46,7 @@ export const profileSlice = createSlice({
     })
     
     // builder.addCase(consumeItem.fulfilled, (state, action) => {
-    //   // state.characters
+    //   // state.dragons
     // })
   },
 })

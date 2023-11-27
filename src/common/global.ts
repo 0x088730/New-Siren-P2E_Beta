@@ -10,14 +10,14 @@ export interface UserProfile {
   level: number
   purchase: [
     {
-      character: string
+      dragon: string
       item: string
       stock: number
     },
   ]
   embed: [
     {
-      character: string
+      dragon: string
       item: string
       stock: number
     },
@@ -39,11 +39,11 @@ export interface UserProfile {
   section: number
   wall: number
   energy: number
-  resource: Number
-  characters:
+  meat: Number
+  dragons:
     | Array<{
-        characterName: string
-        characterNo: number
+        dragonName: string
+        dragonNo: number
         hp: Number
         critical: Number
         wall: Number
@@ -53,7 +53,7 @@ export interface UserProfile {
         damage: Number
       }>
     | []
-  currentCharacterName: string | ''
+  currentDragonName: string | ''
   hunterLevel:number
   attacking: boolean
   miningStatus: boolean
@@ -69,14 +69,14 @@ export let global: UserProfile = {
   level: 0,
   purchase: [
     {
-      character: '',
+      dragon: '',
       item: 'gem-1',
       stock: 0,
     },
   ],
   embed: [
     {
-      character: '',
+      dragon: '',
       item: 'gem-1',
       stock: 0,
     },
@@ -103,25 +103,25 @@ export let global: UserProfile = {
   section: 1,
   wall: 0,
   energy: 1000,
-  resource: 0,
-  characters: [],
-  currentCharacterName: '',
+  meat: 0,
+  dragons: [],
+  currentDragonName: '',
   hunterLevel:0,
   attacking: false,
-  miningStatus: false
+  miningStatus: false,
 }
 
 export const changeItem = (resp: any) => {
-  global.hp = resp.characters.hp
-  global.damage = resp.characters.damage
-  global.critical = resp.characters.critical
+  global.hp = resp.dragons.hp
+  global.damage = resp.dragons.damage
+  global.critical = resp.dragons.critical
   global.purchase = resp.purchase
   global.embed = resp.embed
-  global.exp = resp.characters.exp
-  global.rarity = resp.characters.rarity
-  global.energy = resp.characters.energy
-  global.resource = resp.resource
-  global.currentCharacterName = resp.currentCharacterName
+  global.exp = resp.dragons.exp
+  global.rarity = resp.dragons.rarity
+  global.energy = resp.dragons.energy
+  global.meat = resp.meat
+  global.currentDragonName = resp.currentDragonName
   global.level = resp.level
   global.wall = resp.wall
   global.hunterLevel = resp.hunterLevel

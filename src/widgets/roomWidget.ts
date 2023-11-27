@@ -1,8 +1,8 @@
 import RoomItemWidget from './roomItemWidget'
 import { global } from '../common/global'
-import { getProfile, setCurrentCharacter } from '../common/api'
+import { getProfile, setCurrentDragon } from '../common/api'
 const avatarList = [1, 2, 3, 4]
-var characterClickFlag = false
+var dragonClickFlag = false
 export default class RoomWidget extends Phaser.GameObjects.Container {
   scene: Phaser.Scene
   chapter: Phaser.Structs.List<RoomItemWidget>
@@ -108,21 +108,21 @@ export default class RoomWidget extends Phaser.GameObjects.Container {
         })).setVisible(false),
     )
 
-    let characterList = global.characters
+    let dragonList = global.dragons
     for (let i = 0; i < avatarList.length; i++) {
       const row = Math.floor(i % 2)
       const col = Math.floor(i / 2)
       let modelName =
-        characterList.filter((character) => character.characterNo === i)
+        dragonList.filter((dragon) => dragon.dragonNo === i)
           .length > 0
           ? `model-${avatarList[i]}`
           : `model1-${avatarList[i]}`
 
       let rarity =
-        characterList.filter((character) => character.characterNo === i)
+        dragonList.filter((dragon) => dragon.dragonNo === i)
           .length > 0
-          ? characterList
-            .filter((character) => character.characterNo === i)[0]
+          ? dragonList
+            .filter((dragon) => dragon.dragonNo === i)[0]
             .rarity.toString()
           : ''
       if (rarity === '0') {
@@ -133,12 +133,12 @@ export default class RoomWidget extends Phaser.GameObjects.Container {
         rarity = 'legendary'
       }
       let level =
-        characterList.filter((character) => character.characterNo === i)
+        dragonList.filter((dragon) => dragon.dragonNo === i)
           .length > 0
           ? 'LVL:' +
           Math.floor(
-            characterList
-              .filter((character) => character.characterNo === i)[0]
+            dragonList
+              .filter((dragon) => dragon.dragonNo === i)[0]
               .exp.valueOf() /
             100 +
             1,
@@ -181,22 +181,22 @@ export default class RoomWidget extends Phaser.GameObjects.Container {
           .setDisplaySize(220, 220)
           .setInteractive())
           .on('pointerdown', () => {
-            if (characterClickFlag === false) {
-              characterClickFlag = true
+            if (dragonClickFlag === false) {
+              dragonClickFlag = true
               if (
-                characterList.filter((character) => character.characterNo === i)
+                dragonList.filter((dragon) => dragon.dragonNo === i)
                   .length > 0
               ) {
-                setCurrentCharacter('siren-' + (i + 1)).then(() => {
+                setCurrentDragon('siren-' + (i + 1)).then(() => {
                   getProfile(global.walletAddress, 'siren-' + (i + 1)).then(() => {
                     this.gameMode(3)
-                    characterClickFlag = false
+                    dragonClickFlag = false
                   })
                 })
               }
               else {
                 alert("you have to buy")
-                characterClickFlag = false
+                dragonClickFlag = false
               }
 
             }
@@ -208,22 +208,6 @@ export default class RoomWidget extends Phaser.GameObjects.Container {
     this.add(this.rarityTexts)
     this.setModelList(false)
 
-    // this.add(
-    //   this.background = scene.add
-    //   .image(0,0,"character1-frame")
-    //   .setDisplaySize(700,700)
-    // )
-    // this.add(
-    //   (this.closeBtn = scene.add
-    //     .image(605, -335, 'close-btn')
-    //     .setInteractive()
-    //     .setScale(0.5)
-    //     .on('pointerdown', () => {
-    //       this.gameMode(1)
-    //       this.setVisible(false)
-
-    //     }))
-    // )
     this.setVisible(false)
     scene.add.existing(this)
   }
@@ -311,7 +295,7 @@ export default class RoomWidget extends Phaser.GameObjects.Container {
       }
     }
   }
-  onCloseCharacterWindow() {
+  onCloseDragonWindow() {
     this.gameMode(3)
   }
   setModelList(visible: boolean) {

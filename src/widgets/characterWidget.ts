@@ -18,16 +18,16 @@ import { StockProps } from '../common/state/game/state'
 import { SIREN_SPINE } from '../config/const'
 import StockItem from '../objects/stockItem'
 import { changeItem, global } from '../common/global'
-import { createCharacterAnims } from '../anims/CharacterAnims'
+import { createDragonAnims } from '../anims/CharacterAnims'
 import {
   energySwap,
   getProfile,
   itemModify,
   itemRevive,
-  setCurrentCharacter,
+  setCurrentDragon,
 } from '../common/api'
 
-export default class CharacterWidget extends Phaser.GameObjects.Container {
+export default class DragonWidget extends Phaser.GameObjects.Container {
   scene: Phaser.Scene
   background: Phaser.GameObjects.Image
   modelBackground: Phaser.GameObjects.Image
@@ -207,7 +207,7 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
     )
     this.add(
       (this.meatText1 = this.scene.add
-        .text(500, -140, `${global.resource}`, {
+        .text(500, -140, `${global.meat}`, {
           font: '30px Anime Ace',
           color: '#00c7df',
           stroke: '#000',
@@ -259,19 +259,19 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
           if (this.swapAmount === undefined) {
             return
           }
-          if (global.resource < this.swapAmount) {
+          if (global.meat < this.swapAmount) {
             alert('Meat is less than Swap Amount!!!')
             return
           }
           energySwap(
             global.walletAddress,
-            global.currentCharacterName,
+            global.currentDragonName,
             this.swapAmount,
             (resp: any) => {
               global.energy = resp.energy
-              global.resource = resp.resource
+              global.meat = resp.meat
               this.energy.setText(`${global.energy}`)
-              this.meatText1.setText(`${global.resource}`)
+              this.meatText1.setText(`${global.meat}`)
             },
           )
         }),
@@ -295,33 +295,33 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
   }
 
   gemChange() {
-    let characterList = global.characters
-    if (global.characters.length !== 0) {
+    let dragonList = global.dragons
+    if (global.dragons.length !== 0) {
       for (let i = 0; i < avatarList.length; i++) {
         const row = Math.floor(i % 2)
         const col = Math.floor(i / 2)
         let modelName =
-          characterList.filter((character) => character.characterNo === i)
+        dragonList.filter((dragon) => dragon.dragonNo === i)
             .length > 0
             ? `model-${avatarList[i]}`
             : `model1-${avatarList[i]}`
         let level =
-          characterList.filter((character) => character.characterNo === i)
+        dragonList.filter((dragon) => dragon.dragonNo === i)
             .length > 0
             ? 'LVL:' +
             Math.floor(
-              characterList
-                .filter((character) => character.characterNo === i)[0]
+              dragonList
+                .filter((dragon) => dragon.dragonNo === i)[0]
                 .exp.valueOf() /
               100 +
               1,
             ).toString()
             : ''
         let rarity =
-          characterList.filter((character) => character.characterNo === i)
+          dragonList.filter((dragon) => dragon.dragonNo === i)
             .length > 0
-            ? characterList
-              .filter((character) => character.characterNo === i)[0]
+            ? dragonList
+              .filter((dragon) => dragon.dragonNo === i)[0]
               .rarity.toString()
             : ''
         const lvtext: any = this.scene.add.text(
@@ -367,16 +367,16 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
           .removeListener('pointerdown')
           .on('pointerdown', () => {
             if (
-              global.characters.filter(
-                (character) => character.characterNo === i,
+              global.dragons.filter(
+                (dragon) => dragon.dragonNo === i,
               ).length === 0
             ) {
               alert('MUST BE PURCHASED')
             } else {
-              setCurrentCharacter('siren-' + (i + 1)).then(() => {
+              setCurrentDragon('siren-' + (i + 1)).then(() => {
                 getProfile(global.walletAddress, 'siren-' + (i + 1)).then(
                   () => {
-                    let embed = global.embed.filter(item => item.character === global.currentCharacterName)
+                    let embed = global.embed.filter(item => item.dragon === global.currentDragonName)
                     this.updateHpCritical(
                       global.hp,
                       global.critical,
@@ -412,7 +412,7 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
   }
   gemBuild() {
     let data = global.purchase
-    let embed = global.embed.filter(item => item.character === global.currentCharacterName)
+    let embed = global.embed.filter(item => item.dragon === global.currentDragonName)
     this.updateHpCritical(global.hp, global.critical, global.damage, embed)
 
     for (let j = 0; j < this.gem.length; j++) {
@@ -431,10 +431,10 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
           .on('pointerdown', () => {
             if (this.gemBuilding === false) {
               this.gemBuilding = true
-              itemModify(global.walletAddress, global.currentCharacterName, data[i].item, -1, global.room.chapter, global.room.section, global.chapter, global.section, (resp: any) => {
+              itemModify(global.walletAddress, global.currentDragonName, data[i].item, -1, global.room.chapter, global.room.section, global.chapter, global.section, (resp: any) => {
                 if (resp.purchase !== undefined) {
                   changeItem(resp)
-                  let embed = global.embed.filter(item => item.character === global.currentCharacterName)
+                  let embed = global.embed.filter(item => item.dragon === global.currentDragonName)
                   this.updateHpCritical(global.hp, global.critical, global.damage, embed,)
                   this.gemBuild()
                   this.embedBuild()
@@ -454,7 +454,7 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
       this.embedGem.getAt(j).destroy()
     }
     const embed = global.embed.filter(
-      (obj) => obj.character === global.currentCharacterName,
+      (obj) => obj.dragon === global.currentDragonName,
     )
     for (let i = 0; i < embed.length; i++) {
       let type = embed[i].item
@@ -469,7 +469,7 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
             newItem.removeListener('pointerdown')
             itemRevive(
               global.walletAddress,
-              global.currentCharacterName,
+              global.currentDragonName,
               embed[i].item,
               (resp: any) => {
                 if (resp.purchase !== undefined) changeItem(resp)
@@ -488,13 +488,13 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
     this.sceneMode(2)
     energySwap(
       global.walletAddress,
-      global.currentCharacterName,
+      global.currentDragonName,
       0,
       (resp: any) => {
         global.energy = resp.energy
-        global.resource = resp.resource
+        global.meat = resp.meat
         this.energy.setText(`${global.energy}`)
-        this.meatText1.setText(`${global.resource}`)
+        this.meatText1.setText(`${global.meat}`)
       },
     )
   }
@@ -589,10 +589,10 @@ export default class CharacterWidget extends Phaser.GameObjects.Container {
         this.closeBtn.x = 805
         // this.background.setVisible(false)
         this.siren3.setVisible(false)
-        if (global.currentCharacterName === 'siren-1') {
+        if (global.currentDragonName === 'siren-1') {
           this.sirenSpine.setVisible(true)
         } else {
-          createCharacterAnims(this.scene.anims)
+          createDragonAnims(this.scene.anims)
           this.siren3.play('siren-3')
           this.siren3.setVisible(true)
         }

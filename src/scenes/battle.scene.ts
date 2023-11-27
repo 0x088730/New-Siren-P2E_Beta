@@ -1,13 +1,11 @@
-import { createCharacterAnims } from '../anims/CharacterAnims'
 import { setGameStatus, increment, addExp, setSecondTurn, setThirdTurn, addTurn, setTurnFormat, setAtkBtnState, setGameTurn } from '../common/state/game/reducer'
 import {
   SIREN_SPINE, SIREN_ATTACK1, SIREN_ATTACK2, SIREN_ATTACK3, SIREN_DAMAGE, SIREN_DEAD,
   ENEMY_SPINE, ENEMY_ATTACK1, ENEMY_ATTACK2, ENEMY_ATTACK3, ENEMY_DAMAGE, ENEMY_DEAD,
   ENEMY_1_SPINE, ENEMY_1_ATTACK1, ENEMY_1_ATTACK2, ENEMY_1_ATTACK3, ENEMY_1_DAMAGE, ENEMY_1_DEAD,
 } from '../config/const'
-import Character from '../objects/character'
+import Dragon from '../objects/character'
 import store from '../store'
-// import type MyPlayer from '../characters/MyPlayer.ts'
 import ResultWidget from '../widgets/resultWidget'
 import { useWeb3Context } from '../hooks/web3Context'
 import { onShowAlert } from '../store/utiles/actions'
@@ -34,7 +32,7 @@ export default class Battle extends Phaser.Scene {
   sirenHPFrame!: Phaser.GameObjects.Sprite
   sirenLevel!: Phaser.GameObjects.Text
   sirenHPLabel!: Phaser.GameObjects.Text
-  siren!: Character
+  siren!: Dragon
   robotAnimation!: Phaser.GameObjects.Sprite
   sirenAnimation!: Phaser.GameObjects.Sprite
   sirenAttack!: SpineGameObject
@@ -48,7 +46,7 @@ export default class Battle extends Phaser.Scene {
   enemyHPFrame!: Phaser.GameObjects.Sprite
   enemyLevel!: Phaser.GameObjects.Text
   enemyHPLabel!: Phaser.GameObjects.Text
-  enemy!: Character
+  enemy!: Dragon
   resultWidget!: ResultWidget
   invBtn!: Phaser.GameObjects.Image
   damageLabel!: Phaser.GameObjects.Text
@@ -73,7 +71,7 @@ export default class Battle extends Phaser.Scene {
   enemyHPFrame_1!: Phaser.GameObjects.Sprite
   enemyLevel_1!: Phaser.GameObjects.Text
   enemyHPLabel_1!: Phaser.GameObjects.Text
-  enemy_1!: Character
+  enemy_1!: Dragon
 
   enemySpineTmp_1!: SpineGameObject
   enemyAttackTmp_1!: SpineGameObject
@@ -100,10 +98,9 @@ export default class Battle extends Phaser.Scene {
     this.attacking = false
   }
   create() {
-    // createCharacterAnims(this.anims)
-    this.characterAvatar()
+    this.dragonAvatar()
     this.enemyAvatars()
-    this.createCharacter()
+    this.createDragon()
     this.createEnemy()
     this.createHud()
   }
@@ -114,7 +111,7 @@ export default class Battle extends Phaser.Scene {
   }
 
   loadSirenSpine() {
-    this.load.setPath('assets/character/spine')
+    this.load.setPath('assets/dragon/spine')
     this.load.spine(SIREN_SPINE, 'siren1/idle/sakura.json', 'siren1/idle/sakura.atlas')
     this.load.spine(SIREN_ATTACK1, 'siren1/attack1/sakura.json', 'siren1/attack1/sakura.atlas')
     this.load.spine(SIREN_ATTACK2, 'siren1/attack2/sakura.json', 'siren1/attack2/sakura.atlas')
@@ -184,7 +181,7 @@ export default class Battle extends Phaser.Scene {
       .setVisible(false)
   }
 
-  characterAvatar() {
+  dragonAvatar() {
     this.add
       .sprite(260, 120, 'heart-mark-siren')
       .setScale(1)
@@ -194,7 +191,7 @@ export default class Battle extends Phaser.Scene {
       .sprite(267, 235, 'embed-bar')
       .setScale(1)
       .setOrigin(0, 0.5)
-    const embed = global.embed.filter(obj => obj.character === global.currentCharacterName)
+    const embed = global.embed.filter(obj => obj.dragon === global.currentDragonName)
     for (let i = 0; i < embed.length; i++) {
       let type = embed[i].item
       const count = embed[i].stock
@@ -300,7 +297,7 @@ export default class Battle extends Phaser.Scene {
     }
   }
 
-  createCharacter() {
+  createDragon() {
     this.sirenSpine = this.add
       .spine(400, 900, SIREN_SPINE, 'idle', true)
       .setScale(0.3)
@@ -335,7 +332,7 @@ export default class Battle extends Phaser.Scene {
     const attack3Anim = this.sirenAttack3.findAnimation('attack3')
     attack3Anim.duration = 1.1
 
-    this.siren = new Character(
+    this.siren = new Dragon(
       this,
       global.hp,
       global.hp,
@@ -452,7 +449,7 @@ export default class Battle extends Phaser.Scene {
     }
 
     const unit = global.rooms.filter(obj => obj.chapter === global.chapter && obj.section === global.section).at(0)
-    this.enemy = new Character(
+    this.enemy = new Dragon(
       this,
       unit?.hp,
       unit?.hp,
@@ -467,7 +464,7 @@ export default class Battle extends Phaser.Scene {
       2,
     )
     const unit_1 = global.rooms.filter(obj => obj.chapter === global.chapter && obj.section === global.section).at(1)
-    this.enemy_1 = new Character(
+    this.enemy_1 = new Dragon(
       this,
       unit_1?.hp,
       unit_1?.hp,
@@ -821,13 +818,13 @@ export default class Battle extends Phaser.Scene {
 
   createHud() {
     if ((global.section === 2 || global.section === 4)) {
-      itemModify(global.walletAddress, global.currentCharacterName, 'loot', 1, global.room.chapter, global.room.section, global.chapter, global.section, (resp: any) => {
+      itemModify(global.walletAddress, global.currentDragonName, 'loot', 1, global.room.chapter, global.room.section, global.chapter, global.section, (resp: any) => {
         if (resp.purchase !== undefined) {
           changeItem(resp)
         }
       })
     }
-    itemModify(global.walletAddress, global.currentCharacterName, 'loot', 1, global.room.chapter, global.room.section, global.chapter, global.section, (resp: any) => {
+    itemModify(global.walletAddress, global.currentDragonName, 'loot', 1, global.room.chapter, global.room.section, global.chapter, global.section, (resp: any) => {
     })
     this.resultWidget = new ResultWidget(this, 950, 500).setVisible(false)
     this.resultWidget.on('claim', () => {

@@ -14,7 +14,7 @@ import {
   /* changeNetwork, */ getTransaction /* , sendToken */,
 } from '../../hooks/hook'
 import { useWeb3Context } from '../../hooks/web3Context'
-import { /* buyPremium,  */ getResources } from '../../store/user/actions'
+import { /* buyPremium,  */ getMeats } from '../../store/user/actions'
 // import { ADMIN_WALLET_ADDRESS, chainId, PREMIUM_COST } from "../../hook/constants";
 import { onShowAlert } from '../../store/utiles/actions'
 import { checkPremium } from '../../utils/checkPremium'
@@ -32,10 +32,10 @@ interface HeaderProps {
   setShowAccount: any
   Drg: any
   eggs: any
-  resource: any
+  meat: any
 }
 
-const Header = ({ showAccount, setShowAccount, Drg, eggs, resource }: HeaderProps) => {
+const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const ref = searchParams.get('ref')
@@ -64,7 +64,7 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, resource }: HeaderProp
     if (connected && address !== '') {
       setShow(true)
       dispatch(
-        getResources(address, ref, (res: any) => {
+        getMeats(address, ref, (res: any) => {
           if (!res.success) {
             dispatch(onShowAlert(res.message, 'info'))
           }
@@ -149,7 +149,7 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, resource }: HeaderProp
         </button>
       )}
       <p
-        className={styles.resource}
+        className={styles.meat}
         style={{ background: 'url(/images/but_style1.png)', width: 170, height: 35, marginLeft: '8px' }}
       >
         <img
@@ -160,7 +160,7 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, resource }: HeaderProp
         {`DRG: ${Drg}`}
       </p>
       <p
-        className={styles.resource}
+        className={styles.meat}
         style={{ background: 'url(/images/but_style1.png)', width: 170, height: 35, marginLeft: '8px' }}
       >
         <img
@@ -168,10 +168,10 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, resource }: HeaderProp
           style={{ width: '25px', marginRight: '10px' }}
           src="/images/res_res.png"
         />
-        {`Meat: ${resource}`}
+        {`Meat: ${meat}`}
       </p>
       <p
-        className={styles.resource}
+        className={styles.meat}
         style={{ background: 'url(/images/but_style1.png)', width: 170, height: 35, marginLeft: '8px' }}
       >
         <img

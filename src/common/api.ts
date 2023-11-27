@@ -3,27 +3,27 @@ import { global } from './global'
 import config from '../utils/config'
 
 axios.defaults.baseURL = `${config.server}:${config.port}${config.baseURL}`
-export const getProfile = async (walletAddress: string, character: string) => {
+export const getProfile = async (walletAddress: string, dragon: string) => {
     const data = (await axios.post('/user/profile', {
         walletAddress,
-        character
+        dragon
     })).data
     const user = data.user
 
-    let currentCharacter = user.characters.filter((character : any)=>character.characterName===user.currentCharacterName)[0]
-    global.hp = currentCharacter.hp
-    global.damage = currentCharacter.damage
-    global.critical = currentCharacter.critical
+    let currentDragon = user.dragons.filter((dragon : any)=>dragon.dragonName===user.currentDragonName)[0]
+    global.hp = currentDragon.hp
+    global.damage = currentDragon.damage
+    global.critical = currentDragon.critical
     global.purchase = data.purchase
     global.embed = data.embed
-    global.exp = currentCharacter.exp
-    global.rarity = currentCharacter.rarity
+    global.exp = currentDragon.exp
+    global.rarity = currentDragon.rarity
     global.room = user.room
     global.userRef = user.userRef
     global.wall = user.wall
-    global.energy = currentCharacter.energy
-    global.characters = user.characters
-    global.currentCharacterName = user.currentCharacterName
+    global.energy = currentDragon.energy
+    global.dragons = user.dragons
+    global.currentDragonName = user.currentDragonName
     global.level = user.level
     global.hunterLevel = user.hunterLevel
 }
@@ -37,14 +37,14 @@ export const getRoom = async () => {
     const rooms = await (await axios.post('/user/room', {})).data.room
     global.rooms = rooms
 }
-export const setCurrentCharacter = async (character : string) => {
-    await (await axios.post('/user/current-character', {walletAddress:global.walletAddress, character: character})).data.room
+export const setCurrentDragon = async (dragon : string) => {
+    await (await axios.post('/user/current-dragon', {walletAddress:global.walletAddress, dragon: dragon})).data.room
 }
-export const itemModify = async (walletAddress: string, character: string = 'siren-1', item: string, amount: number, currentChaper: number, currentSection: number, selectChapter: number, selectSection: number, cb: Function) => {
+export const itemModify = async (walletAddress: string, dragon: string = 'siren-1', item: string, amount: number, currentChaper: number, currentSection: number, selectChapter: number, selectSection: number, cb: Function) => {
    
     const data = (await axios.post('/user/item', {
         walletAddress,
-        character,
+        dragon,
         item,
         amount,
         currentChaper,
@@ -53,49 +53,49 @@ export const itemModify = async (walletAddress: string, character: string = 'sir
         selectSection,
     })).data;
     const user = data.user
-    let currentCharacter = user.characters.filter((character : any)=>character.characterName===user.currentCharacterName)[0]
+    let currentDragon = user.dragons.filter((dragon : any)=>dragon.dragonName===user.currentDragonName)[0]
     global.room = user.room
     cb({
-        characters: currentCharacter,
+        dragons: currentDragon,
         purchase: data.purchase,
         embed: data.embed,
         room: user.room,
-        currentCharacterName: character
+        currentDragonName: dragon
     });
 }
 
-export const itemRevive = async (walletAddress :string, character: string = 'siren-1', item: string, cb: Function) => {
+export const itemRevive = async (walletAddress :string, dragon: string = 'siren-1', item: string, cb: Function) => {
     const data = (await axios.post('/user/item/revive', {
         walletAddress,
-        character,
+        dragon,
         item
     })).data;
 
     const user = data.user
 
-    let currentCharacter = user.characters.filter((character : any)=>character.characterName===user.currentCharacterName)[0]
+    let currentDragon = user.dragons.filter((dragon : any)=>dragon.dragonName===user.currentDragonName)[0]
     cb({
-        characters: currentCharacter,
+        dragons: currentDragon,
         purchase: data.purchase,
         embed: data.embed,
         room: user.room,
-        currentCharacterName: character
+        currentDragonName: dragon
 
     });
 }
 
-export const energySwap = async (walletAddress: string, character: string = 'siren-1', amount: Number, cb: Function) => {
+export const energySwap = async (walletAddress: string, dragon: string = 'siren-1', amount: Number, cb: Function) => {
     const data = (await axios.post('/user/swap/energy', {
         walletAddress,
-        character,
+        dragon,
         amount
     })).data;
 
     // const user = data.user
-    let currentCharacter = data.characters.filter((character : any)=>character.characterName===data.currentCharacterName)[0]
+    let currentDragon = data.dragons.filter((dragon : any)=>dragon.dragonName===data.currentDragonName)[0]
     
     cb({
-        energy: currentCharacter.energy,
-        resource: data.resource,
+        energy: currentDragon.energy,
+        meat: data.meat,
     });
 }

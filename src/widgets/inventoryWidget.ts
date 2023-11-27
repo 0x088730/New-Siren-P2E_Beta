@@ -30,5 +30,5 @@ export default class InventoryWidget extends Phaser.GameObjects.Container {
   build() {
     this.itemWidget.build()
   }
-  addCharacter() {}
+  addDragon() {}
 }

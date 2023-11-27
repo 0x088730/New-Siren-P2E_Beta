@@ -3,13 +3,13 @@ import {
   setInventoryStatus,
   increment,
   decrement,
-  setCharacterStatus,
+  setDragonStatus,
   setTurnFormat
 } from '../common/state/game/reducer'
 import store from '../store'
 import ClaimWidget from '../widgets/claimWidget'
 import InventoryWidget from '../widgets/inventoryWidget'
-import CharacterWidget from '../widgets/characterWidget'
+import DragonWidget from '../widgets/characterWidget'
 import { ENEMY_SPINE, SIREN_SPINE } from '../config/const'
 import { changeItem, global } from '../common/global'
 import RoomWidget from '../widgets/roomWidget'
@@ -18,7 +18,7 @@ export default class Game extends Phaser.Scene {
   inventoryWidget!: InventoryWidget
   // btnContainer!: Phaser.GameObjects.Container
   claimWidget!: ClaimWidget
-  characterWidget!: CharacterWidget
+  dragonWidget!: DragonWidget
   roomWidget!: RoomWidget
 
   constructor() {
@@ -81,10 +81,10 @@ export default class Game extends Phaser.Scene {
         this.claimWidget.appear()
       })
 
-    this.characterWidget = new CharacterWidget(this, 880, 530)
-    this.characterWidget
+    this.dragonWidget = new DragonWidget(this, 880, 530)
+    this.dragonWidget
       .on('closed', () => {
-        store.dispatch(setCharacterStatus(false))
+        store.dispatch(setDragonStatus(false))
         this.changeBackground("")
         const video = document.getElementById('backgroundVideo') as HTMLElement
         video.style.display = "block"
@@ -97,7 +97,7 @@ export default class Game extends Phaser.Scene {
         store.dispatch(setInventoryStatus(false))
         this.claimWidget.setVisible(false)
         this.inventoryWidget.setVisible(true)
-        this.characterWidget.showStatus(true)
+        this.dragonWidget.showStatus(true)
         this.scene.start('game')
         const video = document.getElementById('backgroundVideo') as HTMLElement
         video.style.display = "block"
@@ -125,13 +125,13 @@ export default class Game extends Phaser.Scene {
     this.inventoryWidget.setVisible(true)
   }
 
-  character() {
 
-    if (this.characterWidget) {
-      this.characterWidget.gemChange()
-      this.characterWidget.gemBuild()
-      store.dispatch(setCharacterStatus(true))
-      this.characterWidget.showStatus(true)
+  dragon() {
+    if (this.dragonWidget) {
+      this.dragonWidget.gemChange()
+      this.dragonWidget.gemBuild()
+      store.dispatch(setDragonStatus(true))
+      this.dragonWidget.showStatus(true)
     }
   }
 

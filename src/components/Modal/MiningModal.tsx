@@ -19,7 +19,7 @@ import {
   checkUpgradeAvailable,
   claimDrg,
   /* checkWithdrawableReqeust,  */ depositRequest,
-  resourceRequest,
+  meatRequest,
   setCooldown,
   withdrawRequest,
   getMiningStatus,
@@ -37,7 +37,7 @@ interface Props {
   open: boolean
   setOpen: any
   drgAmount: number
-  resource: any
+  meat: any
   setDrgAmount: any
   setEggs: any
   egg: any
@@ -51,7 +51,7 @@ const MiningModal = ({
   open,
   setOpen,
   drgAmount,
-  resource,
+  meat,
   setDrgAmount,
   setEggs,
   egg,

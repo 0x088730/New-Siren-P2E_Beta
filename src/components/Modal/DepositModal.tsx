@@ -16,7 +16,7 @@ import { deposit, sendToken } from '../../hooks/hook'
 import { useWeb3Context } from '../../hooks/web3Context'
 import {
   /* checkWithdrawableReqeust,  */ depositRequest,
-  resourceRequest,
+  meatRequest,
   withdrawRequest,
 } from '../../store/user/actions'
 import { onShowAlert } from '../../store/utiles/actions'
@@ -28,7 +28,7 @@ import { getBcsPrice, getWithdrewDrgAmount } from '../../utils/user'
 interface Props {
   open: boolean
   setOpen: any
-  resource: any
+  meat: any
   egg: any
   onExchange: any
   onExchangeEgg: any
@@ -37,7 +37,7 @@ interface Props {
 const DepositModal = ({
   open,
   setOpen,
-  resource,
+  meat,
   egg,
   onExchange,
   onExchangeEgg,
@@ -74,7 +74,7 @@ const DepositModal = ({
 
   // useEffect(() => {
   //   const timeoutId = setInterval(() => {
-  //     onResource()
+  //     onmeat()
   //   }, 10000);
   // },[])
 
@@ -97,14 +97,14 @@ const DepositModal = ({
     setDrgAmount(e.target.value)
   }
 
-  const onResource = async () => {
+  const onmeat = async () => {
     dispatch(
-      resourceRequest(address, (res: any) => {
+      meatRequest(address, (res: any) => {
         handleClose()
         if (res.success) {
-          dispatch(onShowAlert('Resource Load successfully', 'success'))
+          dispatch(onShowAlert('meat Load successfully', 'success'))
         } else {
-          dispatch(onShowAlert('Resource Load faild!', 'warning'))
+          dispatch(onShowAlert('meat Load faild!', 'warning'))
         }
       }),
     )
