@@ -87,10 +87,10 @@ const DragonChooseModal = ({
       })
     )
   }
-  const selectDragon = (name: any) => {
-    if (cardNum === "1") setCardImg({ ...cardImg, first: name })
-    if (cardNum === "2") setCardImg({ ...cardImg, second: name })
-    if (cardNum === "3") setCardImg({ ...cardImg, third: name })
+  const selectDragon = (order: any, url: any) => {
+    if (cardNum === "1") setCardImg({ ...cardImg, first: {name: order, url} })
+    if (cardNum === "2") setCardImg({ ...cardImg, second: {name: order, url} })
+    if (cardNum === "3") setCardImg({ ...cardImg, third: {name: order, url} })
     setDragonChooseModalOpen(false);
   }
   const style = {
@@ -150,7 +150,7 @@ const DragonChooseModal = ({
                 textAlign: 'center',
                 cursor: 'pointer'
               }}
-              onClick={() => buyedCommonDragon === false ? null : selectDragon(`url('/assets/images/dragons/common_dragon.png')`)}
+              onClick={() => buyedCommonDragon === false ? null : selectDragon("1", `url('/assets/images/dragons/common_dragon.png')`)}
             >
               <div style={{ position: 'relative', top: '5px', textAlign: 'left' }}>
                 {
@@ -221,7 +221,7 @@ const DragonChooseModal = ({
                 textAlign: 'center',
                 cursor: 'pointer'
               }}
-              onClick={() => buyedRareDragon === false ? null : selectDragon(`url('/assets/images/dragons/rare_dragon.png')`)}
+              onClick={() => buyedRareDragon === false ? null : selectDragon("2", `url('/assets/images/dragons/rare_dragon.png')`)}
             >
               <div style={{ position: 'relative', top: '5px', textAlign: 'left' }}>
                 {
@@ -319,7 +319,7 @@ const DragonChooseModal = ({
                 textAlign: 'center',
                 cursor: 'pointer'
               }}
-              onClick={() => buyedLegenDragon === false ? null : selectDragon(`url('/assets/images/dragons/legency_dragon.png')`)}
+              onClick={() => buyedLegenDragon === false ? null : selectDragon("3", `url('/assets/images/dragons/legency_dragon.png')`)}
             >
               <div style={{ position: 'relative', top: '5px', textAlign: 'left' }}>
                 {
