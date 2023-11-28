@@ -27,7 +27,6 @@ const SelectMeatModal = ({
     setMeat,
 }: Props) => {
     const dispatch = useDispatch<any>()
-    const userModule = useSelector((state: any) => state.userModule)
     const [meatNum, setMeatNum] = useState(0);
 
     useEffect(() => {

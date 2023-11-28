@@ -21,7 +21,13 @@ const DragonModal = ({
     setDragonModalOpen,
 }: Props) => {
     const dispatch = useDispatch<any>()
+    const userModule = useSelector((state: any) => state.userModule)
     const { address } = useWeb3Context();
+
+    const [meat, setMeat] = useState(0);
+    useEffect(() => {
+        setMeat(userModule.user.meat);
+    }, [])
 
     const [buyedCommonDragon, setBuyedCommonDragon] = useState(false);
     const [buyedRareDragon, setBuyedRareDragon] = useState(false);
@@ -390,6 +396,8 @@ const DragonModal = ({
                 setDragonInfoModalOpen={setDragonInfoModalOpen}
                 dragonInfo={dragonInfo}
                 setDragonInfo={setDragonInfo}
+                meat={meat}
+                setMeat={setMeat}
             />
         </>
     )

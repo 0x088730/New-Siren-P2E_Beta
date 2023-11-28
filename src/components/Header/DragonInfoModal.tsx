@@ -15,6 +15,8 @@ interface Props {
     setDragonInfoModalOpen: any
     dragonInfo: any
     setDragonInfo: any
+    meat: any
+    setMeat: any
 }
 
 const DragonInfoModal = ({
@@ -22,13 +24,10 @@ const DragonInfoModal = ({
     setDragonInfoModalOpen,
     dragonInfo,
     setDragonInfo,
+    meat,
+    setMeat,
 }: Props) => {
-    const userModule = useSelector((state: any) => state.userModule)
-    const [meat, setMeat] = useState(userModule.user.meat);
-    useEffect(() => {
-        setMeat(userModule.user.meat);
-    }, [dragonInfoModalOpen])
-
+    
     const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
         height: 20,
         outline: '3px solid black',
@@ -124,7 +123,7 @@ const DragonInfoModal = ({
                                     top: '96px',
                                     right: '75px'
                                 }}
-                                onClick={() => setMeatModalOpen(true)}
+                                onClick={() => meat === 0 ? alert("Not Enough Meat") : setMeatModalOpen(true)}
                             >
                                 <p style={{
                                     color: '#ffbf42',
