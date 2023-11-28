@@ -53,7 +53,7 @@ const DragonInfoModal = ({
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '550px',
+        width: '580px',
         height: '600px',
         background: "url(/assets/images/set2.png)",
         backgroundSize: '100% 100%',
@@ -113,8 +113,8 @@ const DragonInfoModal = ({
                                     letterSpacing: '2px',
                                     textShadow: '0 0 3px black, 0 0 3px black',
                                     position: 'absolute',
-                                    top: '94px',
-                                    left: '260px'
+                                    top: '98px',
+                                    left: '270px'
                                 }}
                             >
                                 {dragonInfo.rarity}%
@@ -124,8 +124,8 @@ const DragonInfoModal = ({
                                     height: '26px', width: "20px",
                                     borderLeft: '3px solid black',
                                     position: 'absolute',
-                                    top: '94px',
-                                    right: '128px'
+                                    top: '99px',
+                                    right: '144px'
                                 }}
                                 onClick={() => meat === 0 ? alert("Not Enough Meat") : setMeatModalOpen(true)}
                             >
@@ -135,9 +135,9 @@ const DragonInfoModal = ({
                         <img alt="" src={`assets/images/dragons/${dragonInfo.dragonName}_dragon_avatar.png`} width={'250px'} />
                         <div
                             style={{
-                                width: '150px', height: '90px',
+                                width: '160px', height: '85px',
                                 backgroundImage: `url('/assets/images/dam_bg.png')`,
-                                backgroundSize: 'cover',
+                                backgroundSize: '100% 100%',
                                 marginRight: '90px'
                             }}
                         >
@@ -147,8 +147,8 @@ const DragonInfoModal = ({
                                     fontFamily: 'CubicPixel',
                                     fontSize: '22px',
                                     position: 'absolute',
-                                    bottom: '152px',
-                                    right: '266px'
+                                    bottom: '160px',
+                                    right: '285px'
                                 }}
                             >
                                 {/* {dragonInfo.damage} */}
@@ -157,10 +157,10 @@ const DragonInfoModal = ({
                         </div>
                         <div
                             style={{
-                                width: '150px', height: '90px',
+                                width: '160px', height: '85px',
                                 backgroundImage: `url('/assets/images/health_bg.png')`,
-                                backgroundSize: 'cover',
-                                marginRight: '83px'
+                                backgroundSize: '100% 100%',
+                                marginRight: '90px'
                             }}
                         >
                             <p
@@ -169,8 +169,8 @@ const DragonInfoModal = ({
                                     fontFamily: 'CubicPixel',
                                     fontSize: '22px',
                                     position: 'absolute',
-                                    bottom: '66px',
-                                    right: '266px'
+                                    bottom: '80px',
+                                    right: '285px'
                                 }}
                             >
                                 {/* {dragonInfo.hp} */}
