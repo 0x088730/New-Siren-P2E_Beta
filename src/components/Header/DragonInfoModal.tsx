@@ -11,6 +11,7 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 import { Button } from '@mui/material'
 
 interface Props {
+    setDragonModalOpen: any
     dragonInfoModalOpen: any
     setDragonInfoModalOpen: any
     dragonInfo: any
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const DragonInfoModal = ({
+    setDragonModalOpen,
     dragonInfoModalOpen,
     setDragonInfoModalOpen,
     dragonInfo,
@@ -42,6 +44,10 @@ const DragonInfoModal = ({
     }));
     const [meatModalOpen, setMeatModalOpen] = useState(false);
 
+    const onExit = () => {
+        setDragonModalOpen(true);
+        setDragonInfoModalOpen(false)
+    }
     const style = {
         position: 'absolute' as const,
         top: '50%',
@@ -77,7 +83,7 @@ const DragonInfoModal = ({
                             cursor: 'pointer',
                             zIndex: 5,
                         }}
-                        onClick={() => setDragonInfoModalOpen(false)}
+                        onClick={() => onExit()}
                     />
                     <Box className='displayCenter'
                         sx={{
