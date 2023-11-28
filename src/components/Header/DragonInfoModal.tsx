@@ -53,7 +53,7 @@ const DragonInfoModal = ({
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '400px',
+        width: '500px',
         height: '550px',
         background: "url(/assets/images/set2.png)",
         backgroundSize: '100% 100%',
@@ -103,7 +103,7 @@ const DragonInfoModal = ({
                             LEVEL: <span style={{ color: '#ff8a00' }}>{dragonInfo.level}</span>
                         </div>
                         <div style={{ width: '180px', margin: '5px' }}>
-                            <BorderLinearProgress variant="determinate" value={dragonInfo.rarity} />
+                            <BorderLinearProgress variant="determinate" value={dragonInfo.rarity} style={{background: 'none'}} />
                             <p
                                 style={{
                                     color: 'white',
@@ -111,10 +111,10 @@ const DragonInfoModal = ({
                                     fontFamily: 'CubicPixel',
                                     fontWeight: 'bold',
                                     letterSpacing: '2px',
-                                    textShadow: '3px 3px black',
+                                    textShadow: '0 0 3px black, 0 0 3px black',
                                     position: 'absolute',
                                     top: '93px',
-                                    left: '175px'
+                                    left: '230px'
                                 }}
                             >
                                 {dragonInfo.rarity}%
@@ -122,31 +122,23 @@ const DragonInfoModal = ({
                             <Button
                                 style={{
                                     height: '22px', width: "20px",
-                                    
                                     borderLeft: '3px solid black',
-                                    textShadow: '3px 3px black',
                                     position: 'absolute',
                                     top: '96px',
-                                    right: '75px'
+                                    right: '127px'
                                 }}
                                 onClick={() => meat === 0 ? alert("Not Enough Meat") : setMeatModalOpen(true)}
                             >
-                                <p style={{
-                                    color: '#ffbf42',
-                                    fontSize: '40px',
-                                    fontFamily: 'CubicPixel',
-                                    fontWeight: 'bold',
-                                    marginLeft: '-36px',
-                                    marginBottom: '5px'
-                                    }}>+</p>
+                                <img alt="" src={`assets/images/plus.png`} width={'25px'} style={{marginLeft: '-33px', marginTop: '3px'}}/>
                             </Button>
                         </div>
                         <img alt="" src={`assets/images/dragons/${dragonInfo.dragonName}_dragon_avatar.png`} width={'200px'} />
                         <div
                             style={{
-                                width: '130px', height: '90px',
+                                width: '140px', height: '90px',
                                 backgroundImage: `url('/assets/images/dam_bg.png')`,
-                                backgroundSize: 'cover'
+                                backgroundSize: 'cover',
+                                marginRight: '70px'
                             }}
                         >
                             <p
@@ -155,19 +147,20 @@ const DragonInfoModal = ({
                                     fontFamily: 'CubicPixel',
                                     fontSize: '22px',
                                     position: 'absolute',
-                                    bottom: '159px',
-                                    right: '155px'
+                                    bottom: '156px',
+                                    right: '235px'
                                 }}
                             >
-                                {dragonInfo.damage}
+                                {/* {dragonInfo.damage} */}
+                                NONE
                             </p>
                         </div>
                         <div
                             style={{
-                                width: '130px', height: '90px',
+                                width: '140px', height: '90px',
                                 backgroundImage: `url('/assets/images/health_bg.png')`,
                                 backgroundSize: 'cover',
-                                marginLeft: '5px'
+                                marginRight: '63px'
                             }}
                         >
                             <p
@@ -176,11 +169,12 @@ const DragonInfoModal = ({
                                     fontFamily: 'CubicPixel',
                                     fontSize: '22px',
                                     position: 'absolute',
-                                    bottom: '73px',
-                                    right: '155px'
+                                    bottom: '70px',
+                                    right: '235px'
                                 }}
                             >
-                                {dragonInfo.hp}
+                                {/* {dragonInfo.hp} */}
+                                NONE
                             </p>
                         </div>
                     </Box>
