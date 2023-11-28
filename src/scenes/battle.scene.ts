@@ -481,8 +481,6 @@ export default class Battle extends Phaser.Scene {
   }
 
   attack(type: number) {
-    console.log(this.sirenSpine, this.sirenAttack1)
-
     switch (type) {
       case 1: this.sirenAttack = this.sirenAttack1
         break

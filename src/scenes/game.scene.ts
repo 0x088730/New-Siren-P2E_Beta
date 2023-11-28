@@ -44,10 +44,8 @@ export default class Game extends Phaser.Scene {
     this.load.setPath('/')
     // const spinner = this.add.circle(400, 300, 20, 0xff0000);
     // this.load.on("progress", function (e: any) {
-    //   console.log(e)
     // })
     // this.load.on('progress', function (value: any) {
-    //   console.log(value);
     //   progressBar.clear();
     //   progressBar.fillStyle(0xffffff, 1);
     //   progressBar.fillRect(250, 280, 300 * value, 30);

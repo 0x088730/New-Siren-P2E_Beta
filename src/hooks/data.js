@@ -165,8 +165,6 @@ export const getSameTokenAddress = (chain1, chain2, tokenaddress) => {
   if (!chainData[chain1]) return
   if (!chainData[chain2]) return
 
-  // console.log(chain1, chain2, tokenaddress);
-
   let symbol
   for (const item of chainData[chain1].tokenList) {
     if (item.address === tokenaddress) {

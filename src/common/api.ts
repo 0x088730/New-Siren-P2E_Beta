@@ -9,7 +9,6 @@ export const getProfile = async (walletAddress: string, dragon: string) => {
         dragon
     })).data
     const user = data.user
-    console.log("user------->", user)
 
     let currentDragon = user.dragons.filter((dragon : any)=>dragon.dragonName===user.currentDragonName)[0]
     global.hp = currentDragon.hp

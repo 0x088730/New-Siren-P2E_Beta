@@ -55,19 +55,18 @@ const DepositModal = ({
 
   useEffect(() => {
     ; (async () => {
-      // console.log('user withdraws changed', user.withdraws.length)
       const withdrewDrgAmount = getWithdrewDrgAmount(user.withdraws) // Drg
       // const bcsPrice = await getBcsPrice();
       const bcsPrice = 1
       const maxAmount =
         (checkPremium(user.premium).isPremium ? 10 : 5) / bcsPrice
-      console.log(
-        `bcs price is ${bcsPrice}`,
-        'withdrew Drg amount: ',
-        withdrewDrgAmount,
-        ' and withdrawable bcs amount is ',
-        maxAmount,
-      )
+      // console.log(
+      //   `bcs price is ${bcsPrice}`,
+      //   'withdrew Drg amount: ',
+      //   withdrewDrgAmount,
+      //   ' and withdrawable bcs amount is ',
+      //   maxAmount,
+      // )
       setWithdrawableBcsAmount(maxAmount - Math.floor(withdrewDrgAmount / 10))
     })()
   }, [user.withdraws])
@@ -121,7 +120,6 @@ const DepositModal = ({
       ADMIN_WALLET_ADDRESS[chainId],
       bcsAmount,
     )
-    // console.log('bcs deposite transaction: ', transaction)
     dispatch(
       depositRequest(
         address,
@@ -166,7 +164,6 @@ const DepositModal = ({
         drgAmount,
         // transaction.transactionHash,
         (res: any) => {
-          // console.log('callback')
           handleClose()
           if (res && res?.success) {
             dispatch(onShowAlert('Withdraw successfully', 'success'))

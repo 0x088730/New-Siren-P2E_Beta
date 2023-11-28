@@ -103,7 +103,6 @@ const MiningModal = ({
     dispatch(
       checkCooldown(address, 'level-up', (res: any) => {
         let cooldownSec = res.data
-        console.log(cooldownSec)
         if (cooldownSec === 999999) {
           // if(miningStatus === false) return
           // setBtnType('Start')
@@ -142,7 +141,6 @@ const MiningModal = ({
 
   useEffect(() => {
     ; (async () => {
-      // console.log('user withdraws changed', user.withdraws.length)
       const withdrewdrgAmount = getWithdrewDrgAmount(user.withdraws) // Drg
       // const bcsPrice = await getBcsPrice();
       const bcsPrice = 1

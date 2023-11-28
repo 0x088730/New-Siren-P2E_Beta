@@ -540,7 +540,6 @@ export default class DragonWidget extends Phaser.GameObjects.Container {
   }
 
   sceneMode(mode: number) {
-    console.log(mode)
     switch (mode) {
       case 1: {
         //modelList

@@ -144,11 +144,8 @@ const PowerPlantModal = ({ open, setOpen }: Props) => {
 
   useEffect(() => {
     if (user.powerMine) {
-      //console.log(user.powerMine)
       const check = new Date('2022-12-30T00:00:00').getTime()
       const powerMine = new Date(user.powerMine).getTime()
-
-      //console.log('check, powerMine = ', check, powerMine)
 
       const date = new Date()
       const curSec = date.getTime()
@@ -162,10 +159,8 @@ const PowerPlantModal = ({ open, setOpen }: Props) => {
       }
 
       if (check > powerMine) {
-        //console.log('check, powerMine = ', check, powerMine)
         setBuyButton(true)
       } else {
-        //console.log('check, powerMine = ', check, powerMine)
         setBuyButton(false)
       }
     }
