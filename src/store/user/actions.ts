@@ -131,10 +131,12 @@ export function changeResources(address: any, drgAmount: Number, meatAmount: Num
   }
 }
 
-export function buyLevel(address: any, cb: any) {
+export function buyLevel(address: any, dragon: any, meatAmount: any, cb: any) {
   return async (dispatch: any) => {
     const res = await api(`user/buy/level`, 'post', {
       walletAddress: address,
+      dragon: dragon,
+      meatAmount: meatAmount,
     })
     cb(res)
     dispatch({
@@ -265,7 +267,6 @@ export function upgradeWall(address: any, cb: any) {
     const res = await api(`user/upgrade/wall`, 'post', {
       walletAddress: address,
     })
-    console.log(res)
     cb(res)
     dispatch({
       type: RESOURCE_CHANGE_SUCCESS,
@@ -328,7 +329,6 @@ export function depositRequest(
       amount: amount,
       txID: txID,
     })
-    // console.log(res)
     cb(res)
     dispatch({
       type: RESOURCE_CHANGE_SUCCESS,
@@ -345,7 +345,6 @@ export function meatRequest(
     const res = await api(`user/meat`, 'post', {
       walletAddress: address,
     })
-    //console.log('get Meat', res)
     cb(res)
     dispatch({
       type: RESOURCE_CHANGE_SUCCESS,
@@ -374,7 +373,6 @@ export function withdrawRequest(
 
     cb(res)
     if (res.success) {
-      //console.log(res)
       dispatch({
         type: RESOURCE_CHANGE_SUCCESS,
         payload: { data: res },
@@ -459,8 +457,6 @@ export function buyMining(
       type: type,
     })
 
-    //console.log(res)
-
     cb(res)
     dispatch({
       type: RESOURCE_CHANGE_SUCCESS,
@@ -533,7 +529,6 @@ export function getAllMeat(address: any, cb?: any) {
     const res = await api(`user/plant/get`, 'post', {
       walletAddress: address,
     })
-    //console.log('get all meat', res)
     cb(res)
     if (res.success) {
       dispatch({

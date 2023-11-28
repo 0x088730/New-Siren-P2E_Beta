@@ -51,6 +51,7 @@ export interface UserProfile {
         exp: Number
         rarity: Number
         damage: Number
+        level: Number
       }>
     | []
   currentDragonName: string | ''

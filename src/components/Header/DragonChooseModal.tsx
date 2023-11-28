@@ -30,7 +30,6 @@ const DragonChooseModal = ({
   const { address } = useWeb3Context();
 
   useEffect(() => {
-    console.log("dragons--->", global.dragons)
     if (global.dragons.length === 1) {
       setBuyedCommonDragon(false);
       setBuyedRareDragon(false);
@@ -57,43 +56,24 @@ const DragonChooseModal = ({
   const [buyedRareDragon, setBuyedRareDragon] = useState(false);
   const [buyedLegenDragon, setBuyedLegenDragon] = useState(false);
 
-  const onBuyCommonDragon = () => {
+  const onBuyDragon = (name: any, num: any) => {
     dispatch(
-      buyDragon(address, { dragonName: "common", dragonNo: 0 }, (res: any) => {
-        if (res.data.name === "common") {
-          setBuyedCommonDragon(true);
+      buyDragon(address, { dragonName: name, dragonNo: num }, (res: any) => {
+        if (res.data.name === name) {
+          if(name === "common") setBuyedCommonDragon(true);
+          if(name === 'rare') setBuyedRareDragon(true);
+          if(name === 'legendery') setBuyedLegenDragon(true);
           getProfile(address, "dragon")
           setDrg(res.data.drg);
         }
-      })
+      }),
     )
   }
-  const onBuyRareDragon = () => {
-    dispatch(
-      buyDragon(address, { dragonName: "rare", dragonNo: 1 }, (res: any) => {
-        if (res.data.name === "rare") {
-          setBuyedRareDragon(true);
-          getProfile(address, "dragon")
-          setDrg(res.data.drg);
-        }
-      })
-    )
-  }
-  const onBuyLegendDragon = () => {
-    dispatch(
-      buyDragon(address, { dragonName: "legendery", dragonNo: 2 }, (res: any) => {
-        if (res.data.name === "legendery") {
-          setBuyedLegenDragon(true);
-          getProfile(address, "dragon")
-          setDrg(res.data.drg);
-        }
-      })
-    )
-  }
+
   const selectDragon = (order: any, url: any) => {
-    if (cardNum === "1") setCardImg({ ...cardImg, first: {name: order, url} })
-    if (cardNum === "2") setCardImg({ ...cardImg, second: {name: order, url} })
-    if (cardNum === "3") setCardImg({ ...cardImg, third: {name: order, url} })
+    if (cardNum === "1") setCardImg({ ...cardImg, first: { name: order, url } })
+    if (cardNum === "2") setCardImg({ ...cardImg, second: { name: order, url } })
+    if (cardNum === "3") setCardImg({ ...cardImg, third: { name: order, url } })
     setDragonChooseModalOpen(false);
   }
   const style = {
@@ -188,7 +168,7 @@ const DragonChooseModal = ({
               {
                 buyedCommonDragon === false ?
                   <Button
-                    onClick={() => onBuyCommonDragon()}
+                    onClick={() => onBuyDragon("common", 0)}
                     sx={{
                       width: '180px',
                       height: '60px',
@@ -212,7 +192,7 @@ const DragonChooseModal = ({
                     </p>
                   </Button>
                   :
-                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>1</span></div>
+                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[1].level}`}</span></div>
               }
             </div>
             <div
@@ -286,7 +266,7 @@ const DragonChooseModal = ({
                     </Button>
                     :
                     <Button
-                      onClick={() => onBuyRareDragon()}
+                      onClick={() => onBuyDragon("rare", 1)}
                       sx={{
                         width: '180px',
                         height: '60px',
@@ -310,19 +290,19 @@ const DragonChooseModal = ({
                       </p>
                     </Button>
                   :
-                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>1</span></div>
+                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[2].level}`}</span></div>
               }
             </div>
             <div
               style={{
                 width: '200px', height: '200px',
                 margin: '0 5px',
-                backgroundImage: `url('/assets/images/dragons/legency_dragon.png')`,
+                backgroundImage: `url('/assets/images/dragons/legendery_dragon.png')`,
                 backgroundSize: 'cover',
                 textAlign: 'center',
                 cursor: 'pointer'
               }}
-              onClick={() => buyedLegenDragon === false ? null : selectDragon("3", `url('/assets/images/dragons/legency_dragon.png')`)}
+              onClick={() => buyedLegenDragon === false ? null : selectDragon("3", `url('/assets/images/dragons/legendery_dragon.png')`)}
             >
               <div style={{ position: 'relative', top: '5px', textAlign: 'left' }}>
                 {
@@ -384,7 +364,7 @@ const DragonChooseModal = ({
                     </Button>
                     :
                     <Button
-                      onClick={() => onBuyLegendDragon()}
+                      onClick={() => onBuyDragon("legendery", 2)}
                       sx={{
                         width: '180px',
                         height: '60px',
@@ -408,7 +388,7 @@ const DragonChooseModal = ({
                       </p>
                     </Button>
                   :
-                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>1</span></div>
+                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[3].level}`}</span></div>
               }
             </div>
           </Box>

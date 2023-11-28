@@ -68,18 +68,14 @@ const ExchangeModal = ({
     const date = new Date()
 
     const expiredTime = new Date(userModule.user.premium)
-    // console.log("--->", userModule.user.premium, expiredTime, "<---");
-    // let curTime = new Date();
     expiredTime.setMonth(expiredTime.getMonth() + 1)
 
-    // console.log(expiredTime, date);
 
     const curSec = date.getTime() + date.getTimezoneOffset() * 60 * 1000
     const endSec = expiredTime.getTime()
 
     if (endSec > curSec) {
       setIsPremium(true)
-      // console.log("is premium...");
     } else {
       setIsPremium(false)
     }

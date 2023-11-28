@@ -76,7 +76,6 @@ const ExchangeModal = ({
   // }, [open])
   useEffect(() => {
     setRewardValue((Number(cardImg.first.name) + Number(cardImg.second.name) + Number(cardImg.third.name)) *10 )
-    console.log(rewardValue)
     let devideTime = remainedTime % 30;
     let count = Math.floor(remainedTime / 30);
     if (isCooldownStarted === true && devideTime === 0 && count < cooldownCount) {
@@ -101,7 +100,6 @@ const ExchangeModal = ({
           if (resp.data !== undefined || resp.data !== null) {
             setRemainedTime(30 * cooldownCount)
             setIsCooldownStarted(true)
-            console.log("user.eggs==>", resp.data);
             setEgg(resp.data)
           }
         }),

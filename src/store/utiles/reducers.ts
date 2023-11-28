@@ -19,7 +19,6 @@ export function utilesReducer(
 ): UtilesState {
   switch (action.type) {
     case ALERT_SET_ACTION: {
-      //console.log(action)
       const { msg, flg } = action.payload
       const { alert, spinner } = { ...state }
 

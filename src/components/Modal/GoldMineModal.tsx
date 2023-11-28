@@ -107,17 +107,13 @@ const GoldMineModal = ({ open, setOpen }: Props) => {
 
   useEffect(() => {
     if (user.goldMine) {
-      //console.log(user.goldMine)
       const check = new Date('2022-12-30T00:00:00').getTime()
       const miningModule = new Date(user.goldMine).getTime()
-
-      //console.log('gold mine check, miningModule = ', check, miningModule)
 
       const date = new Date()
       const curSec = date.getTime()
 
       const tm = GOLD_MINE.TIMER - Math.floor((curSec - miningModule) / 1000)
-      //console.log(' ====== timer ====== ', tm)
       if (tm < 0) {
         setuTime(0)
       } else {
