@@ -71,9 +71,18 @@ const DragonChooseModal = ({
   }
 
   const selectDragon = (order: any, url: any) => {
-    if (cardNum === "1") setCardImg({ ...cardImg, first: { name: order, url } })
-    if (cardNum === "2") setCardImg({ ...cardImg, second: { name: order, url } })
-    if (cardNum === "3") setCardImg({ ...cardImg, third: { name: order, url } })
+    if (cardNum === "1") {
+      if(cardImg.second.name === order || cardImg.third.name === order) return
+      setCardImg({ ...cardImg, first: { name: order, url } });
+    }
+    if (cardNum === "2") {
+      if(cardImg.first.name === order || cardImg.third.name === order) return
+      setCardImg({ ...cardImg, second: { name: order, url } });
+    }
+    if (cardNum === "3") {
+      if(cardImg.second.name === order || cardImg.first.name === order) return
+      setCardImg({ ...cardImg, third: { name: order, url } });
+    }
     setDragonChooseModalOpen(false);
   }
   const style = {
@@ -91,8 +100,6 @@ const DragonChooseModal = ({
     <>
       <Modal
         open={dragonChooseModalOpen}
-        // open={true}
-        // onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
