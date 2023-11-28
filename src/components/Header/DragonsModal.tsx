@@ -24,15 +24,15 @@ const DragonModal = ({
     const userModule = useSelector((state: any) => state.userModule)
     const { address } = useWeb3Context();
 
-    const [meat, setMeat] = useState(0);
+    const [meat, setMeat] = useState(userModule.user.meat);
     useEffect(() => {
         if(address) {
             getProfile(address, "dragon").then(() => {
                 setMeat(userModule.user.meat);
             })
         }
-    }, [])
-
+    }, [address, userModule.user.meat])
+ 
     const [buyedCommonDragon, setBuyedCommonDragon] = useState(false);
     const [buyedRareDragon, setBuyedRareDragon] = useState(false);
     const [buyedLegenDragon, setBuyedLegenDragon] = useState(false);
