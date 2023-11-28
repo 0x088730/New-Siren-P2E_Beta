@@ -24,6 +24,7 @@ import UpgradeWallModal from '../../components/Header/UpgradeWallModal'
 import { global } from '../../common/global'
 import RockModal from '../../components/Header/RockModal'
 import ConvertModal from '../../components/Modal/ConvertModal'
+import { getProfile } from '../../common/api'
 
 interface MainProps {
   showAccount: any
