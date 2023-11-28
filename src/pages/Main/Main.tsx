@@ -36,6 +36,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const dispatch = useDispatch<any>()
   const userModule = useSelector((state: any) => state.userModule)
   const { user } = userModule
+  const { connected, chainID, address, connect } = useWeb3Context()
 
   const [openBird, setOpenBird] = React.useState(false)
   const [Drg, setDrg] = useState(userModule.user.Drg)
@@ -50,9 +51,13 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
       history.back();
     }
   })
+  useEffect(() => {
+    setDrg(userModule.user.Drg);
+    setEggs(userModule.user.eggs);
+    setMeat(userModule.user.meat);
+  }, [userModule])
 
   const TEST_MODE = true
-  const { connected, chainID, address, connect } = useWeb3Context()
 
   const [openSwap, setOpenSwap] = useState(false)
   const [openUpgradeWall, setOpenUpgradeWall] = useState(false)
