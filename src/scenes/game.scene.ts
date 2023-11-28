@@ -123,6 +123,7 @@ export default class Game extends Phaser.Scene {
     this.inventoryWidget.setVisible(true)
   }
 
+
   dragon() {
     if (this.dragonWidget) {
       this.dragonWidget.gemChange()

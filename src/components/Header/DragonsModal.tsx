@@ -32,7 +32,7 @@ const DragonModal = ({
             })
         }
     }, [address, userModule.user.meat])
-    
+ 
     const [buyedCommonDragon, setBuyedCommonDragon] = useState(false);
     const [buyedRareDragon, setBuyedRareDragon] = useState(false);
     const [buyedLegenDragon, setBuyedLegenDragon] = useState(false);
