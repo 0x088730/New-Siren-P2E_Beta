@@ -71,7 +71,6 @@ const ConvertModal = ({
     const onConvert = () => {
         if (convertCooldown === false) {
             setConvertCooldown(true);
-
             if (convertBtn === "Start") {
                 dispatch(
                     setCooldown(address, 'convertor', true, (res: any) => {
@@ -82,12 +81,10 @@ const ConvertModal = ({
                 )
             } else if (convertBtn === "Claim") {
                 dispatch(convertDrg(address, (res: any) => {
-                    if (res) {
-                        setDrg(res.data.drg)
-                        setConvertBtn('Start')
-                        setConvertCooldown(false)
-                        setOpenBird(false)
-                    }
+                    setDrg(res.data.drg)
+                    setConvertBtn('Start')
+                    setConvertCooldown(false)
+                    setOpenBird(false)
                 }))
             }
         }
@@ -232,7 +229,7 @@ const ConvertModal = ({
                                                 fontSize: "smaller"
                                             }}
                                         >
-                                            <p style={{textShadow: '2px 2px black'}}>50~150<br />DRG</p>
+                                            <p style={{ textShadow: '2px 2px black' }}>50~150<br />DRG</p>
                                         </div>
                                     </div>
                                 </Stack>

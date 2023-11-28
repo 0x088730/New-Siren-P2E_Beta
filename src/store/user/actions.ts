@@ -45,7 +45,7 @@ export function startMineTownCooldown(address: any, cooldownCount: number, cb: a
     })
     cb(res)
     dispatch({
-      type: HUNTER_UPGRADE_START_SUCCESS,
+      type: RESOURCE_CHANGE_SUCCESS,
       payload: { data: res },
     })
   }
@@ -140,7 +140,7 @@ export function buyLevel(address: any, dragon: any, meatAmount: any, cb: any) {
     })
     cb(res)
     dispatch({
-      type: BUY_LEVEL_SUCCESS,
+      type: RESOURCE_CHANGE_SUCCESS,
       payload: { data: res },
     })
   }
@@ -153,7 +153,7 @@ export function checkCooldown(address: any, type: string, cb: any) {
     })
     cb(res)
     dispatch({
-      type: CHECK_COOLDOWN_SUCCESS,
+      type: RESOURCE_CHANGE_SUCCESS,
       payload: { data: res },
     })
   }
@@ -166,21 +166,19 @@ export function getMiningStatus(address: any, cb: any) {
     })
     cb(res)
     dispatch({
-      type: CHECK_COOLDOWN_SUCCESS,
+      type: RESOURCE_CHANGE_SUCCESS,
       payload: { data: res },
     })
   }
 }
 export function levelupHunter(address: any, cb: any) {
   return async (dispatch: any) => {
-
-
     const res = await api(`user/levelup/hunter`, 'post', {
       walletAddress: address,
     })
     cb(res)
     dispatch({
-      type: LEVELUP_HUNTER_SUCCESS,
+      type: RESOURCE_CHANGE_SUCCESS,
       payload: { data: res },
     })
   }
@@ -192,7 +190,7 @@ export function checkUpgradeAvailable(address: any, cb: any) {
     })
     cb(res)
     dispatch({
-      type: CHECK_UPGRADE_AVAILABLE,
+      type: RESOURCE_CHANGE_SUCCESS,
       payload: { data: res },
     })
   }
@@ -204,7 +202,7 @@ export function claimDrg(address: any, cb: any) {
     })
     cb(res)
     dispatch({
-      type: CLAIM_SIREN_SUCCESS,
+      type: RESOURCE_CHANGE_SUCCESS,
       payload: { data: res },
     })
   }
@@ -216,7 +214,7 @@ export function convertDrg(address: any, cb: any) {
     })
     cb(res)
     dispatch({
-      type: CLAIM_SIREN_SUCCESS,
+      type: RESOURCE_CHANGE_SUCCESS,
       payload: { data: res },
     })
   }
@@ -242,7 +240,7 @@ export function setCooldown(address: any, type: string, value: boolean, cb: any)
     })
     cb(res)
     dispatch({
-      type: SET_COOLDOWN_SUCCESS,
+      type: RESOURCE_CHANGE_SUCCESS,
       payload: { data: res },
     })
   }

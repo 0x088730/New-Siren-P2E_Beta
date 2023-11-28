@@ -39,9 +39,9 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const { connected, chainID, address, connect } = useWeb3Context()
 
   const [openBird, setOpenBird] = React.useState(false)
-  const [Drg, setDrg] = useState(userModule.user.Drg)
-  const [eggs, setEggs] = useState(userModule.user.eggs)
-  const [meat, setMeat] = useState(userModule.user.meat)
+  const [Drg, setDrg] = useState(0)
+  const [eggs, setEggs] = useState(0)
+  const [meat, setMeat] = useState(0)
   const [wallLevelState, setWallLevelState] = useState(userModule.user.wall)
 
   const [openInstruction, setOpenInstruction] = useState(false)
@@ -55,7 +55,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
     setDrg(userModule.user.Drg);
     setEggs(userModule.user.eggs);
     setMeat(userModule.user.meat);
-  }, [userModule])
+  }, [])
 
   const TEST_MODE = true
 

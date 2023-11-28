@@ -32,6 +32,7 @@ import { getBcsPrice, getWithdrewDrgAmount } from '../../utils/user'
 import { global } from '../../common/global'
 import { setDefaultResultOrder } from 'dns'
 import userEvent from '@testing-library/user-event'
+import { getProfile } from '../../common/api'
 
 interface Props {
   open: boolean
@@ -142,7 +143,6 @@ const MiningModal = ({
   useEffect(() => {
     ; (async () => {
       const withdrewdrgAmount = getWithdrewDrgAmount(user.withdraws) // Drg
-      // const bcsPrice = await getBcsPrice();
       const bcsPrice = 1
       const maxAmount =
         (checkPremium(user.premium).isPremium ? 10 : 5) / bcsPrice
@@ -166,13 +166,11 @@ const MiningModal = ({
       if (btnType === 'Start') {
         dispatch(
           setCooldown(address, 'level-up', true, (res: any) => {
-
-            if (res.data)
-              if (!isCooldownStarted) {
-                setDrgAmount(res.data);
-                setRemainedTime(30)
-                setIsCooldownStarted(true)
-              }
+            if (!isCooldownStarted) {
+              setDrgAmount(res.data);
+              setRemainedTime(30)
+              setIsCooldownStarted(true)
+            }
           }),
         )
       } else if (btnType === 'Claim') {
@@ -355,7 +353,7 @@ const MiningModal = ({
                 textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center'
               }}>
                 <img src='assets/images/alert_.png' style={{ marginTop: "-9px", width: "30px", height: "30px" }}></img>
-                <p style={{textShadow: '1px 1px black'}}>ONCE YOU BUY IT YOU CAN RUN IT AN INFINITE NUMBER OF TIMES</p>
+                <p style={{ textShadow: '1px 1px black' }}>ONCE YOU BUY IT YOU CAN RUN IT AN INFINITE NUMBER OF TIMES</p>
               </div>
             </Box>
           </Box>
