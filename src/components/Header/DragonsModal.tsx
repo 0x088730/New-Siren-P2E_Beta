@@ -26,13 +26,13 @@ const DragonModal = ({
 
     const [meat, setMeat] = useState(userModule.user.meat);
     useEffect(() => {
-        if(address) {
+        if (address) {
             getProfile(address, "dragon").then(() => {
                 setMeat(userModule.user.meat);
             })
         }
     }, [address, userModule.user.meat])
- 
+
     const [buyedCommonDragon, setBuyedCommonDragon] = useState(false);
     const [buyedRareDragon, setBuyedRareDragon] = useState(false);
     const [buyedLegenDragon, setBuyedLegenDragon] = useState(false);
@@ -74,10 +74,12 @@ const DragonModal = ({
                 }
             }),
         )
+        console.log(global.dragons)
     }
     const selectDragon = (num: any) => {
         setDragonInfo(global.dragons[num]);
-        setDragonInfoModalOpen(true)
+        setDragonInfoModalOpen(true);
+        setDragonModalOpen(false);
     }
     const style = {
         position: 'absolute' as const,
@@ -86,7 +88,7 @@ const DragonModal = ({
         transform: 'translate(-50%, -50%)',
         width: {
             xs: 130,
-            md: 700,
+            md: 800,
         },
     }
 
@@ -128,7 +130,7 @@ const DragonModal = ({
                         <div
                             style={{
                                 width: '200px', height: '200px',
-                                margin: '0 5px',
+                                margin: '0 10px',
                                 backgroundImage: `url('/assets/images/dragons/common_dragon.png')`,
                                 backgroundSize: 'cover',
                                 textAlign: 'center',
@@ -193,13 +195,13 @@ const DragonModal = ({
                                         </p>
                                     </Button>
                                     :
-                                    <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[1].level}`}</span></div>
+                                    <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[1] !== undefined ? global.dragons[1].level : "1"}`}</span></div>
                             }
                         </div>
                         <div
                             style={{
                                 width: '200px', height: '200px',
-                                margin: '0 5px',
+                                margin: '0 10px',
                                 backgroundImage: `url('/assets/images/dragons/rare_dragon.png')`,
                                 backgroundSize: 'cover',
                                 textAlign: 'center',
@@ -291,13 +293,13 @@ const DragonModal = ({
                                             </p>
                                         </Button>
                                     :
-                                    <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[2].level}`}</span></div>
+                                    <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[2] !== undefined ? global.dragons[2].level : "1"}`}</span></div>
                             }
                         </div>
                         <div
                             style={{
                                 width: '200px', height: '200px',
-                                margin: '0 5px',
+                                margin: '0 10px',
                                 backgroundImage: `url('/assets/images/dragons/legendery_dragon.png')`,
                                 backgroundSize: 'cover',
                                 textAlign: 'center',
@@ -389,13 +391,14 @@ const DragonModal = ({
                                             </p>
                                         </Button>
                                     :
-                                    <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[3].level}`}</span></div>
+                                    <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[3] !== undefined ? global.dragons[3].level : "1"}`}</span></div>
                             }
                         </div>
                     </Box>
                 </Box>
             </Modal>
             <DragonInfoModal
+                setDragonModalOpen={setDragonModalOpen}
                 dragonInfoModalOpen={dragonInfoModalOpen}
                 setDragonInfoModalOpen={setDragonInfoModalOpen}
                 dragonInfo={dragonInfo}

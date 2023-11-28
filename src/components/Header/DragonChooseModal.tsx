@@ -192,7 +192,7 @@ const DragonChooseModal = ({
                     </p>
                   </Button>
                   :
-                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[1].level}`}</span></div>
+                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[1] !== undefined ? global.dragons[1].level : "1"}`}</span></div>
               }
             </div>
             <div
@@ -290,7 +290,7 @@ const DragonChooseModal = ({
                       </p>
                     </Button>
                   :
-                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[2].level}`}</span></div>
+                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[2] !== undefined ? global.dragons[2].level : "1"}`}</span></div>
               }
             </div>
             <div
@@ -388,7 +388,7 @@ const DragonChooseModal = ({
                       </p>
                     </Button>
                   :
-                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[3].level}`}</span></div>
+                  <div className='levelTitle'>LEVEL: <span style={{ color: '#ff8a00' }}>{`${global.dragons[3] !== undefined ? global.dragons[3].level : "1"}`}</span></div>
               }
             </div>
           </Box>
