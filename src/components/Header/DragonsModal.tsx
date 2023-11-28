@@ -26,7 +26,9 @@ const DragonModal = ({
 
     const [meat, setMeat] = useState(0);
     useEffect(() => {
-        setMeat(userModule.user.meat);
+        getProfile(address, "dragon").then(() => {
+            setMeat(userModule.user.meat);
+        })
     }, [])
 
     const [buyedCommonDragon, setBuyedCommonDragon] = useState(false);

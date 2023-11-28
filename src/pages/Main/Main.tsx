@@ -52,9 +52,11 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
     }
   })
   useEffect(() => {
-    setDrg(userModule.user.Drg);
-    setEggs(userModule.user.eggs);
-    setMeat(userModule.user.meat);
+    getProfile(address, "dragon").then(() => {
+      setDrg(userModule.user.Drg);
+      setEggs(userModule.user.eggs);
+      setMeat(userModule.user.meat);
+    })
   }, [])
 
   const TEST_MODE = true
@@ -279,7 +281,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   return (
     <>
       <Box className="Main">
-      {/* <RingLoader color="#36D7B7" loading={true} size={150}  /> */}
+        {/* <RingLoader color="#36D7B7" loading={true} size={150}  /> */}
         <Header
           showAccount={showAccount}
           setShowAccount={setShowAccount}
