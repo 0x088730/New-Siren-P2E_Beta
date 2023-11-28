@@ -14,6 +14,8 @@ interface Props {
     setMeatModalOpen: any
     dragonInfo: any
     setDragonInfo: any
+    meat: any
+    setMeat: any
 }
 
 const SelectMeatModal = ({
@@ -21,13 +23,15 @@ const SelectMeatModal = ({
     setMeatModalOpen,
     dragonInfo,
     setDragonInfo,
+    meat,
+    setMeat,
 }: Props) => {
     const dispatch = useDispatch<any>()
     const userModule = useSelector((state: any) => state.userModule)
     const [meatNum, setMeatNum] = useState(0);
 
     useEffect(() => {
-        setMeatNum(userModule.user.meat);
+        setMeatNum(meat);
     }, [meatModalOpen])
     const onChangeMeatNum = (value: any) => {
         let num = value / 1;
@@ -41,9 +45,9 @@ const SelectMeatModal = ({
             setMeatNum(0);
             return
         }
-        if(value > userModule.user.meat) {
+        if(value > meat) {
             alert("Not Enough Meats")
-            setMeatNum(userModule.user.meat);
+            setMeatNum(meat);
             return
         }
         setMeatNum(value);
@@ -52,7 +56,7 @@ const SelectMeatModal = ({
         dispatch(
             buyLevel(global.walletAddress, dragonInfo.dragonName, meatNum, (res: any) => {
                 setDragonInfo(res.data.dragons);
-                global.meat = res.data.meat;
+                setMeat(res.data.meat);
                 getProfile(global.walletAddress, "dragon")
             })
         )
@@ -130,7 +134,7 @@ const SelectMeatModal = ({
                                 marginTop: '5%',
                                 marginLeft: '70px',
                             }}
-                        >You have <span style={{ color: '#ff8a00' }}>{userModule.user.meat}</span>meat</p>
+                        >You have <span style={{ color: '#ff8a00' }}>{meat}</span>meat</p>
                         <TextField
                             sx={{
                                 mr: 1,

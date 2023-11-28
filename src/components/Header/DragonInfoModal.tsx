@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal'
 import { useSelector, useDispatch } from 'react-redux'
 import { global } from '../../common/global'
 import "./modal.css"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import SelectMeatModal from './selectMeatModal'
 import { styled } from '@mui/material/styles';
 
@@ -23,6 +23,12 @@ const DragonInfoModal = ({
     dragonInfo,
     setDragonInfo,
 }: Props) => {
+    const userModule = useSelector((state: any) => state.userModule)
+    const [meat, setMeat] = useState(userModule.user.meat);
+    useEffect(() => {
+        setMeat(userModule.user.meat);
+    }, [dragonInfoModalOpen])
+
     const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
         height: 20,
         outline: '3px solid black',
@@ -180,6 +186,8 @@ const DragonInfoModal = ({
                 setMeatModalOpen={setMeatModalOpen}
                 dragonInfo={dragonInfo}
                 setDragonInfo={setDragonInfo}
+                meat={meat}
+                setMeat={setMeat}
             />
         </>
     )
