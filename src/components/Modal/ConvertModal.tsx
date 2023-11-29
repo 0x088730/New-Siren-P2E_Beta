@@ -111,23 +111,25 @@ const ConvertModal = ({
     }, [convertCooldown])
 
     useEffect(() => {
-        dispatch(
-            checkCooldown(address, 'convertor', (res: any) => {
-                let cooldownSec = res.data
-                if (cooldownSec === 999999) {
-                    // if(miningStatus === false) return
-                    // setBtnType('Start')
-                }
-                else if (cooldownSec <= 0) {
-                    setConvertTimeRemained(0);
-                    setConvertBtn("Claim");
-                }
-                else {
-                    setConvertTimeRemained(cooldownSec)
-                    setConvertCooldown(true)
-                }
-            }),
-        )
+        if (address !== '') {
+            dispatch(
+                checkCooldown(address, 'convertor', (res: any) => {
+                    let cooldownSec = res.data
+                    if (cooldownSec === 999999) {
+                        // if(miningStatus === false) return
+                        // setBtnType('Start')
+                    }
+                    else if (cooldownSec <= 0) {
+                        setConvertTimeRemained(0);
+                        setConvertBtn("Claim");
+                    }
+                    else {
+                        setConvertTimeRemained(cooldownSec)
+                        setConvertCooldown(true)
+                    }
+                }),
+            )
+        }
     }, [openBird])
 
     const style = {

@@ -101,23 +101,25 @@ const MiningModal = ({
   }, [])
 
   useEffect(() => {
-    dispatch(
-      checkCooldown(address, 'level-up', (res: any) => {
-        let cooldownSec = res.data
-        if (cooldownSec === 999999) {
-          // if(miningStatus === false) return
-          // setBtnType('Start')
-        }
-        else if (cooldownSec <= 0) {
-          setRemainedTime(0);
-          setBtnType("Claim");
-        }
-        else {
-          setRemainedTime(cooldownSec)
-          setIsCooldownStarted(true)
-        }
-      }),
-    )
+    if (address !== '') {
+      dispatch(
+        checkCooldown(address, 'level-up', (res: any) => {
+          let cooldownSec = res.data
+          if (cooldownSec === 999999) {
+            // if(miningStatus === false) return
+            // setBtnType('Start')
+          }
+          else if (cooldownSec <= 0) {
+            setRemainedTime(0);
+            setBtnType("Claim");
+          }
+          else {
+            setRemainedTime(cooldownSec)
+            setIsCooldownStarted(true)
+          }
+        }),
+      )
+    }
   }, [address])
 
   useEffect(() => {

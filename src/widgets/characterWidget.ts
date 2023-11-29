@@ -301,12 +301,12 @@ export default class DragonWidget extends Phaser.GameObjects.Container {
         const row = Math.floor(i % 2)
         const col = Math.floor(i / 2)
         let modelName =
-        dragonList.filter((dragon) => dragon.dragonNo === i)
+          dragonList.filter((dragon) => dragon.dragonNo === i)
             .length > 0
             ? `model-${avatarList[i]}`
             : `model1-${avatarList[i]}`
         let level =
-        dragonList.filter((dragon) => dragon.dragonNo === i)
+          dragonList.filter((dragon) => dragon.dragonNo === i)
             .length > 0
             ? 'LVL:' +
             Math.floor(
@@ -374,29 +374,31 @@ export default class DragonWidget extends Phaser.GameObjects.Container {
               alert('MUST BE PURCHASED')
             } else {
               setCurrentDragon('siren-' + (i + 1)).then(() => {
-                getProfile(global.walletAddress, 'siren-' + (i + 1)).then(
-                  () => {
-                    let embed = global.embed.filter(item => item.dragon === global.currentDragonName)
-                    this.updateHpCritical(
-                      global.hp,
-                      global.critical,
-                      global.damage,
-                      embed,
-                    )
-                    this.openModel(i)
-                    this.embedBuild()
-                    for (let i = 0; i < this.rarityTexts.length; i++) {
-                      this.rarityTexts[i].setVisible(false)
-                      this.remove(this.rarityTexts[i])
-                    }
-                    this.rarityTexts = []
-                    for (let i = 0; i < this.lvTexts.length; i++) {
-                      this.lvTexts[i].setVisible(false)
-                      this.remove(this.lvTexts[i])
-                    }
-                    this.lvTexts = []
-                  },
-                )
+                if (global.walletAddress !== '') {
+                  getProfile(global.walletAddress, 'siren-' + (i + 1)).then(
+                    () => {
+                      let embed = global.embed.filter(item => item.dragon === global.currentDragonName)
+                      this.updateHpCritical(
+                        global.hp,
+                        global.critical,
+                        global.damage,
+                        embed,
+                      )
+                      this.openModel(i)
+                      this.embedBuild()
+                      for (let i = 0; i < this.rarityTexts.length; i++) {
+                        this.rarityTexts[i].setVisible(false)
+                        this.remove(this.rarityTexts[i])
+                      }
+                      this.rarityTexts = []
+                      for (let i = 0; i < this.lvTexts.length; i++) {
+                        this.lvTexts[i].setVisible(false)
+                        this.remove(this.lvTexts[i])
+                      }
+                      this.lvTexts = []
+                    },
+                  )
+                }
               })
             }
           })
