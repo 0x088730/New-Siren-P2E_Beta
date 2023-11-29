@@ -58,6 +58,7 @@ export interface UserProfile {
   hunterLevel:number
   attacking: boolean
   miningStatus: boolean
+  loadingStatus: boolean
 }
 
 export let global: UserProfile = {
@@ -110,6 +111,7 @@ export let global: UserProfile = {
   hunterLevel:0,
   attacking: false,
   miningStatus: false,
+  loadingStatus: true,
 }
 
 export const changeItem = (resp: any) => {

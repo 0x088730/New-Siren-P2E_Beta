@@ -25,6 +25,9 @@ import { global } from '../../common/global'
 import RockModal from '../../components/Header/RockModal'
 import ConvertModal from '../../components/Modal/ConvertModal'
 import { getProfile } from '../../common/api'
+import store from '../../store'
+import { setLoadingStatus } from '../../common/state/game/reducer'
+import { RingLoader } from 'react-spinners';
 
 interface MainProps {
   showAccount: any
@@ -34,6 +37,8 @@ interface MainProps {
 const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const dispatch = useDispatch<any>()
   const userModule = useSelector((state: any) => state.userModule)
+  const isLoading = useSelector((state: any) => state.app.game.isLoading)
+
   const { user } = userModule
   const { connected, chainID, address, connect } = useWeb3Context()
 
@@ -56,6 +61,9 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
       setEggs(userModule.user.eggs);
       setMeat(userModule.user.meat);
     })
+    setTimeout(() => {
+      store.dispatch(setLoadingStatus(false))
+    }, 2000)
   }, [])
 
   const TEST_MODE = true
@@ -279,395 +287,404 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
 
   return (
     <>
-      <Box className="Main">
-        {/* <RingLoader color="#36D7B7" loading={true} size={150}  /> */}
-        <Header
-          showAccount={showAccount}
-          setShowAccount={setShowAccount}
-          Drg={Drg}
-          eggs={eggs}
-          meat={meat}
-        />
-
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={{ ...style, width: { sm: 400, md: 400 } }}>
-            <Grid container spacing={3}>
-              {diamonds.map((item, index) => (
-                <Grid
-                  item
-                  key={index}
-                  xs={6}
-                  sm={6}
-                  md={6}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: '100px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {item === 1 && <img alt="" src="/images/diamond_1.png" />}
-                    {item === 2 && <img alt="" src="/images/diamond_2.png" />}
-
-                    <Box sx={{ textAlign: 'center' }}>
-                      <Button
-                        sx={{
-                          padding: '10px 4px',
-                        }}
-                        variant="contained"
-                        color="success"
-                        onClick={(e) => onRockStart(item)}
-                      >
-                        20 Drg
-                      </Button>
-                    </Box>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </Modal>
-
-        <ConvertModal
-          openBird={openBird}
-          setOpenBird={setOpenBird}
-          Drg={Drg}
-          setDrg={setDrg}
-          eggs={eggs}
-          setEggs={setEggs}
-          meat={meat}
-          setMeat={setMeat}
-        />
-        <ExchangeModal
-          open={openSwap}
-          setOpen={setOpenSwap}
-          Drg={Drg}
-          egg={eggs}
-          setDrg={setDrg}
-          setEgg={setEggs}
-        />
-        <UpgradeWallModal
-          open={openUpgradeWall}
-          setOpen={setOpenUpgradeWall}
-          setWall={onUpgradeWall}
-        />
-        <RockModal
-          openRock={openRock}
-          counting={items[selectedIndex].counting}
-          timer={items[selectedIndex].timer}
-          setOpen={setOpenRock}
-          onRock={() => onRockStart(1)}
-          setRockClaim={onRockClaim}
-          btnTitle={btnTitle}
-        />
-        <DepositModal
-          open={openDeposit}
-          setOpen={setOpenDeposit}
-          meat={meat}
-          egg={eggs}
-          onExchange={onExchange}
-          onExchangeEgg={onExchangeEgg}
-        />
-        <MiningModal
-          open={openMining}
-          setOpen={setOpenMining}
-          drgAmount={Drg}
-          setDrgAmount={setDrg}
-          meat={meat}
-          egg={eggs}
-          setEggs={setEggs}
-          levelState={levelState}
-          setLevelState={setLevelState}
-          onExchange={onExchange}
-          onExchangeEgg={onExchangeEgg}
-        />
-
-        <InstructionModal open={openInstruction} setOpen={setOpenInstruction} />
-
-        <Box
-          sx={{
-            pointerEvents: `${TEST_MODE || connected ? '' : 'none'}`,
-            height: '90%',
-          }}
-        >
-          <div
-            className="wall-wallet"
-          // style={{ backgroundImage:"url('/images/border"+(wallLevelState)+".png')" }}
-          >
-            <img
-              src={'assets/images/border' + wallLevelState + '.png'}
-              style={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                cursor: 'pointer'
-              }}
-              onClick={() => setOpenUpgradeWall(true)}
-              className={styles.item}
+      {isLoading === true ?
+        <div style={{ width: '100%', height: '100%', backgroundColor: 'black' }}>
+          <RingLoader color="#36D7B7" loading={isLoading} size={150} style={{ position: 'absolute', top: '40vh', left: '45vw' }} />
+        </div>
+        :
+        <>
+          <Box className="Main">
+            <Header
+              showAccount={showAccount}
+              setShowAccount={setShowAccount}
+              Drg={Drg}
+              eggs={eggs}
+              meat={meat}
             />
+
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={{ ...style, width: { sm: 400, md: 400 } }}>
+                <Grid container spacing={3}>
+                  {diamonds.map((item, index) => (
+                    <Grid
+                      item
+                      key={index}
+                      xs={6}
+                      sm={6}
+                      md={6}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: '100px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {item === 1 && <img alt="" src="/images/diamond_1.png" />}
+                        {item === 2 && <img alt="" src="/images/diamond_2.png" />}
+
+                        <Box sx={{ textAlign: 'center' }}>
+                          <Button
+                            sx={{
+                              padding: '10px 4px',
+                            }}
+                            variant="contained"
+                            color="success"
+                            onClick={(e) => onRockStart(item)}
+                          >
+                            20 Drg
+                          </Button>
+                        </Box>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            </Modal>
+
+            <ConvertModal
+              openBird={openBird}
+              setOpenBird={setOpenBird}
+              Drg={Drg}
+              setDrg={setDrg}
+              eggs={eggs}
+              setEggs={setEggs}
+              meat={meat}
+              setMeat={setMeat}
+            />
+            <ExchangeModal
+              open={openSwap}
+              setOpen={setOpenSwap}
+              Drg={Drg}
+              egg={eggs}
+              setDrg={setDrg}
+              setEgg={setEggs}
+            />
+            <UpgradeWallModal
+              open={openUpgradeWall}
+              setOpen={setOpenUpgradeWall}
+              setWall={onUpgradeWall}
+            />
+            <RockModal
+              openRock={openRock}
+              counting={items[selectedIndex].counting}
+              timer={items[selectedIndex].timer}
+              setOpen={setOpenRock}
+              onRock={() => onRockStart(1)}
+              setRockClaim={onRockClaim}
+              btnTitle={btnTitle}
+            />
+            <DepositModal
+              open={openDeposit}
+              setOpen={setOpenDeposit}
+              meat={meat}
+              egg={eggs}
+              onExchange={onExchange}
+              onExchangeEgg={onExchangeEgg}
+            />
+            <MiningModal
+              open={openMining}
+              setOpen={setOpenMining}
+              drgAmount={Drg}
+              setDrgAmount={setDrg}
+              meat={meat}
+              egg={eggs}
+              setEggs={setEggs}
+              levelState={levelState}
+              setLevelState={setLevelState}
+              onExchange={onExchange}
+              onExchangeEgg={onExchangeEgg}
+            />
+
+            <InstructionModal open={openInstruction} setOpen={setOpenInstruction} />
+
             <Box
               sx={{
-                width: '50%',
-                paddingTop: '50vh',
-                // transform: 'translateY(-20vh)',                
-
-                justifyContent: 'space-between',
-                margin: 'auto',
-                display: 'flex',
-                zIndex: 20,
+                pointerEvents: `${TEST_MODE || connected ? '' : 'none'}`,
+                height: '90%',
               }}
             >
-              <Box
-                sx={{
-                  cursor: 'pointer',
-                  transform: 'translateY(-100px)',
-                  height: 'fit-content',
-
-                  zIndex: 20,
-                }}
-                onClick={(e) => setOpenSwap(true)}
-              >
-                <img alt="" src="/images/storage.png" style={{ transform: 'translate(-50%, -50%)' }} className={styles.item} />
-              </Box>
-              <Box
-                sx={{
-                  cursor: 'pointer',
-                  transform: 'translate(20px, 20px)',
-                  height: 'fit-content',
-                  zIndex: 20,
-                }}
-                onClick={(e) => setOpenDeposit(true)}
-              >
-                <img alt="" src="/images/home.png" style={{ transform: 'translate(-50%, -50%)', maxWidth: '250px' }} className={styles.item} />
-              </Box>
-              <Box
-                sx={{
-                  // left: `${Math.max(innerWidth, 1200) / 2 - 75}px`,
-                  zIndex: 20,
-                  transform: 'translateY(200px)',
-                  height: 'fit-content',
-                  width: 'fit-content',
-
-                  cursor: 'pointer',
-                }}
-                onClick={(e) => {
-                  showBirdModal()
-                }}
+              <div
+                className="wall-wallet"
+              // style={{ backgroundImage:"url('/images/border"+(wallLevelState)+".png')" }}
               >
                 <img
-                  alt=""
+                  src={'assets/images/border' + wallLevelState + '.png'}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => setOpenUpgradeWall(true)}
                   className={styles.item}
-                  style={{ transform: 'translate(-5%, -115%)' }}
-                  width={'80%'}
-                  src={`/images/bird_place.png`}
                 />
-              </Box>
-              <Box
-                sx={{
-                  zIndex: 20,
-                  transform: 'translate(100%, -180px)',
-                  height: 'fit-content',
-                  cursor: 'pointer',
-                }}
-                onClick={(e) => setOpenMining(true)}
-              >
-                <img alt="" src="/images/mining.png" style={{ transform: 'translate(-50%, -50%)' }} className={styles.item} />
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                position: 'absolute',
-                display: 'flex',
-                width: '30%',
-                margin: 'auto',
-                top: '25%',
-                left: '50%',
-                transform: "translateX(-50%)"
-              }}
-            >
-              {items.map((item, index) => (
                 <Box
                   sx={{
+                    width: '50%',
+                    paddingTop: '50vh',
+                    // transform: 'translateY(-20vh)',                
 
-                    // left:
-                    //   windowSize.width < MIN_SCREEN
-                    //     ? MIN_SCREEN - parseInt(item.posy, 10) - 30 + 'px'
-                    //     : Math.max(900, windowSize.width - 450 ) - parseInt(item.posy, 10) + 'px',
-                    cursor: 'pointer',
+                    justifyContent: 'space-between',
                     margin: 'auto',
+                    display: 'flex',
+                    zIndex: 20,
                   }}
-                  onClick={(e) => {
-                    showModal(index)
-                  }}
-                  key={index}
                 >
-                  {/* {item.item === 0 ? ( */}
                   <Box
                     sx={{
-                      zIndex: 10,
-                      transform: index === 1 ? 'translateY(-30%) ' : index === 2 ? 'translateY(30%) ' : ''
+                      cursor: 'pointer',
+                      transform: 'translateY(-100px)',
+                      height: 'fit-content',
+
+                      zIndex: 20,
+                    }}
+                    onClick={(e) => setOpenSwap(true)}
+                  >
+                    <img alt="" src="/images/storage.png" style={{ transform: 'translate(-50%, -50%)' }} className={styles.item} />
+                  </Box>
+                  <Box
+                    sx={{
+                      cursor: 'pointer',
+                      transform: 'translate(20px, 20px)',
+                      height: 'fit-content',
+                      zIndex: 20,
+                    }}
+                    onClick={(e) => setOpenDeposit(true)}
+                  >
+                    <img alt="" src="/images/home.png" style={{ transform: 'translate(-50%, -50%)', maxWidth: '250px' }} className={styles.item} />
+                  </Box>
+                  <Box
+                    sx={{
+                      // left: `${Math.max(innerWidth, 1200) / 2 - 75}px`,
+                      zIndex: 20,
+                      transform: 'translateY(200px)',
+                      height: 'fit-content',
+                      width: 'fit-content',
+
+                      cursor: 'pointer',
+                    }}
+                    onClick={(e) => {
+                      showBirdModal()
                     }}
                   >
                     <img
                       alt=""
                       className={styles.item}
-                      width={'100'}
-                      // width={index===1?150:100}
-                      src={`/images/place_1.png`}
+                      style={{ transform: 'translate(-5%, -115%)' }}
+                      width={'80%'}
+                      src={`/images/bird_place.png`}
                     />
                   </Box>
+                  <Box
+                    sx={{
+                      zIndex: 20,
+                      transform: 'translate(100%, -180px)',
+                      height: 'fit-content',
+                      cursor: 'pointer',
+                    }}
+                    onClick={(e) => setOpenMining(true)}
+                  >
+                    <img alt="" src="/images/mining.png" style={{ transform: 'translate(-50%, -50%)' }} className={styles.item} />
+                  </Box>
                 </Box>
-              ))}
-            </Box>
-
-            {/* </div> */}
-          </div>
-        </Box>
-
-        <Box
-          sx={{
-            zIndex: 20,
-            height: 'fit-content',
-            width: 'fit-content',
-          }}
-        >
-          <img
-            alt=""
-            style={{ position: 'absolute', left: '2%', top: '55%' }}
-            src={`/images/greentree1.png`}
-          />
-        </Box>
-        <Box
-          sx={{
-            zIndex: 20,
-            height: 'fit-content',
-            width: 'fit-content',
-          }}
-        >
-          <img
-            alt=""
-            style={{ position: 'absolute', left: '15%', top: '65%', width: '280px', height: '300px' }}
-            src={`/images/pinktree.png`}
-          />
-        </Box>
-        <Box
-          sx={{
-            zIndex: 20,
-            height: 'fit-content',
-            width: 'fit-content',
-          }}
-        >
-          <img
-            alt=""
-            style={{ position: 'absolute', right: '5%', top: '55%', }}
-            src={`/images/greentree2.png`}
-          />
-        </Box>
-        <Box
-          sx={{
-            zIndex: 20,
-            height: 'fit-content',
-            width: 'fit-content',
-          }}
-        >
-          <img
-            alt=""
-            style={{ position: 'absolute', left: '50%', bottom: '-5%', }}
-            src={`/images/rock.png`}
-          />
-        </Box>
-      </Box >
-
-      <Box
-        className={styles.loginbg}
-        sx={{
-          display: TEST_MODE || connected ? 'none' : 'block',
-          position: 'absolute',
-          top: 0,
-          width: '100%',
-          zIndex: 2,
-        }}
-      >
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            transform: 'translate(0, -50%)',
-            justifyContent: 'center',
-            width: '100vw',
-            display: 'flex',
-          }}
-        >
-          <Box
-            sx={{
-              width: '12vw',
-              minWidth: '100px',
-              maxWidth: '180px',
-            }}
-          >
-            <img alt="" src="/images/login_icon.png" />
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-            }}
-          >
-            <Box className={styles.icon_buttons}>
-              <Button
-                sx={{ mb: 1, width: '100%' }}
-                variant="contained"
-                color="success"
-                onClick={(e) => {
-                  connect()
-                }}
-              >
-                <img alt="" src="/images/icon_metamask.png" />
-                Connect Metamask
-              </Button>
-            </Box>
-            <Box className={styles.icon_buttons}>
-              <a
-                className={styles.link}
-                href="https://pancakeswap.finance/swap?outputCurrency=BNB&inputCurrency=0xc6D542Ab6C9372a1bBb7ef4B26528039fEE5C09B"
-              >
-                <Button
-                  sx={{ width: '100%', justifyContent: 'left', mb: 1 }}
-                  variant="contained"
-                  color="success"
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    display: 'flex',
+                    width: '30%',
+                    margin: 'auto',
+                    top: '25%',
+                    left: '50%',
+                    transform: "translateX(-50%)"
+                  }}
                 >
-                  <img alt="" src="/images/icon_bcs.png" />
-                  Buy/Sell BCS
-                </Button>
-              </a>
+                  {items.map((item, index) => (
+                    <Box
+                      sx={{
+
+                        // left:
+                        //   windowSize.width < MIN_SCREEN
+                        //     ? MIN_SCREEN - parseInt(item.posy, 10) - 30 + 'px'
+                        //     : Math.max(900, windowSize.width - 450 ) - parseInt(item.posy, 10) + 'px',
+                        cursor: 'pointer',
+                        margin: 'auto',
+                      }}
+                      onClick={(e) => {
+                        showModal(index)
+                      }}
+                      key={index}
+                    >
+                      {/* {item.item === 0 ? ( */}
+                      <Box
+                        sx={{
+                          zIndex: 10,
+                          transform: index === 1 ? 'translateY(-30%) ' : index === 2 ? 'translateY(30%) ' : ''
+                        }}
+                      >
+                        <img
+                          alt=""
+                          className={styles.item}
+                          width={'100'}
+                          // width={index===1?150:100}
+                          src={`/images/place_1.png`}
+                        />
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+
+                {/* </div> */}
+              </div>
             </Box>
-            <Box className={styles.icon_buttons}>
-              <Button
-                sx={{ width: '100%', justifyContent: 'left', mb: 1 }}
-                variant="contained"
-                color="success"
-                onClick={(e) => {
-                  setOpenInstruction(true)
+
+            <Box
+              sx={{
+                zIndex: 20,
+                height: 'fit-content',
+                width: 'fit-content',
+              }}
+            >
+              <img
+                alt=""
+                style={{ position: 'absolute', left: '2%', top: '55%' }}
+                src={`/images/greentree1.png`}
+              />
+            </Box>
+            <Box
+              sx={{
+                zIndex: 20,
+                height: 'fit-content',
+                width: 'fit-content',
+              }}
+            >
+              <img
+                alt=""
+                style={{ position: 'absolute', left: '15%', top: '65%', width: '280px', height: '300px' }}
+                src={`/images/pinktree.png`}
+              />
+            </Box>
+            <Box
+              sx={{
+                zIndex: 20,
+                height: 'fit-content',
+                width: 'fit-content',
+              }}
+            >
+              <img
+                alt=""
+                style={{ position: 'absolute', right: '5%', top: '55%', }}
+                src={`/images/greentree2.png`}
+              />
+            </Box>
+            <Box
+              sx={{
+                zIndex: 20,
+                height: 'fit-content',
+                width: 'fit-content',
+              }}
+            >
+              <img
+                alt=""
+                style={{ position: 'absolute', left: '50%', bottom: '-5%', }}
+                src={`/images/rock.png`}
+              />
+            </Box>
+          </Box >
+
+          <Box
+            className={styles.loginbg}
+            sx={{
+              display: TEST_MODE || connected ? 'none' : 'block',
+              position: 'absolute',
+              top: 0,
+              width: '100%',
+              zIndex: 2,
+            }}
+          >
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                transform: 'translate(0, -50%)',
+                justifyContent: 'center',
+                width: '100vw',
+                display: 'flex',
+              }}
+            >
+              <Box
+                sx={{
+                  width: '12vw',
+                  minWidth: '100px',
+                  maxWidth: '180px',
                 }}
               >
-                <img alt="" src="/images/icon_youtube.png" />
-                INSTRUCTION
-              </Button>
+                <img alt="" src="/images/login_icon.png" />
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
+              >
+                <Box className={styles.icon_buttons}>
+                  <Button
+                    sx={{ mb: 1, width: '100%' }}
+                    variant="contained"
+                    color="success"
+                    onClick={(e) => {
+                      connect()
+                    }}
+                  >
+                    <img alt="" src="/images/icon_metamask.png" />
+                    Connect Metamask
+                  </Button>
+                </Box>
+                <Box className={styles.icon_buttons}>
+                  <a
+                    className={styles.link}
+                    href="https://pancakeswap.finance/swap?outputCurrency=BNB&inputCurrency=0xc6D542Ab6C9372a1bBb7ef4B26528039fEE5C09B"
+                  >
+                    <Button
+                      sx={{ width: '100%', justifyContent: 'left', mb: 1 }}
+                      variant="contained"
+                      color="success"
+                    >
+                      <img alt="" src="/images/icon_bcs.png" />
+                      Buy/Sell BCS
+                    </Button>
+                  </a>
+                </Box>
+                <Box className={styles.icon_buttons}>
+                  <Button
+                    sx={{ width: '100%', justifyContent: 'left', mb: 1 }}
+                    variant="contained"
+                    color="success"
+                    onClick={(e) => {
+                      setOpenInstruction(true)
+                    }}
+                  >
+                    <img alt="" src="/images/icon_youtube.png" />
+                    INSTRUCTION
+                  </Button>
+                </Box>
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </Box>
+        </>
+      }
+
+
     </>
   )
 }
