@@ -4,7 +4,8 @@ import {
   increment,
   decrement,
   setDragonStatus,
-  setTurnFormat
+  setTurnFormat,
+  setLoadingStatus,
 } from '../common/state/game/reducer'
 import store from '../store'
 import ClaimWidget from '../widgets/claimWidget'
@@ -13,6 +14,7 @@ import DragonWidget from '../widgets/characterWidget'
 import { ENEMY_SPINE, SIREN_SPINE } from '../config/const'
 import { changeItem, global } from '../common/global'
 import RoomWidget from '../widgets/roomWidget'
+import { useSelector, useDispatch } from 'react-redux'
 
 export default class Game extends Phaser.Scene {
   inventoryWidget!: InventoryWidget
@@ -34,33 +36,22 @@ export default class Game extends Phaser.Scene {
   init() { }
 
   preload() {
-    // var progressBar = this.add.graphics();
-    // var progressBox = this.add.graphics();
-    // progressBox.fillStyle(0x222222, 0.8);
-    // progressBox.fillRect(240, 270, 320, 50);
-
+    store.dispatch(setLoadingStatus(true));
     this.load.setPath('assets/character/spine')
     this.load.spine(SIREN_SPINE, 'siren1/idle/sakura.json', 'siren1/idle/sakura.atlas')
     this.load.setPath('/')
-    // const spinner = this.add.circle(400, 300, 20, 0xff0000);
-    // this.load.on("progress", function (e: any) {
-    // })
-    // this.load.on('progress', function (value: any) {
-    //   progressBar.clear();
-    //   progressBar.fillStyle(0xffffff, 1);
-    //   progressBar.fillRect(250, 280, 300 * value, 30);
-    // });
-    // this.load.on('complete', () => {
-    //   this.time.addEvent({
-    //     delay: 3000,
-    //     callback: () => {
-    //       progressBar.destroy();
-    //       progressBox.destroy();
-    //     },
-    //   })
 
-    // });
+    this.load.on('complete', () => {
+      this.time.addEvent({
+        delay: 1000,
+        callback: () => {
+          const video = document.getElementById('backgroundVideo') as HTMLElement
+          video.style.display = "block"
+          store.dispatch(setLoadingStatus(false));
+        },
+      })
 
+    });
   }
 
   create() {

@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-import { setGameStatus, setTurnFormat } from '../common/state/game/reducer'
+import { setGameStatus, setLoadingStatus, setTurnFormat } from '../common/state/game/reducer'
 import { ButtonComponent } from '../components/button.component'
 import { GameHeaderComponent } from '../components/game-header.component'
 import { useWeb3Context } from '../hooks/web3Context'
@@ -93,6 +93,7 @@ export const GamePage = ({
   //   onDragon()
   // }
   const dispatch = useDispatch<any>()
+  const navigate = useNavigate();
   // const [openAccount, setOpenAccount] = useState(showAccount)
   const [show, setShow] = useState(false)
   const handleOpenAccount = (flag: boolean) => {
@@ -114,6 +115,11 @@ export const GamePage = ({
     } else {
     }
   }, [chainID, connected, address])
+
+  const onLand = () => {
+    store.dispatch(setLoadingStatus(true));
+    navigate("/land", { replace: true });
+  }
 
   return (
     <div className="relative w-full">
@@ -147,18 +153,18 @@ export const GamePage = ({
                     </div> */}
                   </div>
                   <div className="btn-ligroup">
-                    <ButtonComponent onClick={() => setDragonModalOpen(true)}>
+                    <ButtonComponent onClick={() => !address ? null : setDragonModalOpen(true)}>
                       <img
                         src="assets/images/characters.png"
                       />
                     </ButtonComponent>
-                    <Link to="/land" className="button muted-button">
-                      <ButtonComponent>
-                        <img
-                          src="assets/images/land.png"
-                        />
-                      </ButtonComponent>
-                    </Link>
+                    {/* <Link to="/land" className="button muted-button"> */}
+                    <ButtonComponent onClick={() => !address ? null : onLand()}>
+                      <img
+                        src="assets/images/land.png"
+                      />
+                    </ButtonComponent>
+                    {/* </Link> */}
                   </div>
                 </div>
               )}
