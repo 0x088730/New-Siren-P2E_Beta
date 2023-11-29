@@ -29,7 +29,7 @@ const DragonInfoModal = ({
     meat,
     setMeat,
 }: Props) => {
-    
+
     const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
         height: 20,
         outline: '3px solid black',
@@ -103,7 +103,7 @@ const DragonInfoModal = ({
                             LEVEL: <span style={{ color: '#ff8a00' }}>{dragonInfo.level}</span>
                         </div>
                         <div style={{ width: '230px', margin: '5px' }}>
-                            <BorderLinearProgress variant="determinate" value={dragonInfo.rarity} style={{background: 'none'}} />
+                            <BorderLinearProgress variant="determinate" value={dragonInfo.rarity} style={{ background: 'none' }} />
                             <p
                                 style={{
                                     color: 'white',
@@ -129,7 +129,19 @@ const DragonInfoModal = ({
                                 }}
                                 onClick={() => meat === 0 ? alert("Not Enough Meat") : setMeatModalOpen(true)}
                             >
-                                <img alt="" src={`assets/images/plus.png`} width={'25px'} style={{marginLeft: '-33px', marginTop: '3px'}}/>
+                                <p
+                                    style={{
+                                        fontFamily: "arial",
+                                        color: 'black',
+                                        fontSize: '38px',
+                                        position: 'absolute',
+                                        right: '35px',
+                                        top: '-20px',
+                                        textShadow: '0 0 2px #ff8a00, 0 0 2px #ff8a00',
+                                    }}
+                                >
+                                    +
+                                </p>
                             </Button>
                         </div>
                         <img alt="" src={`assets/images/dragons/${dragonInfo.dragonName}_dragon_avatar.png`} width={'250px'} />
