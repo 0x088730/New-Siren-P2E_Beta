@@ -118,7 +118,7 @@ const ExchangeModal = ({
   //  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false)
   useEffect(() => {
-    if (isCooldownStarted) {
+    if (isCooldownStarted && address !== '') {
       var cooldownInterval = setInterval(() => {
         setRemainedTime((prevTime) => {
           if (prevTime === 1) {
@@ -162,7 +162,7 @@ const ExchangeModal = ({
     return () => clearInterval(cooldownInterval)
   }, [isCooldownStarted])
   useEffect(() => {
-    if (open === true)
+    if (open === true && address !== '')
       dispatch(
         checkCooldown(address, 'hunter-level-up', (res: any) => {
           let cooldownSec = res.data.time

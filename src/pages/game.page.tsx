@@ -12,6 +12,8 @@ import InforModal from '../components/Header/InforModal'
 import { getMeats } from '../store/user/actions'
 import { onShowAlert } from '../store/utiles/actions'
 import DragonModal from '../components/Header/DragonsModal'
+import { RingLoader } from 'react-spinners';
+
 interface HeaderProps {
   showAccount: any
   setShowAccount: Function
@@ -38,6 +40,7 @@ export const GamePage = ({
   const secondTurn = useSelector((state: any) => state.app.game.secondTurn)
   const thirdTurn = useSelector((state: any) => state.app.game.thirdTurn)
   const user = useSelector((state: any) => state.userModule)
+  const isLoading = useSelector((state: any) => state.app.game.isLoading)
 
   const inventoryOpened = useSelector(
     (state: any) => state.app.game.inventoryOpened,
@@ -116,6 +119,12 @@ export const GamePage = ({
     }
   }, [chainID, connected, address])
 
+  useEffect(() => {
+    console.log("loading")
+    setTimeout(() => {
+      store.dispatch(setLoadingStatus(false));
+    }, 2000)
+  }, [location.key])
   const onLand = () => {
     store.dispatch(setLoadingStatus(true));
     navigate("/land", { replace: true });
@@ -123,20 +132,25 @@ export const GamePage = ({
 
   return (
     <div className="relative w-full">
-      <div className="grid h-full">
-        <div className="flex h-full flex-1 flex-col p-8 min-w-[1024px]">
-          <InforModal
-            openAccount={showAccount}
-            setOpenAccount={handleOpenAccount}
-          />
+      {isLoading === true ?
+        <div style={{ width: '100%', height: '100%', backgroundColor: 'black' }}>
+          <RingLoader color="#36D7B7" loading={isLoading} size={150} style={{ position: 'absolute', top: '40vh', left: '45vw' }} />
+        </div>
+        :
+        <div className="grid h-full">
+          <div className="flex h-full flex-1 flex-col p-8 min-w-[1024px]">
+            <InforModal
+              openAccount={showAccount}
+              setOpenAccount={handleOpenAccount}
+            />
 
-          {gameState === 0 && (
-            <div className="flex flex-col justify-center flex-1 h-full d-flex">
+            {gameState === 0 && (
+              <div className="flex flex-col justify-center flex-1 h-full d-flex">
 
-              {!inventoryOpened && !dragonOpened && (
-                <div>
-                  <div className="btn-group">
-                    {/* <div className="btn-wrapper">
+                {!inventoryOpened && !dragonOpened && (
+                  <div>
+                    <div className="btn-group">
+                      {/* <div className="btn-wrapper">
                       <ButtonComponent onClick={start}>
                         <img src="assets/images/play pve.png"/>
                       </ButtonComponent>
@@ -151,141 +165,142 @@ export const GamePage = ({
                         <img src="assets/images/inventory.png"/>
                       </ButtonComponent>
                     </div> */}
+                    </div>
+                    <div className="btn-ligroup">
+                      <ButtonComponent onClick={() => !address ? null : setDragonModalOpen(true)}>
+                        <img
+                          src="assets/images/characters.png"
+                        />
+                      </ButtonComponent>
+                      {/* <Link to="/land" className="button muted-button"> */}
+                      <ButtonComponent onClick={() => !address ? null : onLand()}>
+                        <img
+                          src="assets/images/land.png"
+                        />
+                      </ButtonComponent>
+                      {/* </Link> */}
+                    </div>
                   </div>
-                  <div className="btn-ligroup">
-                    <ButtonComponent onClick={() => !address ? null : setDragonModalOpen(true)}>
-                      <img
-                        src="assets/images/characters.png"
-                      />
-                    </ButtonComponent>
-                    {/* <Link to="/land" className="button muted-button"> */}
-                    <ButtonComponent onClick={() => !address ? null : onLand()}>
-                      <img
-                        src="assets/images/land.png"
-                      />
-                    </ButtonComponent>
-                    {/* </Link> */}
+                )}
+              </div>
+            )}
+            {gameState === 1 && global.currentDragonName === 'siren-1' && (
+              <>
+                <GameHeaderComponent />
+                {!turn && atkBtnState && (
+                  <div className="absolute bottom-0 right-0 gap-2 p-4">
+                    {/* <AttackButton /> */}
+                    <button
+                      onClick={() => {
+                        if (thirdTurn === 0) {
+                          thirdAttack()
+                        }
+                      }}
+                      style={{
+                        position: 'absolute',
+                        right: '200px',
+                        bottom: '50px',
+                      }}
+                    >
+
+                      <div className="w-[160px]">
+                        {thirdTurn === 0 && (
+                          <img src="assets/images/btn_attack_2.png" />
+                        )}
+                        {thirdTurn !== 0 && (
+                          <img src="assets/images/btn_attack_2_d.png" />
+                        )}
+                        {thirdTurn !== 0 && (
+                          <h1
+                            style={{
+                              position: 'absolute',
+                              fontSize: '60px',
+                              fontFamily: 'Anime Ace',
+                              color: '#ffffff',
+                              left: '30px',
+                              top: '30px',
+                            }}
+                          >{`${5 - thirdTurn}T`}</h1>
+                        )}
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (secondTurn === 0) {
+                          secondAttack()
+                        }
+                      }}
+                      style={{
+                        position: 'absolute',
+                        right: '90px',
+                        bottom: '210px',
+                      }}
+                    >
+                      <div className="w-[160px]">
+                        {secondTurn === 0 && (
+                          <img src="assets/images/btn_attack_3.png" />
+                        )}
+                        {secondTurn !== 0 && (
+                          <img src="assets/images/btn_attack_3_d.png" />
+                        )}
+                        {secondTurn !== 0 && (
+                          <h1
+                            style={{
+                              position: 'absolute',
+                              fontSize: '60px',
+                              fontFamily: 'Anime Ace',
+                              color: '#ffffff',
+                              left: '30px',
+                              top: '30px',
+                            }}
+                          >{`${4 - secondTurn}T`}</h1>
+                        )}
+                      </div>
+                    </button>
+                    <button
+                      onClick={normalAttack}
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        bottom: '50px',
+                      }}
+                    >
+                      <div className="w-[129px]">
+                        <img src="assets/images/btn_attack.png" />
+                      </div>
+                    </button>
+
                   </div>
-                </div>
-              )}
-            </div>
-          )}
-          {gameState === 1 && global.currentDragonName === 'siren-1' && (
-            <>
-              <GameHeaderComponent />
-              {!turn && atkBtnState && (
-                <div className="absolute bottom-0 right-0 gap-2 p-4">
-                  {/* <AttackButton /> */}
-                  <button
-                    onClick={() => {
-                      if (thirdTurn === 0) {
-                        thirdAttack()
-                      }
-                    }}
-                    style={{
-                      position: 'absolute',
-                      right: '200px',
-                      bottom: '50px',
-                    }}
-                  >
+                )}
+              </>
+            )}
+            {gameState === 1 && global.currentDragonName === 'siren-4' && (
+              <>
+                <GameHeaderComponent />
+                {!turn && atkBtnState && (
+                  <div className="absolute bottom-0 right-0 gap-2 p-4">
+                    {/* <AttackButton /> */}
 
-                    <div className="w-[160px]">
-                      {thirdTurn === 0 && (
-                        <img src="assets/images/btn_attack_2.png" />
-                      )}
-                      {thirdTurn !== 0 && (
-                        <img src="assets/images/btn_attack_2_d.png" />
-                      )}
-                      {thirdTurn !== 0 && (
-                        <h1
-                          style={{
-                            position: 'absolute',
-                            fontSize: '60px',
-                            fontFamily: 'Anime Ace',
-                            color: '#ffffff',
-                            left: '30px',
-                            top: '30px',
-                          }}
-                        >{`${5 - thirdTurn}T`}</h1>
-                      )}
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (secondTurn === 0) {
-                        secondAttack()
-                      }
-                    }}
-                    style={{
-                      position: 'absolute',
-                      right: '90px',
-                      bottom: '210px',
-                    }}
-                  >
-                    <div className="w-[160px]">
-                      {secondTurn === 0 && (
-                        <img src="assets/images/btn_attack_3.png" />
-                      )}
-                      {secondTurn !== 0 && (
-                        <img src="assets/images/btn_attack_3_d.png" />
-                      )}
-                      {secondTurn !== 0 && (
-                        <h1
-                          style={{
-                            position: 'absolute',
-                            fontSize: '60px',
-                            fontFamily: 'Anime Ace',
-                            color: '#ffffff',
-                            left: '30px',
-                            top: '30px',
-                          }}
-                        >{`${4 - secondTurn}T`}</h1>
-                      )}
-                    </div>
-                  </button>
-                  <button
-                    onClick={normalAttack}
-                    style={{
-                      position: 'absolute',
-                      right: '10px',
-                      bottom: '50px',
-                    }}
-                  >
-                    <div className="w-[129px]">
-                      <img src="assets/images/btn_attack.png" />
-                    </div>
-                  </button>
+                    <button
+                      onClick={normalAttack}
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        bottom: '50px',
+                      }}
+                    >
+                      <div className="w-[129px]">
+                        <img src="assets/images/btn_attack.png" />
+                      </div>
+                    </button>
 
-                </div>
-              )}
-            </>
-          )}
-          {gameState === 1 && global.currentDragonName === 'siren-4' && (
-            <>
-              <GameHeaderComponent />
-              {!turn && atkBtnState && (
-                <div className="absolute bottom-0 right-0 gap-2 p-4">
-                  {/* <AttackButton /> */}
-
-                  <button
-                    onClick={normalAttack}
-                    style={{
-                      position: 'absolute',
-                      right: '10px',
-                      bottom: '50px',
-                    }}
-                  >
-                    <div className="w-[129px]">
-                      <img src="assets/images/btn_attack.png" />
-                    </div>
-                  </button>
-
-                </div>
-              )}
-            </>
-          )}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      }
       <DragonModal
         dragonModalOpen={dragonModalOpen}
         setDragonModalOpen={setDragonModalOpen}

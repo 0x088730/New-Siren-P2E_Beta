@@ -2,6 +2,7 @@ import { Box, Grid, Button, Typography, Stack } from '@mui/material'
 import Modal from '@mui/material/Modal'
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import ExchangeModal from '../../components/Header/ExchangeModal'
 import Header from '../../components/Header/Header'
@@ -38,6 +39,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const dispatch = useDispatch<any>()
   const userModule = useSelector((state: any) => state.userModule)
   const isLoading = useSelector((state: any) => state.app.game.isLoading)
+  const navigate = useNavigate();
 
   const { user } = userModule
   const { connected, chainID, address, connect } = useWeb3Context()
@@ -56,13 +58,16 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
     }
   })
   useEffect(() => {
-    getProfile(address, "dragon").then(() => {
-      setDrg(userModule.user.Drg);
-      setEggs(userModule.user.eggs);
-      setMeat(userModule.user.meat);
-    })
+    if (address) {
+      getProfile(address, "dragon").then(() => {
+        setDrg(userModule.user.Drg);
+        setEggs(userModule.user.eggs);
+        setMeat(userModule.user.meat);
+      })
+    }
     setTimeout(() => {
-      store.dispatch(setLoadingStatus(false))
+      if (address) store.dispatch(setLoadingStatus(false));
+      else navigate("/", { replace: true });
     }, 2000)
   }, [])
 
@@ -122,25 +127,27 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
     coolDownStatus(selectedIndex)
   }, [selectedIndex])
   const coolDownStatus = (cooldown: any) => {
-    dispatch(
-      checkCooldown(address, `diamond${selectedIndex + 1}`, (res: any) => {
-        let cooldownSec = res.data
-        const _items = [...items]
-        _items[selectedIndex].timer = res.data
-        _items[selectedIndex].counting = 1
-        setItems(_items)
-        if (cooldownSec === 999999) {
-          _items[selectedIndex].timer = 0
-        }
-        else if (cooldownSec <= 0) {
-          _items[selectedIndex].timer = 0
-          setBtnTitle("CLAIM")
-        }
-        else {
-          _items[selectedIndex].timer = cooldownSec
-        }
-      }),
-    )
+    if (address !== '') {
+      dispatch(
+        checkCooldown(address, `diamond${selectedIndex + 1}`, (res: any) => {
+          let cooldownSec = res.data
+          const _items = [...items]
+          _items[selectedIndex].timer = res.data
+          _items[selectedIndex].counting = 1
+          setItems(_items)
+          if (cooldownSec === 999999) {
+            _items[selectedIndex].timer = 0
+          }
+          else if (cooldownSec <= 0) {
+            _items[selectedIndex].timer = 0
+            setBtnTitle("CLAIM")
+          }
+          else {
+            _items[selectedIndex].timer = cooldownSec
+          }
+        }),
+      )
+    }
   }
 
   const onRockClaim = () => {
@@ -683,8 +690,6 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
           </Box>
         </>
       }
-
-
     </>
   )
 }

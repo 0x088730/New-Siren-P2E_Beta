@@ -188,10 +188,12 @@ export default class RoomWidget extends Phaser.GameObjects.Container {
                   .length > 0
               ) {
                 setCurrentDragon('siren-' + (i + 1)).then(() => {
-                  getProfile(global.walletAddress, 'siren-' + (i + 1)).then(() => {
-                    this.gameMode(3)
-                    dragonClickFlag = false
-                  })
+                  if (global.walletAddress !== '') {
+                    getProfile(global.walletAddress, 'siren-' + (i + 1)).then(() => {
+                      this.gameMode(3)
+                      dragonClickFlag = false
+                    })
+                  }
                 })
               }
               else {
@@ -214,7 +216,7 @@ export default class RoomWidget extends Phaser.GameObjects.Container {
   gameMode(mode: number) {
     this.gMode = mode
     if (mode === 1) {
-      
+
       this.backBtn.setVisible(true)
       //chapter
       const gChapter = global.room.chapter

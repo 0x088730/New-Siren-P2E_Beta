@@ -44,7 +44,7 @@ const SelectMeatModal = ({
             setMeatNum(0);
             return
         }
-        if(value > meat) {
+        if (value > meat) {
             alert("Not Enough Meats")
             setMeatNum(meat);
             return
@@ -52,14 +52,16 @@ const SelectMeatModal = ({
         setMeatNum(value);
     }
     const onBtnClick = () => {
-        dispatch(
-            buyLevel(global.walletAddress, dragonInfo.dragonName, meatNum, (res: any) => {
-                setDragonInfo(res.data.dragons);
-                setMeat(res.data.meat);
-                getProfile(global.walletAddress, "dragon")
-            })
-        )
-        setMeatModalOpen(false);
+        if (global.walletAddress !== '') {
+            dispatch(
+                buyLevel(global.walletAddress, dragonInfo.dragonName, meatNum, (res: any) => {
+                    setDragonInfo(res.data.dragons);
+                    setMeat(res.data.meat);
+                    getProfile(global.walletAddress, "dragon")
+                })
+            )
+            setMeatModalOpen(false);
+        }
     }
 
     const style = {

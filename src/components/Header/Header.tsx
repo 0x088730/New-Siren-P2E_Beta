@@ -26,6 +26,8 @@ import styles from './Header.module.scss'
 import HeaderModal from './HeaderModal'
 import { ClientRequest } from 'http'
 import InforModal from './InforModal'
+import { setLoadingStatus } from '../../common/state/game/reducer'
+import store from '../../store'
 
 interface HeaderProps {
   showAccount: any
@@ -62,6 +64,7 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
   }
   useEffect(() => {
     if (connected && address !== '') {
+      console.log(address)
       setShow(true)
       dispatch(
         getMeats(address, ref, (res: any) => {
@@ -100,7 +103,10 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
   useEffect(() => {
     headerList()
   }, [userModule])
-
+  const onMain = () => {
+    // store.dispatch(setLoadingStatus(true));
+    navigate("/", { replace: true });
+  }
   const headerList = () => {
     return <Box
       className={styles.Drg}
@@ -202,19 +208,20 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
           className={styles.Drg}
           sx={{ display: 'flex', alignItems: 'center' }}
         >
-          <Link to="/" className="button muted-button">
-            <button
-              style={{
-                background: 'url(/images/but_style2.png)',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                width: 116,
-                height: 35,
-              }}
-            >
-              Back
-            </button>
-          </Link>
+          {/* <Link to="/" className="button muted-button"> */}
+          <button
+            style={{
+              background: 'url(/images/but_style2.png)',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              width: 116,
+              height: 35,
+            }}
+            onClick={() => onMain()}
+          >
+            Back
+          </button>
+          {/* </Link> */}
         </Box>
       </Box>
     </header>

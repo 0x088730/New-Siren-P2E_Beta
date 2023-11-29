@@ -57,30 +57,32 @@ const DragonChooseModal = ({
   const [buyedLegenDragon, setBuyedLegenDragon] = useState(false);
 
   const onBuyDragon = (name: any, num: any) => {
-    dispatch(
-      buyDragon(address, { dragonName: name, dragonNo: num }, (res: any) => {
-        if (res.data.name === name) {
-          if(name === "common") setBuyedCommonDragon(true);
-          if(name === 'rare') setBuyedRareDragon(true);
-          if(name === 'legendery') setBuyedLegenDragon(true);
-          getProfile(address, "dragon")
-          setDrg(res.data.drg);
-        }
-      }),
-    )
+    if (address !== '') {
+      dispatch(
+        buyDragon(address, { dragonName: name, dragonNo: num }, (res: any) => {
+          if (res.data.name === name) {
+            if (name === "common") setBuyedCommonDragon(true);
+            if (name === 'rare') setBuyedRareDragon(true);
+            if (name === 'legendery') setBuyedLegenDragon(true);
+            getProfile(address, "dragon")
+            setDrg(res.data.drg);
+          }
+        }),
+      )
+    }
   }
 
   const selectDragon = (order: any, url: any) => {
     if (cardNum === "1") {
-      if(cardImg.second.name === order || cardImg.third.name === order) return
+      if (cardImg.second.name === order || cardImg.third.name === order) return
       setCardImg({ ...cardImg, first: { name: order, url } });
     }
     if (cardNum === "2") {
-      if(cardImg.first.name === order || cardImg.third.name === order) return
+      if (cardImg.first.name === order || cardImg.third.name === order) return
       setCardImg({ ...cardImg, second: { name: order, url } });
     }
     if (cardNum === "3") {
-      if(cardImg.second.name === order || cardImg.first.name === order) return
+      if (cardImg.second.name === order || cardImg.first.name === order) return
       setCardImg({ ...cardImg, third: { name: order, url } });
     }
     setDragonChooseModalOpen(false);

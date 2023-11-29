@@ -64,17 +64,18 @@ const DragonModal = ({
     }, [dragonModalOpen])
 
     const onBuyDragon = (name: any, num: any) => {
-        dispatch(
-            buyDragon(address, { dragonName: name, dragonNo: num }, (res: any) => {
-                if (res.data.name === name) {
-                    if (name === "common") setBuyedCommonDragon(true);
-                    if (name === 'rare') setBuyedRareDragon(true);
-                    if (name === 'legendery') setBuyedLegenDragon(true)
-                    getProfile(address, "dragon")
-                }
-            }),
-        )
-        console.log(global.dragons)
+        if (address !== '') {
+            dispatch(
+                buyDragon(address, { dragonName: name, dragonNo: num }, (res: any) => {
+                    if (res.data.name === name) {
+                        if (name === "common") setBuyedCommonDragon(true);
+                        if (name === 'rare') setBuyedRareDragon(true);
+                        if (name === 'legendery') setBuyedLegenDragon(true)
+                        getProfile(address, "dragon")
+                    }
+                }),
+            )
+        }
     }
     const selectDragon = (num: any) => {
         setDragonInfo(global.dragons[num]);

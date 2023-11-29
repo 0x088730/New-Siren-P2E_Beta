@@ -4,7 +4,6 @@ import AccountIcon from './AccountIcon/AccountIcon'
 import { /* formatDecimal,  */ shortAddress } from './../utils/tools'
 import { setAddress } from '../common/state/game/reducer'
 import { useEffect, useState } from 'react'
-// import { getProfile } from '../common/state/profile/action'
 import {getProfile, getRoom, referalAdd} from '../common/api'
 import { global } from '../common/global'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
@@ -52,8 +51,6 @@ export const HeaderComponent = ({onModalShow}: HeaderProps) => {
     if (!address) {
       return
     }
-
-    // dispatch(getProfile(address))
     getProfile(address, global.currentDragonName).then(() => {
       setUserRef(global.userRef)
       referalAdd()
