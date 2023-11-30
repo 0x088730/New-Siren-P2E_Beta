@@ -48,7 +48,8 @@ const DepositModal = ({
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-
+  
+  const [deposit_Withdraw, setdeposit_Withdraw] = useState("DEPOSIT")
   const [bcsAmount, setBCSAmount] = useState(320)
   const [drgAmount, setDrgAmount] = useState(0)
   const [withdrawableBcsAmount, setWithdrawableBcsAmount] = useState<number>(0)
@@ -224,7 +225,7 @@ const DepositModal = ({
             <Box>
               <p
                 style={{
-                  fontFamily: 'Marko One, serif',
+                  fontFamily: 'CubicPixel',
                   fontSize: '35px',
                   textTransform: 'uppercase',
                   textAlign: 'center',
@@ -233,9 +234,9 @@ const DepositModal = ({
                   lineHeight: '100%',
                 }}
               >
-                Deposit and Withdraw
+                {deposit_Withdraw}
               </p>
-              <p
+              {/* <p
                 style={{
                   color: '#770909',
                   marginTop: '12px',
@@ -247,48 +248,50 @@ const DepositModal = ({
                 <ErrorOutlineIcon /> You can withdraw BCS: 5 a day and 10
                 <br /> if you have premium
               </p>
-              <p></p>
+              <p></p> */}
             </Box>
             <Grid
               container
               spacing={2}
               sx={{
+                justifyContent:"center",
+                
                 padding: '2% 6% 6% 8%',
                 width: '100%',
-                height: '100%',
-                margin: 0,
+                margin: "4% 0",
               }}
             >
-              <Grid item xs={6} sx={{ padding: '0 !important' }}>
+              <Grid item xs={6} sx={{ padding: '0 !important'  }}>
                 <Stack
                   spacing={2}
                   sx={{
                     display: 'flex',
-                    alignItems:'center',
-                    fontFamily: 'Marko One, serif',
+                    boxShadow: "2px 5px 2px 2px #6a4d72",
+                    alignItems: 'center',
+                    fontFamily: 'CubicPixel',
                     fontSize: '18px',
                     textTransform: 'uppercase',
                     color: '#e7e1e1',
                     lineHeight: '120%',
                   }}
                 >
-                  <div style={{marginTop: '0px', textAlign:"left"}}>
-                    <div style={{fontFamily: 'Anime Ace', color: '#ffe86b', fontSize: '16px', margin: '2px 20px'}}>BCS</div>
+                  <div style={{ marginTop: '0px', textAlign: "left" }}>
+                    <div style={{ fontFamily: 'CubicPixel', color: '#ffe86b', fontSize: '16px', margin: '2px 20px' }}>BCS</div>
                     <TextField
-                      sx={{ mr: 1, textAlign: 'right', borderColor: 'white', width: '100%', borderRadius: '5px', backgroundColor: 'white'}}
+                      sx={{ mr: 1, textAlign: 'right', borderColor: 'white', width: '100%', borderRadius: '5px', backgroundColor: 'white' }}
                       name="bcs"
                       value={bcsAmount}
                       size='small'
                       onChange={onChangeAmount}
                     />
                   </div>
-                  <p style={{textAlign: 'center'}}>You will receive <br/> {Number(bcsAmount)} Drg</p>
+                  <p style={{ textAlign: 'center' }}>You will receive <br /> {Number(bcsAmount)} Drg</p>
                   <p
                     style={{
                       color: '#770909',
                       marginTop: '12px',
                       textAlign: 'center',
-                      fontFamily: 'Anime Ace',
+                      fontFamily: 'CubicPixel',
                       fontSize: '15px',
                       fontWeight: 'bold'
                     }}
@@ -305,11 +308,11 @@ const DepositModal = ({
                     }}
                   >
                     <Button onClick={(/* e */) => onDeposit()}>
-                      <img alt="" src="/assets/images/big-button.png" style={{width: '80%'}}/>
+                      <img alt="" src="/assets/images/big-button.png" style={{ width: '80%' }} />
                       <p
                         style={{
                           position: 'absolute',
-                          fontFamily: 'Marko One, serif',
+                          fontFamily: 'CubicPixel',
                           fontSize: '16px',
                           textTransform: 'uppercase',
                           color: '#e7e1e1',
@@ -322,12 +325,12 @@ const DepositModal = ({
                   </Box>
                 </Stack>
               </Grid>
-              <Grid item xs={6} sx={{ padding: '0 !important' }}>
+              {/* <Grid item xs={6} sx={{ padding: '0 !important' }}>
                 <Stack
                   spacing={2}
                   sx={{
                     display: 'flex',
-                    alignItems:'center',
+                    alignItems: 'center',
                     fontFamily: 'Marko One, serif',
                     fontSize: '18px',
                     textTransform: 'uppercase',
@@ -336,17 +339,17 @@ const DepositModal = ({
                     lineHeight: '120%',
                   }}
                 >
-                  <div style={{marginTop: '0px', textAlign:"left"}}>
-                    <div style={{fontFamily: 'Anime Ace', color: '#ffe86b', fontSize: '16px', margin: '2px 20px'}}>DRG</div>
+                  <div style={{ marginTop: '0px', textAlign: "left" }}>
+                    <div style={{ fontFamily: 'Anime Ace', color: '#ffe86b', fontSize: '16px', margin: '2px 20px' }}>DRG</div>
                     <TextField
-                      sx={{ mr: 1, textAlign: 'right', borderColor: 'white', width: '100%', borderRadius: '5px', backgroundColor: 'white'}}
+                      sx={{ mr: 1, textAlign: 'right', borderColor: 'white', width: '100%', borderRadius: '5px', backgroundColor: 'white' }}
                       name="Drg"
                       value={drgAmount}
                       size='small'
                       onChange={onChangeEggAmount}
                     />
-                  </div>                  
-                  <p style={{textAlign: 'center'}}>You will receive <br/> {Math.floor(drgAmount / 10)} BCS</p>
+                  </div>
+                  <p style={{ textAlign: 'center' }}>You will receive <br /> {Math.floor(drgAmount / 10)} BCS</p>
                   <p
                     style={{
                       color: '#770909',
@@ -360,20 +363,15 @@ const DepositModal = ({
                     <ErrorOutlineIcon /> Availabe : {Math.floor(withdrawableBcsAmount).toString()}{' '}
                     BCS
                   </p>
-                  {/* <ErrorOutlineIcon />
-                    <Typography component="p">
-                      Availabe : {Math.floor(withdrawableBcsAmount).toString()}{' '}
-                      BCS
-                    </Typography> */}
-                  {/* </Box> */}
+
                   <Box
                     sx={{
                       display: 'flex',
                       justifyContent: 'space-evenly',
                     }}
                   >
-                    <Button onClick={(/* e */) => onWithdraw()}>
-                      <img alt="" src="/assets/images/big-button.png" style={{width: '80%'}}/>
+                    <Button onClick={() => onWithdraw()}>
+                      <img alt="" src="/assets/images/big-button.png" style={{ width: '80%' }} />
                       <p
                         style={{
                           position: 'absolute',
@@ -390,7 +388,7 @@ const DepositModal = ({
                     </Button>
                   </Box>
                 </Stack>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Box>
         </Box>

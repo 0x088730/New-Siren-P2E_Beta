@@ -77,7 +77,6 @@ const MiningModal = ({
   const [upgradeTab, setUpgradeTab] = React.useState(false)
   const [remainedTime, setRemainedTime] = React.useState(0)
   const [isCooldownStarted, setIsCooldownStarted] = useState(false)
-
   const [displayLevel, setDisplayLevel] = useState(-1)
 
   const [upgradeErrorFlag, setUpgradeErrorFlag] = useState(false)
@@ -95,10 +94,12 @@ const MiningModal = ({
     return formattedTime
   }
   useEffect(() => {
+    console.log("user===>", user.miningStatus)
+    
     if (user.miningStatus === false) {
       setBtnType("BUY")
     }
-  }, [])
+  }, [address])
 
   useEffect(() => {
     if (address !== '') {
@@ -156,12 +157,14 @@ const MiningModal = ({
     if (btnType === "BUY") {
       dispatch(
         getMiningStatus(address, (res: any) => {
+          console.log("getMiningStatus", res);
           setBtnType("Start")
           setMiningStatus(true)
           setDrgAmount(res.data.Drg)
         })
       )
-    } else {
+    }
+    else {
       if (remainedTime > 0) {
         return
       }

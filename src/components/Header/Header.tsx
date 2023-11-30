@@ -110,7 +110,7 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
   const headerList = () => {
     return <Box
       className={styles.Drg}
-      sx={{ display: 'flex', alignItems: 'center' }}
+      sx={{display: 'flex', flexDirection:"column", alignItems: 'center' }}
     >
       {!ispremium && (
         <button
@@ -142,6 +142,7 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
         <button
           onClick={setOpenedAccount}
           style={{
+            marginTop:"10px",
             background: 'url(/images/but_style1.png)',
             width: 170,
             height: 35,
@@ -187,6 +188,18 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
         />
         {`EGG: ${eggs}`}
       </p>
+      <p
+        className={styles.meat}
+        style={{ background: 'url(/images/but_style1.png)',justifyContent:"center", width: 170, height: 35, marginLeft: '8px' }}
+      >
+        DEPOSIT
+      </p>
+      <p
+        className={styles.meat}
+        style={{ background: 'url(/images/but_style1.png)',justifyContent:"center", width: 170, height: 35, marginLeft: '8px' }}
+      >
+        WITHDRAW
+      </p>
     </Box>
   }
 
@@ -206,7 +219,7 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
 
         <Box
           className={styles.Drg}
-          sx={{ display: 'flex', alignItems: 'center' }}
+          sx={{ display: 'flex', position:"absolute", left:"20px", top:"93vh", alignItems: 'center', zIndex:"1000" }}
         >
           {/* <Link to="/" className="button muted-button"> */}
           <button
