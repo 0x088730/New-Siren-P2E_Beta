@@ -144,7 +144,7 @@ const DragonInfoModal = ({
                                 </p>
                             </Button>
                         </div>
-                        <img alt="" src={`assets/images/dragons/${dragonInfo.dragonName}_dragon_avatar.png`} width={'250px'} />
+                        <img alt="" src={`assets/images/dragons/${dragonInfo.dragonName}_avatar.png`} width={'250px'} />
                         <div
                             style={{
                                 width: '160px', height: '85px',
