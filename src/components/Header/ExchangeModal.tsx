@@ -46,11 +46,11 @@ const ExchangeModal = ({
   const [dragonChooseModalOpen, setDragonChooseModalOpen] = useState(false);
   const [cardNum, setCardNum] = useState("0");
   const [cardImg, setCardImg] = useState({
-    first: {name: '', url: ''},
-    second: {name: '', url: ''},
-    third: {name: '', url: ''},
+    first: { name: '', url: '', reward: 0 },
+    second: { name: '', url: '', reward: 0 },
+    third: { name: '', url: '', reward: 0 },
   });
-  const [rewardValue, setRewardValue] = useState(10);
+  const [rewardValue, setRewardValue] = useState(0);
 
   var convertSecToHMS = (number: number) => {
     const toTime = Math.floor(number % 30)
@@ -75,11 +75,10 @@ const ExchangeModal = ({
   //   }
   // }, [open])
   useEffect(() => {
-    setRewardValue((Number(cardImg.first.name) + Number(cardImg.second.name) + Number(cardImg.third.name)) *10 )
     let devideTime = remainedTime % 30;
     let count = Math.floor(remainedTime / 30);
     if (isCooldownStarted === true && devideTime === 0 && count < cooldownCount) {
-      setRewardAmount(rewardAmount + rewardValue);
+      setRewardValue(rewardValue + rewardAmount);
     }
   }, [remainedTime])
 
@@ -95,8 +94,12 @@ const ExchangeModal = ({
         alert("Not Enough Drg")
         return
       }
+      if (rewardAmount === 0) {
+        alert("Please Choose Dragon")
+        return
+      }
       dispatch(
-        startMineTownCooldown(address, cooldownCount, (resp: any) => {
+        startMineTownCooldown(address, cooldownCount, rewardAmount, (resp: any) => {
           if (resp.data !== undefined || resp.data !== null) {
             setRemainedTime(30 * cooldownCount)
             setIsCooldownStarted(true)
@@ -106,6 +109,7 @@ const ExchangeModal = ({
       )
     } else if (btnType === 'Claim') {
       setRewardAmount(0);
+      setRewardValue(0);
       dispatch(
         claimHunter(address, (resp: any) => {
           setBtnType('Start')
@@ -190,6 +194,9 @@ const ExchangeModal = ({
   }, [open, dispatch])
 
   const dragonChoose = (order: any) => {
+    if (btnType !== "Start" || remainedTime !== 0) {
+      return;
+    }
     setCardNum(order);
     setDragonChooseModalOpen(true);
   }
@@ -393,7 +400,7 @@ const ExchangeModal = ({
                       textShadow: '1px 1px black'
                     }}
                   >
-                    {rewardAmount}
+                    {rewardValue}
                   </span> &nbsp;
                   <span
                     style={{
@@ -426,6 +433,8 @@ const ExchangeModal = ({
         setDrg={setDrg}
         cardImg={cardImg}
         setCardImg={setCardImg}
+        rewardAmount={rewardAmount}
+        setRewardAmount={setRewardAmount}
       />
     </>
   )
