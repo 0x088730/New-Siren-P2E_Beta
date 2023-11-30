@@ -59,36 +59,33 @@ const DepositModal = ({
   useEffect(() => {
     ; (async () => {
       const withdrewDrgAmount = getWithdrewDrgAmount(user.withdraws) // Drg
-      // const bcsPrice = await getBcsPrice();
       const bcsPrice = 1
       const maxAmount =
         (checkPremium(user.premium).isPremium ? 10 : 5) / bcsPrice
-      // console.log(
-      //   `bcs price is ${bcsPrice}`,
-      //   'withdrew Drg amount: ',
-      //   withdrewDrgAmount,
-      //   ' and withdrawable bcs amount is ',
-      //   maxAmount,
-      // )
+    
       setWithdrawableBcsAmount(maxAmount - Math.floor(withdrewDrgAmount / 10))
     })()
   }, [user.withdraws])
 
-  // useEffect(() => {
-  //   const timeoutId = setInterval(() => {
-  //     onmeat()
-  //   }, 10000);
-  // },[])
 
   const onChangeAmount = (e: any) => {
     e.preventDefault()
 
     if (e.target.value < 0) {
-      setBCSAmount(320)
+      if(modalTitle === "deposit"){
+        setBCSAmount(320)
+      }
+      else {
+        setDrgAmount(5)
+      }
       return
     }
-
-    setBCSAmount(e.target.value)
+    if(modalTitle === "deposit"){
+      setBCSAmount(e.target.value);
+    }
+    else {
+      setDrgAmount(e.target.value)
+    }
   }
 
   const onChangeEggAmount = (e: any) => {
@@ -117,7 +114,6 @@ const DepositModal = ({
       alert("minimal withdraw amount is 320BCS");
       return
     }
-    console.log("deposit req")
 
     dispatch(onShowAlert('Pease wait while confirming', 'info'))
     const transaction = await deposit(
@@ -125,7 +121,6 @@ const DepositModal = ({
       ADMIN_WALLET_ADDRESS[chainId],
       bcsAmount,
     )
-    console.log("ggg", transaction)
     if(transaction===null || transaction===undefined) 
     {
       return
@@ -148,11 +143,12 @@ const DepositModal = ({
   }
 
   const onWithdraw = async () => {
-    if (drgAmount < 50) {
-      alert("minimal withdraw amount is 300Drg");
+    console.log("withdraw amount", drgAmount)
+    if (drgAmount > 50) {
+      alert("Maxim withdraw amount is 50DRG");
       return
     }
-
+console.log("withdrawableBcsAmount", withdrawableBcsAmount)
     if (withdrawableBcsAmount * 10 <= drgAmount) {
       dispatch(
         onShowAlert(
@@ -163,7 +159,6 @@ const DepositModal = ({
       )
       return
     }
-
     dispatch(onShowAlert('Pease wait while confirming', 'info'))
 
     // const transaction = await sendToken(address, FEE_WALLET_ADDRESS[chainId], 1)
@@ -289,12 +284,12 @@ const DepositModal = ({
                   <TextField
                     sx={{ mr: 1, textAlign: 'right', borderColor: 'white', width: '100%', borderRadius: '5px', backgroundColor: 'white' }}
                     name="drg"
-                    value={bcsAmount}
+                    value={modalTitle === 'deposit' ? bcsAmount : drgAmount}
                     size='small'
                     onChange={onChangeAmount}
                   />
                 </div>
-                <p style={{ textAlign: 'center', fontSize: '22px' }}>You will receive <br /> <span>{bcsAmount}</span>{modalTitle === 'deposit' ? ' DRG' : ' BCS'}</p>
+                <p style={{ textAlign: 'center', fontSize: '22px' }}>You will receive <br /> <span>{modalTitle === 'deposit' ? bcsAmount: drgAmount}</span>{modalTitle === 'deposit' ? ' DRG' : ' BCS'}</p>
                 <p
                   style={{
                     color: '#770909',
