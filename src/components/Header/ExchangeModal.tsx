@@ -194,7 +194,8 @@ const ExchangeModal = ({
   }, [open, dispatch])
 
   const dragonChoose = (order: any) => {
-    if (btnType !== "Start" || remainedTime !== 0) {
+    console.log(btnType, remainedTime)
+    if (btnType !== "Start" || remainedTime > 0) {
       return;
     }
     setCardNum(order);

@@ -67,7 +67,6 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
   }
   useEffect(() => {
     if (connected && address !== '') {
-      console.log(address)
       setShow(true)
       dispatch(
         getMeats(address, ref, (res: any) => {

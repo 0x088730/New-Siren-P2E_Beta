@@ -58,7 +58,7 @@ const DragonChooseModal = ({
 
   useEffect(() => {
     console.log("rewardAmount", rewardAmount);
-  
+
   }, [rewardAmount])
 
   const [buyedGoldDragon, setBuyedGoldDragon] = useState(false);
@@ -83,48 +83,65 @@ const DragonChooseModal = ({
       )
     }
   }
+  const getRandomReward = (order: any) => {
+    let rndValue = Math.floor(Math.random() * 100);
+    console.log(global.dragons)
+    if (order === "1") {
+      if (rndValue > 90) {
+        setReward1(29 + Number(global.dragons[1].level));
+      } else if (rndValue > 70 && rndValue <= 90) {
+        setReward1(19 + Number(global.dragons[1].level));
+      } else {
+        setReward1(9 + Number(global.dragons[1].level));
+      }
+    }
+    else if (order === "2") {
+      if (rndValue < 50) {
+        setReward2(9 + Number(global.dragons[2].level));
+      } else if (rndValue >= 50 && rndValue < 80) {
+        setReward2(19 + Number(global.dragons[2].level));
+      } else {
+        setReward2(29 + Number(global.dragons[2].level));
+
+      }
+    }
+    else if (order === "3") {
+      if (rndValue >= 70) {
+        setReward3(19 + Number(global.dragons[3].level));
+      } else if (rndValue >= 20 && rndValue < 70) {
+        setReward3(29 + Number(global.dragons[3].level));
+      } else {
+        setReward3(9 + Number(global.dragons[3].level));
+      }
+    }
+  }
+  useEffect(() => {
+    setRewardAmount(reward1 + reward2 +reward3);
+  }, [dragonChooseModalOpen])
+
   const selectDragon = (order: any, url: any) => {
     if (cardNum === "1") {
       if (cardImg.second.name === order || cardImg.third.name === order) return
+      if(cardImg.first.name !== order) {
+        getRandomReward(order);
+      }
       setCardImg({ ...cardImg, first: { name: order, url } });
     }
     if (cardNum === "2") {
       if (cardImg.first.name === order || cardImg.third.name === order) return
+      if(cardImg.second.name !== order) {
+        getRandomReward(order);
+      }
       setCardImg({ ...cardImg, second: { name: order, url } });
     }
     if (cardNum === "3") {
       if (cardImg.second.name === order || cardImg.first.name === order) return
+      if(cardImg.third.name !== order) {
+        getRandomReward(order);
+      }
       setCardImg({ ...cardImg, third: { name: order, url } });
     }
-    let rndValue = Math.floor(Math.random() * 100);
-    if(order === "1") {
-      if(rndValue > 90) {
-        setRewardAmount(rewardAmount + 30);
-      } else if ( rndValue > 70 && rndValue <= 90) {
-        setRewardAmount(rewardAmount + 20);
-      } else {
-        setRewardAmount(rewardAmount + 10);
-      }
-    }
-    else if(order === "2") {
-      if(rndValue < 50) {
-        setRewardAmount(rewardAmount + 10);
-      } else if ( rndValue >= 50 && rndValue < 80) {
-        setRewardAmount(rewardAmount + 20);
-      } else {
-        setRewardAmount(rewardAmount + 30);
 
-      }
-    }
-    else if(order === "3") {
-      if(rndValue >= 70) {
-        setRewardAmount(rewardAmount + 20);
-      } else if ( rndValue >= 20 && rndValue < 70) {
-        setRewardAmount(rewardAmount + 30);
-      } else {
-        setRewardAmount(rewardAmount + 10);
-      }
-    }
     setDragonChooseModalOpen(false);
   }
 
