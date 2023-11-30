@@ -4,7 +4,6 @@ import AccountIcon from './AccountIcon/AccountIcon'
 import { /* formatDecimal,  */ shortAddress } from './../utils/tools'
 import { setAddress } from '../common/state/game/reducer'
 import { useEffect, useState } from 'react'
-// import { getProfile } from '../common/state/profile/action'
 import {getProfile, getRoom, referalAdd} from '../common/api'
 import { global } from '../common/global'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
@@ -19,8 +18,8 @@ export const HeaderComponent = ({onModalShow}: HeaderProps) => {
   const inventoryOpened = useSelector(
     (state: any) => state.app.game.inventoryOpened,
   )
-  const characterOpened = useSelector(
-    (state: any) => state.app.game.characterOpened,
+  const dragonOpened = useSelector(
+    (state: any) => state.app.game.dragonOpened,
   )
   const NavItems = [
     {
@@ -52,9 +51,7 @@ export const HeaderComponent = ({onModalShow}: HeaderProps) => {
     if (!address) {
       return
     }
-
-    // dispatch(getProfile(address))
-    getProfile(address, global.currentCharacterName).then(() => {
+    getProfile(address, global.currentDragonName).then(() => {
       setUserRef(global.userRef)
       referalAdd()
     })
@@ -67,7 +64,7 @@ export const HeaderComponent = ({onModalShow}: HeaderProps) => {
 
   return (
     <div>
-      {!inventoryOpened && !characterOpened && (
+      {!inventoryOpened && !dragonOpened && (
         <div className="flex justify-between bg-black/30 p-4 backdrop-blur">
           <div className="flex">
             <div className="flex gap-4 p-3">

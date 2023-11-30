@@ -137,7 +137,7 @@ const PreniumModal = ({ open, setOpen }: Props) => {
                   }}
                 >
                   TIME: 30 DAYS<br></br>
-                  WATER CLAIM: +30%<br></br>                  
+                  MEAT CLAIM: +30%<br></br>                  
                   WALL HP: +20%<br></br>
                 </h2>
                 <Button

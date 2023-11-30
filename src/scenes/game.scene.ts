@@ -3,23 +3,24 @@ import {
   setInventoryStatus,
   increment,
   decrement,
-  setCharacterStatus,
-  setTurnFormat
+  setDragonStatus,
+  setTurnFormat,
+  setLoadingStatus,
 } from '../common/state/game/reducer'
 import store from '../store'
 import ClaimWidget from '../widgets/claimWidget'
 import InventoryWidget from '../widgets/inventoryWidget'
-import CharacterWidget from '../widgets/characterWidget'
+import DragonWidget from '../widgets/characterWidget'
 import { ENEMY_SPINE, SIREN_SPINE } from '../config/const'
-import { itemModify } from '../common/api'
 import { changeItem, global } from '../common/global'
 import RoomWidget from '../widgets/roomWidget'
+import { useSelector, useDispatch } from 'react-redux'
 
 export default class Game extends Phaser.Scene {
   inventoryWidget!: InventoryWidget
   // btnContainer!: Phaser.GameObjects.Container
   claimWidget!: ClaimWidget
-  characterWidget!: CharacterWidget
+  dragonWidget!: DragonWidget
   roomWidget!: RoomWidget
 
   constructor() {
@@ -32,12 +33,25 @@ export default class Game extends Phaser.Scene {
     document.body.style.backgroundImage = src
   }
 
-  init() {}
+  init() { }
 
   preload() {
+    store.dispatch(setLoadingStatus(true));
     this.load.setPath('assets/character/spine')
     this.load.spine(SIREN_SPINE, 'siren1/idle/sakura.json', 'siren1/idle/sakura.atlas')
     this.load.setPath('/')
+
+    this.load.on('complete', () => {
+      this.time.addEvent({
+        delay: 1000,
+        callback: () => {
+          const video = document.getElementById('backgroundVideo') as HTMLElement
+          video.style.display = "block"
+          store.dispatch(setLoadingStatus(false));
+        },
+      })
+
+    });
   }
 
   create() {
@@ -56,15 +70,15 @@ export default class Game extends Phaser.Scene {
         this.claimWidget.appear()
       })
 
-    this.characterWidget = new CharacterWidget(this, 880, 530)
-    this.characterWidget
+    this.dragonWidget = new DragonWidget(this, 880, 530)
+    this.dragonWidget
       .on('closed', () => {
-        store.dispatch(setCharacterStatus(false))
+        store.dispatch(setDragonStatus(false))
         this.changeBackground("")
         const video = document.getElementById('backgroundVideo') as HTMLElement
         video.style.display = "block"
       })
-    
+
     this.claimWidget = new ClaimWidget(this, 960, 540).on(
       'randomly-selected',
       (itemType: string, crystals: number) => {
@@ -72,7 +86,7 @@ export default class Game extends Phaser.Scene {
         store.dispatch(setInventoryStatus(false))
         this.claimWidget.setVisible(false)
         this.inventoryWidget.setVisible(true)
-        this.characterWidget.showStatus(true)
+        this.dragonWidget.showStatus(true)
         this.scene.start('game')
         const video = document.getElementById('backgroundVideo') as HTMLElement
         video.style.display = "block"
@@ -82,7 +96,7 @@ export default class Game extends Phaser.Scene {
     this.createNewGame()
   }
 
-  update() {}
+  update() { }
 
   private createNewGame() {
     this.scene.launch('game')
@@ -100,14 +114,13 @@ export default class Game extends Phaser.Scene {
     this.inventoryWidget.setVisible(true)
   }
 
-  character() {
-    console.log("reading.....................", this.characterWidget)
 
-    if(this.characterWidget) {
-      this.characterWidget.gemChange()
-      this.characterWidget.gemBuild()
-      store.dispatch(setCharacterStatus(true))
-      this.characterWidget.showStatus(true)
+  dragon() {
+    if (this.dragonWidget) {
+      this.dragonWidget.gemChange()
+      this.dragonWidget.gemBuild()
+      store.dispatch(setDragonStatus(true))
+      this.dragonWidget.showStatus(true)
     }
   }
 
@@ -115,10 +128,10 @@ export default class Game extends Phaser.Scene {
     store.dispatch(setTurnFormat())
 
     store.dispatch(setGameStatus(2))
-    
+
     this.changeBackground('url(assets/background/chapter.jpg')
     //this.roomWidget.destroy()
-    
+
     this.roomWidget = new RoomWidget(this, 880, 530)
     this.roomWidget
       .on('cancel', () => {
@@ -132,7 +145,7 @@ export default class Game extends Phaser.Scene {
         global.section = section
         this.startGame()
       })
-    
+
     this.roomWidget.setVisible(true)
 
   }

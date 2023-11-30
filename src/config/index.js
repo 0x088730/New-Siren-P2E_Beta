@@ -16,7 +16,6 @@ import getxDAIConfig from './coinbase/xDAI'
 import farmConfig from './farming'
 import { getNetwork, getIdCode } from './getUrlParams'
 
-// console.log(location.href)
 const ENV_NODE_CONFIG = 'ANYSWAP_DEX_ENV_NODE_CONFIG'
 // const INIT_NODE = 'FSN_MAIN'
 // const INIT_NODE = 'BNB_MAIN'
@@ -29,7 +28,6 @@ getIdCode()
 
 const ENV_CONFIG = getNetwork(ENV_NODE_CONFIG, INIT_NODE)
 // ENV_CONFIG = 'FTM_MAIN'
-// console.log(ENV_CONFIG)
 
 const netArr = ENV_CONFIG.split('_')
 

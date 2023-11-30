@@ -10,7 +10,7 @@ export interface UserProfile {
     walletAddress: string,
     exp: number,
     level: number,
-    characters: [
+    dragons: [
         {
             outfit: string,
             items: [{

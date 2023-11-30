@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 interface Props {
   open: any
   setOpen: any
-  resource: any
+  meat: any
   egg: any
   onExchange: any
   onExchangeEgg: any
@@ -17,7 +17,7 @@ interface Props {
 const ExchangeModal = ({
   open,
   setOpen,
-  resource,
+  meat,
   egg,
   onExchange,
   onExchangeEgg,
@@ -54,7 +54,7 @@ const ExchangeModal = ({
   }
 
   const onSwap = () => {
-    if (resource < swapAmount) return
+    if (meat < swapAmount) return
     onExchange(swapAmount)
   }
 
@@ -68,18 +68,14 @@ const ExchangeModal = ({
     const date = new Date()
 
     const expiredTime = new Date(userModule.user.premium)
-    // console.log("--->", userModule.user.premium, expiredTime, "<---");
-    // let curTime = new Date();
     expiredTime.setMonth(expiredTime.getMonth() + 1)
 
-    // console.log(expiredTime, date);
 
     const curSec = date.getTime() + date.getTimezoneOffset() * 60 * 1000
     const endSec = expiredTime.getTime()
 
     if (endSec > curSec) {
       setIsPremium(true)
-      // console.log("is premium...");
     } else {
       setIsPremium(false)
     }
@@ -171,20 +167,20 @@ const ExchangeModal = ({
                   >
                       <TextField
                         sx={{ mr: 1, textAlign: 'right'}}
-                        name="resource"
-                        label="Water"
+                        name="meat"
+                        label="Meat"
                         value={swapAmount}
                         type="number"
                         onChange={onChangeAmount}
-                        error={resource < swapAmount ? true : false}
+                        error={meat < swapAmount ? true : false}
                         style={textFieldStyle}
                       />
                     <Box>
-                      <p>You will receive {swapAmount * 5} Siren</p>
+                      <p>You will receive {swapAmount * 5} Drg</p>
                       {ispremium && (
                         <p>
                           Premium bonus + {Math.floor((swapAmount * 3) / 2)}{' '}
-                          Siren
+                          Drg
                         </p>
                       )}
                     </Box>
@@ -241,11 +237,11 @@ const ExchangeModal = ({
                         error={egg < swapEggAmount ? true : false}
                       />
                       <Box>
-                        <p>You will receive {swapEggAmount * 30} Siren</p>
+                        <p>You will receive {swapEggAmount * 30} Drg</p>
                         {ispremium && (
                           <p>
                             Premium bonus + {Math.floor(swapEggAmount * 9)}{' '}
-                            Siren
+                            Drg
                           </p>
                         )}
                       </Box>

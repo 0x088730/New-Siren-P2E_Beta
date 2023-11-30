@@ -1,9 +1,5 @@
-import {  global } from '../common/global'
-import { createCharacterAnims } from '../anims/CharacterAnims'
-import {  setCurrentCharacter
-} from '../common/api'
 var avatarList = [1, 2, 3, 4]
-export default class CharacterWidgetOnBattle extends Phaser.GameObjects.Container {
+export default class DragonWidgetOnBattle extends Phaser.GameObjects.Container {
   scene: Phaser.Scene
   background: Phaser.GameObjects.Image
   closeBtn: Phaser.GameObjects.Image

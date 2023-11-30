@@ -107,11 +107,12 @@ const RockModal = ({
               >
                 <h2 className="font-bold text-2xl mb-4 text-white upgrade-label"
                   style={{
-                    fontFamily: 'Anime Ace',
-                    fontSize: '20px',
+                    fontFamily: 'CubicPixel',
+                    fontSize: '30px',
                     marginTop: '15px',
                     marginBottom: '0px',
                     textAlign: 'center',
+                    letterSpacing: "2px",
                   }}
                 >
                   AMOUNT: 30<br></br>
@@ -122,7 +123,8 @@ const RockModal = ({
                     background: "url(/assets/images/big-button.png)",
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
-                    fontFamily: 'Anime Ace',
+                    fontFamily: 'CubicPixel',
+                    fontSize: '30px',
                     color: 'white',
                     border: 'none',
                     width: '200px',
@@ -141,14 +143,15 @@ const RockModal = ({
                 </Button>
                 <h2 className="font-bold text-2xl mb-4 text-white upgrade-label"
                   style={{
-                    fontFamily: 'Anime Ace',
-                    fontSize: '20px',
+                    fontFamily: 'CubicPixel',
+                    fontSize: '30px',
                     marginTop: '15px',
                     marginBottom: '0px',
                     textAlign: 'center',
+                    letterSpacing: "2px",
                   }}
                 >
-                  PRICE: 20 SIREN<br></br>
+                  PRICE: 20 DRG<br></br>
                 </h2>
               </Box>
             </Grid>

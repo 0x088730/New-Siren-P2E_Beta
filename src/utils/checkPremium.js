@@ -5,8 +5,6 @@ export const checkPremium = (premium) => {
   // let curTime = new Date();
   expiredTime.setMonth(expiredTime.getMonth() + 1)
 
-  //console.log(expiredTime, date)
-
   const curSec = date.getTime() + date.getTimezoneOffset() * 60 * 1000
   const endSec = expiredTime.getTime()
 

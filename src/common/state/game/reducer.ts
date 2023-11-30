@@ -35,11 +35,11 @@ export const gameSlice = createSlice({
     ) => {
       state.inventoryOpened = action.payload
     },
-    setCharacterStatus: (
+    setDragonStatus: (
       state: GameStateProps,
       action: PayloadAction<boolean>,
     ) => {
-      state.characterOpened = action.payload
+      state.dragonOpened = action.payload
     },
     setAddress: (state: GameStateProps, action: PayloadAction<string>) => {
       state.address = action.payload
@@ -70,6 +70,9 @@ export const gameSlice = createSlice({
       state.thirdTurn = 0
       state.secondTurn = 0
     },
+    setLoadingStatus: (state: GameStateProps, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload
+    }
   },
 })
 
@@ -80,13 +83,14 @@ export const {
   setAtkBtnState,
   setTurnFormat,
   setInventoryStatus,
-  setCharacterStatus,
+  setDragonStatus,
   increment,
   decrement,
   addExp,
   addTurn,
   setSecondTurn,
   setThirdTurn,
+  setLoadingStatus,
 } = gameSlice.actions
 
 export default gameSlice.reducer

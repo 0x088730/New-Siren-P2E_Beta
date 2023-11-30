@@ -14,7 +14,7 @@ import {
   /* changeNetwork, */ getTransaction /* , sendToken */,
 } from '../../hooks/hook'
 import { useWeb3Context } from '../../hooks/web3Context'
-import { /* buyPremium,  */ getResources } from '../../store/user/actions'
+import { /* buyPremium,  */ getMeats } from '../../store/user/actions'
 // import { ADMIN_WALLET_ADDRESS, chainId, PREMIUM_COST } from "../../hook/constants";
 import { onShowAlert } from '../../store/utiles/actions'
 import { checkPremium } from '../../utils/checkPremium'
@@ -26,16 +26,18 @@ import styles from './Header.module.scss'
 import HeaderModal from './HeaderModal'
 import { ClientRequest } from 'http'
 import InforModal from './InforModal'
+import { setLoadingStatus } from '../../common/state/game/reducer'
+import store from '../../store'
 
 interface HeaderProps {
   showAccount: any
   setShowAccount: any
-  Siren: any
+  Drg: any
   eggs: any
-  resource: any
+  meat: any
 }
 
-const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderProps) => {
+const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const ref = searchParams.get('ref')
@@ -62,9 +64,10 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
   }
   useEffect(() => {
     if (connected && address !== '') {
+      console.log(address)
       setShow(true)
       dispatch(
-        getResources(address, ref, (res: any) => {
+        getMeats(address, ref, (res: any) => {
           if (!res.success) {
             dispatch(onShowAlert(res.message, 'info'))
           }
@@ -100,11 +103,14 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
   useEffect(() => {
     headerList()
   }, [userModule])
-
+  const onMain = () => {
+    // store.dispatch(setLoadingStatus(true));
+    navigate("/", { replace: true });
+  }
   const headerList = () => {
     return <Box
-      className={styles.Siren}
-      sx={{ display: 'flex', alignItems: 'center' }}
+      className={styles.Drg}
+      sx={{display: 'flex', flexDirection:"column", alignItems: 'center' }}
     >
       {!ispremium && (
         <button
@@ -136,6 +142,7 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
         <button
           onClick={setOpenedAccount}
           style={{
+            marginTop:"10px",
             background: 'url(/images/but_style1.png)',
             width: 170,
             height: 35,
@@ -149,18 +156,18 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
         </button>
       )}
       <p
-        className={styles.resource}
+        className={styles.meat}
         style={{ background: 'url(/images/but_style1.png)', width: 170, height: 35, marginLeft: '8px' }}
       >
         <img
           alt=""
           style={{ width: '25px', marginRight: '10px' }}
-          src="/images/res_Siren.png"
+          src="/images/res_Drg.png"
         />
-        {`DRG: ${Siren}`}
+        {`DRG: ${Drg}`}
       </p>
       <p
-        className={styles.resource}
+        className={styles.meat}
         style={{ background: 'url(/images/but_style1.png)', width: 170, height: 35, marginLeft: '8px' }}
       >
         <img
@@ -168,10 +175,10 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
           style={{ width: '25px', marginRight: '10px' }}
           src="/images/res_res.png"
         />
-        {`Water: ${resource}`}
+        {`Meat: ${meat}`}
       </p>
       <p
-        className={styles.resource}
+        className={styles.meat}
         style={{ background: 'url(/images/but_style1.png)', width: 170, height: 35, marginLeft: '8px' }}
       >
         <img
@@ -180,6 +187,18 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
           src="/images/res_egg.png"
         />
         {`EGG: ${eggs}`}
+      </p>
+      <p
+        className={styles.meat}
+        style={{ background: 'url(/images/but_style1.png)',justifyContent:"center", width: 170, height: 35, marginLeft: '8px' }}
+      >
+        DEPOSIT
+      </p>
+      <p
+        className={styles.meat}
+        style={{ background: 'url(/images/but_style1.png)',justifyContent:"center", width: 170, height: 35, marginLeft: '8px' }}
+      >
+        WITHDRAW
       </p>
     </Box>
   }
@@ -199,22 +218,23 @@ const Header = ({ showAccount, setShowAccount, Siren, eggs, resource }: HeaderPr
         {headerList()}
 
         <Box
-          className={styles.Siren}
-          sx={{ display: 'flex', alignItems: 'center' }}
+          className={styles.Drg}
+          sx={{ display: 'flex', position:"absolute", left:"20px", top:"93vh", alignItems: 'center', zIndex:"1000" }}
         >
-          <Link to="/" className="button muted-button">
-            <button
-              style={{
-                background: 'url(/images/but_style2.png)',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                width: 116,
-                height: 35,
-              }}
-            >
-              Back
-            </button>
-          </Link>
+          {/* <Link to="/" className="button muted-button"> */}
+          <button
+            style={{
+              background: 'url(/images/but_style2.png)',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              width: 116,
+              height: 35,
+            }}
+            onClick={() => onMain()}
+          >
+            Back
+          </button>
+          {/* </Link> */}
         </Box>
       </Box>
     </header>

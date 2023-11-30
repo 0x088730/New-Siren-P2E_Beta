@@ -28,7 +28,7 @@ const UpgradeWallModal = ({
       case 1: {amount = 500; break; }
       case 2: {amount = 1500; break; }
     }
-    if(userModule.user.Siren >= amount)
+    if(userModule.user.Drg >= amount)
       setWall()
   }
 
@@ -142,7 +142,7 @@ const UpgradeWallModal = ({
                     marginBottom: '0px'
                   }}
                 >
-                  {userModule.user.wall === 1 ? 'UPGRADE LVL 2: 500 SIREN' : userModule.user.wall === 2 ? 'UPGRADE LVL 3: 1500 SIREN' : 'UPGRADE FINISHED'}
+                  {userModule.user.wall === 1 ? 'UPGRADE LVL 2: 500 DRG' : userModule.user.wall === 2 ? 'UPGRADE LVL 3: 1500 DRG' : 'UPGRADE FINISHED'}
                 </h2>
                 {(userModule.user.wall !== 3) && (
                   <Button

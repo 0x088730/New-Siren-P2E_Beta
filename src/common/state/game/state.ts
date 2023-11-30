@@ -20,17 +20,18 @@ export interface GameStateProps {
   secondTurn: number
   thirdTurn: number
   inventoryOpened: boolean
-  characterOpened: boolean
+  dragonOpened: boolean
   score: ScoreProps
   stock: StockProps
   address: String
   exp: number
   attackBtnState:boolean
+  isLoading: boolean
 }
 
 const gameInitialState: GameStateProps = {
   inventoryOpened: false,
-  characterOpened: false,
+  dragonOpened: false,
   score: {
     enemy: 0,
     player: 0,
@@ -53,7 +54,8 @@ const gameInitialState: GameStateProps = {
   },
   address: '',
   exp: 0,
-  attackBtnState:true
+  attackBtnState:true,
+  isLoading: true,
 }
 
 export default gameInitialState

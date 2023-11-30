@@ -10,15 +10,13 @@ export const getBcsPrice = async (): Promise<number> => {
   return (await api(`user/get-bcs-price`, 'get')).price
 }
 
-export const getWithdrewSirenAmount = (withdraws: Withdraw[]): number => {
-  //console.log('user withdraws ', withdraws)
+export const getWithdrewDrgAmount = (withdraws: Withdraw[]): number => {
   if (withdraws && withdraws.length > 0) {
     // const amounts = withdraws.map((item: Withdraw) => parseInt(item.amount))
     const amount = withdraws.reduce((prev: number, current: Withdraw) => {
       return prev + parseInt(current.amount, 10)
     }, 0)
 
-    //console.log(`you withdraw ${amount} Siren for 24h`)
     return amount
   } else return 0
 }

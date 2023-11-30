@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Provider } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { Provider, useSelector } from 'react-redux'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import { Web3ContextProvider } from './hooks/web3Context'
@@ -11,8 +11,6 @@ import phaserGame from './PhaserGame'
 import type Battle from './scenes/battle.scene'
 import type Game from './scenes/game.scene'
 import store from './store'
-import { global } from './common/global'
-import { getProfile } from './common/api'
 
 const onAttack = (type: number) => {
   const battle = phaserGame.scene.keys.battle as Battle
@@ -30,9 +28,9 @@ const onInventory = () => {
   game.inventory()
 }
 
-const onCharacter = () => {
+const onDragon = () => {
   const game = phaserGame.scene.keys.game as Game
-  game.character()
+  game.dragon()
 }
 
 const App: React.FC = () => {
@@ -58,7 +56,7 @@ const App: React.FC = () => {
                       onAttack={onAttack}
                       onStart={onStart}
                       onInventory={onInventory}
-                      onCharacter={onCharacter}
+                      onDragon={onDragon}
                     />
                   }
                 />

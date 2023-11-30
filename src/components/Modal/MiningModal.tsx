@@ -17,9 +17,9 @@ import {
   buyLevel,
   checkCooldown,
   checkUpgradeAvailable,
-  claimSiren,
+  claimDrg,
   /* checkWithdrawableReqeust,  */ depositRequest,
-  resourceRequest,
+  meatRequest,
   setCooldown,
   withdrawRequest,
   getMiningStatus,
@@ -28,17 +28,18 @@ import { onShowAlert } from '../../store/utiles/actions'
 import { checkPremium } from '../../utils/checkPremium'
 // import { Withdraw } from "../../store/user/action-types";
 // import api from '../../utils/callApi';
-import { getBcsPrice, getWithdrewSirenAmount } from '../../utils/user'
+import { getBcsPrice, getWithdrewDrgAmount } from '../../utils/user'
 import { global } from '../../common/global'
 import { setDefaultResultOrder } from 'dns'
 import userEvent from '@testing-library/user-event'
+import { getProfile } from '../../common/api'
 
 interface Props {
   open: boolean
   setOpen: any
-  sirenAmount: number
-  resource: any
-  setSirenAmount: any
+  drgAmount: number
+  meat: any
+  setDrgAmount: any
   setEggs: any
   egg: any
   onExchange: any
@@ -50,9 +51,9 @@ interface Props {
 const MiningModal = ({
   open,
   setOpen,
-  sirenAmount,
-  resource,
-  setSirenAmount,
+  drgAmount,
+  meat,
+  setDrgAmount,
   setEggs,
   egg,
   onExchange,
@@ -99,28 +100,31 @@ const MiningModal = ({
       setBtnType("BUY")
     }
   }, [address])
+
   useEffect(() => {
-    dispatch(
-      checkCooldown(address, 'level-up', (res: any) => {
-        let cooldownSec = res.data
-        console.log(cooldownSec)
-        if (cooldownSec === 999999) {
-          setBtnType('Start')
-        }
-        else if (cooldownSec <= 0) {
-          setRemainedTime(0);
-          setBtnType("Claim");
-        }
-        else {
-          setRemainedTime(cooldownSec)
-          setIsCooldownStarted(true)
-        }
-      }),
-    )
+    if (address !== '') {
+      dispatch(
+        checkCooldown(address, 'level-up', (res: any) => {
+          let cooldownSec = res.data
+          if (cooldownSec === 999999) {
+            // if(miningStatus === false) return
+            // setBtnType('Start')
+          }
+          else if (cooldownSec <= 0) {
+            setRemainedTime(0);
+            setBtnType("Claim");
+          }
+          else {
+            setRemainedTime(cooldownSec)
+            setIsCooldownStarted(true)
+          }
+        }),
+      )
+    }
   }, [address])
+
   useEffect(() => {
     if (isCooldownStarted) {
-
       var cooldownInterval = setInterval(() => {
         setRemainedTime((prevTime) => {
           if (prevTime === 1) {
@@ -141,13 +145,11 @@ const MiningModal = ({
 
   useEffect(() => {
     ; (async () => {
-      // console.log('user withdraws changed', user.withdraws.length)
-      const withdrewsirenAmount = getWithdrewSirenAmount(user.withdraws) // Siren
-      // const bcsPrice = await getBcsPrice();
+      const withdrewdrgAmount = getWithdrewDrgAmount(user.withdraws) // Drg
       const bcsPrice = 1
       const maxAmount =
         (checkPremium(user.premium).isPremium ? 10 : 5) / bcsPrice
-      setWithdrawableBcsAmount(maxAmount - Math.floor(withdrewsirenAmount / 10))
+      setWithdrawableBcsAmount(maxAmount - Math.floor(withdrewdrgAmount / 10))
     })()
   }, [user.withdraws])
 
@@ -158,7 +160,7 @@ const MiningModal = ({
           console.log("getMiningStatus", res);
           setBtnType("Start")
           setMiningStatus(true)
-          setSirenAmount(res.data.Siren)
+          setDrgAmount(res.data.Drg)
         })
       )
     }
@@ -167,21 +169,18 @@ const MiningModal = ({
         return
       }
       if (btnType === 'Start') {
-        console.log("setCooldown");
         dispatch(
           setCooldown(address, 'level-up', true, (res: any) => {
-
-            if (res.data)
-              if (!isCooldownStarted) {
-                setSirenAmount(res.data);
-                setRemainedTime(30)
-                setIsCooldownStarted(true)
-              }
+            if (!isCooldownStarted) {
+              setDrgAmount(res.data);
+              setRemainedTime(30)
+              setIsCooldownStarted(true)
+            }
           }),
         )
       } else if (btnType === 'Claim') {
-        dispatch(claimSiren(address, (res: any) => {
-          setSirenAmount(res.data.siren)
+        dispatch(claimDrg(address, (res: any) => {
+          setDrgAmount(res.data.drg)
           setEggs(res.data.eggs)
           setBtnType('Start')
         }))
@@ -279,7 +278,7 @@ const MiningModal = ({
                         width: '100px', height: '100px',
                         lineHeight: '1',
                         backgroundImage: 'radial-gradient(farthest-corner at 30px 70px,#71923c, #ebd8c2 )',
-                        padding: '20px',
+                        padding: '23px 0',
                         margin: "10px",
                         border: "3px solid black",
                         borderRadius: '23px',
@@ -329,7 +328,6 @@ const MiningModal = ({
 
                   }}
                 >
-                  {/* {user.miningStatus === false ? "BUY" : btnType} */}
                   {miningStatus === false ? "BUY" : (remainedTime === 0 ? btnType : convertSecToHMS(remainedTime))}
                 </p>
               </Button>
@@ -357,10 +355,10 @@ const MiningModal = ({
                 fontSize: '20px',
                 fontWeight: 'bold',
                 color: '#e7e1e1',
-                textAlign: 'center', display: 'flex', justifyContent: 'center'
+                textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center'
               }}>
-                <img src='assets/images/alert_.png' style={{ marginTop: "-9px" }} width={upgradeTab ? 20 : 30}></img>
-                <p>ONCE YOU BUY IT YOU CAN RUN IT AN INFINITE NUMBER OF TIMES</p>
+                <img src='assets/images/alert_.png' style={{ marginTop: "-9px", width: "30px", height: "30px" }}></img>
+                <p style={{ textShadow: '1px 1px black' }}>ONCE YOU BUY IT YOU CAN RUN IT AN INFINITE NUMBER OF TIMES</p>
               </div>
             </Box>
           </Box>

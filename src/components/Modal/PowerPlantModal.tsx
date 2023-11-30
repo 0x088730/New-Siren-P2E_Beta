@@ -17,8 +17,8 @@ import { useWeb3Context } from '../../hooks/web3Context'
 import {
   buyMining,
   claimMining,
-  getAllResource,
-  plantAllResource,
+  getAllMeat,
+  plantAllMeat,
   requestMining,
 } from '../../store/user/actions'
 import { onShowAlert } from '../../store/utiles/actions'
@@ -84,26 +84,26 @@ const PowerPlantModal = ({ open, setOpen }: Props) => {
     )
   }
 
-  const onPlantResources = () => {
-    dispatch(onShowAlert('Pease wait while planting all resource', 'info'))
+  const onPlantMeats = () => {
+    dispatch(onShowAlert('Pease wait while planting all meat', 'info'))
     dispatch(
-      plantAllResource(address, (res: any) => {
+      plantAllMeat(address, (res: any) => {
         handleClose()
         if (res.success) {
-          dispatch(onShowAlert('Plant all resource successfully', 'success'))
+          dispatch(onShowAlert('Plant all meat successfully', 'success'))
         } else {
           dispatch(onShowAlert(res.message, 'warning'))
         }
       }),
     )
   }
-  const onGetResources = () => {
-    dispatch(onShowAlert('Pease wait while claiming all resource', 'info'))
+  const onGetMeats = () => {
+    dispatch(onShowAlert('Pease wait while claiming all meat', 'info'))
     dispatch(
-      getAllResource(address, (res: any) => {
+      getAllMeat(address, (res: any) => {
         handleClose()
         if (res.success) {
-          dispatch(onShowAlert('Claim all resource successfully', 'success'))
+          dispatch(onShowAlert('Claim all meat successfully', 'success'))
         } else {
           dispatch(onShowAlert(res.message, 'warning'))
         }
@@ -144,11 +144,8 @@ const PowerPlantModal = ({ open, setOpen }: Props) => {
 
   useEffect(() => {
     if (user.powerMine) {
-      //console.log(user.powerMine)
       const check = new Date('2022-12-30T00:00:00').getTime()
       const powerMine = new Date(user.powerMine).getTime()
-
-      //console.log('check, powerMine = ', check, powerMine)
 
       const date = new Date()
       const curSec = date.getTime()
@@ -162,10 +159,8 @@ const PowerPlantModal = ({ open, setOpen }: Props) => {
       }
 
       if (check > powerMine) {
-        //console.log('check, powerMine = ', check, powerMine)
         setBuyButton(true)
       } else {
-        //console.log('check, powerMine = ', check, powerMine)
         setBuyButton(false)
       }
     }
@@ -222,7 +217,7 @@ const PowerPlantModal = ({ open, setOpen }: Props) => {
               }}
             >
               {' '}
-              <AllInclusiveIcon /> Earn: 9000Siren
+              <AllInclusiveIcon /> Earn: 9000Drg
             </p>
             <p
               style={{
@@ -278,7 +273,7 @@ const PowerPlantModal = ({ open, setOpen }: Props) => {
                           color="primary"
                           onClick={(e) => onRequestMining()}
                         >
-                          {POWER_PLANT.REQUEST} Siren
+                          {POWER_PLANT.REQUEST} Drg
                         </Button>
                       </>
                     )}
@@ -288,10 +283,10 @@ const PowerPlantModal = ({ open, setOpen }: Props) => {
                       color="success"
                       sx={{ width: '185px', mt: 1 }}
                       onClick={(e) => {
-                        onPlantResources()
+                        onPlantMeats()
                       }}
                     >
-                      Plant Resources
+                      Plant Meats
                     </Button>
 
                     <Button
@@ -299,10 +294,10 @@ const PowerPlantModal = ({ open, setOpen }: Props) => {
                       color="success"
                       sx={{ width: '185px' }}
                       onClick={(e) => {
-                        onGetResources()
+                        onGetMeats()
                       }}
                     >
-                      Get Resources
+                      Get Meats
                     </Button>
                   </>
                 )}

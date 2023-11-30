@@ -1,7 +1,7 @@
 import { setAtkBtnState, setGameTurn, setTurnFormat } from '../common/state/game/reducer'
 import store from '../store'
 
-export default class Character extends Phaser.Events.EventEmitter {
+export default class Dragon extends Phaser.Events.EventEmitter {
   scene: Phaser.Scene
   hp: number = 1000
   maxHp: number = 1000
@@ -10,10 +10,10 @@ export default class Character extends Phaser.Events.EventEmitter {
   owner: number = 1
   hpLabel: Phaser.GameObjects.Text
   hpImage: Phaser.GameObjects.Sprite
-  character: SpineGameObject
-  characterFire: SpineGameObject
-  characterFthrow: SpineGameObject
-  characterDown: Phaser.GameObjects.Sprite
+  dragon: SpineGameObject
+  dragonFire: SpineGameObject
+  dragonFthrow: SpineGameObject
+  dragonDown: Phaser.GameObjects.Sprite
   private imageW: number = 0
   private dead: boolean = false
   movingTween!: Phaser.Tweens.Tween
@@ -26,10 +26,10 @@ export default class Character extends Phaser.Events.EventEmitter {
     level: number,
     hpImage: Phaser.GameObjects.Sprite,
     hpLabel: Phaser.GameObjects.Text,
-    character: SpineGameObject,
-    characterFire: SpineGameObject,
-    characterFthrow: SpineGameObject,
-    characterDown: Phaser.GameObjects.Sprite,
+    dragon: SpineGameObject,
+    dragonFire: SpineGameObject,
+    dragonFthrow: SpineGameObject,
+    dragonDown: Phaser.GameObjects.Sprite,
     owner: number,
   ) {
     super()
@@ -41,19 +41,19 @@ export default class Character extends Phaser.Events.EventEmitter {
     this.hpLabel = hpLabel
     this.owner = owner
     // this.imageW = hpImage.displayWidth
-    this.character = character
-    this.characterFire = characterFire
-    this.characterFthrow = characterFthrow
-    this.characterDown = characterDown
+    this.dragon = dragon
+    this.dragonFire = dragonFire
+    this.dragonFthrow = dragonFthrow
+    this.dragonDown = dragonDown
     store.dispatch(setAtkBtnState(true))
 
-    this.characterDown.on('animationcomplete', (animation: any, frame: any) => {
+    this.dragonDown.on('animationcomplete', (animation: any, frame: any) => {
       // console.log(animation)
       if (animation.key === 'robot-stabb') {
         if (!this.dead) {
-          this.characterDown.anims.play('robot-run')
+          this.dragonDown.anims.play('robot-run')
           this.movingTween = this.scene.tweens.add({
-            targets: this.characterDown,
+            targets: this.dragonDown,
             x: 700,
             duration: 700,
             ease: 'Power2',
@@ -62,12 +62,12 @@ export default class Character extends Phaser.Events.EventEmitter {
           })
           .on('complete', () => {
             this.movingTween.stop()
-            this.characterDown.anims.play('robot-punch')
+            this.dragonDown.anims.play('robot-punch')
             var timer = this.scene.time.addEvent({
               delay: 900,
               callback: () => {
-                // this.character.setAlpha(100)
-                // this.characterDown.setVisible(false)
+                // this.dragon.setAlpha(100)
+                // this.dragonDown.setVisible(false)
                 // store.dispatch(setGameTurn())
                 this.emit('enemyAttack')
               },
@@ -84,25 +84,25 @@ export default class Character extends Phaser.Events.EventEmitter {
       }
       // if (animation.key === 'robot-run') {
       //   // this.movingTween.stop()
-      //   this.characterDown.anims.play('robot-punch')
+      //   this.dragonDown.anims.play('robot-punch')
       // }
       if (animation.key === 'robot-punch') {
-        this.character.setAlpha(100)
-        this.characterDown.setVisible(false)
+        this.dragon.setAlpha(100)
+        this.dragonDown.setVisible(false)
         store.dispatch(setGameTurn())
         // this.emit('enemyAttack')
       }
       if (animation.key === 'siren-stabb') {
-        this.character.setAlpha(100)
-        this.characterDown.setVisible(false)
+        this.dragon.setAlpha(100)
+        this.dragonDown.setVisible(false)
         this.emit('sirenDamage')
       }
     }, this)
 
-    // const throwAnim = this.character.findAnimation('throw_swords')
+    // const throwAnim = this.dragon.findAnimation('throw_swords')
     // throwAnim.duration = 1.25
 
-    // this.characterFire.setAlpha(0)
+    // this.dragonFire.setAlpha(0)
     // this.on('dead', this.onDead, this)
   }
 
@@ -127,9 +127,9 @@ export default class Character extends Phaser.Events.EventEmitter {
   }
 
   sirenDamageAnimation() {
-    this.character.setAlpha(0)
-    this.characterDown.setVisible(true)
-    this.characterDown.anims.play('siren-stabb')
+    this.dragon.setAlpha(0)
+    this.dragonDown.setVisible(true)
+    this.dragonDown.anims.play('siren-stabb')
   }
 
   attack(type: number) {
@@ -138,26 +138,26 @@ export default class Character extends Phaser.Events.EventEmitter {
 
     if (turn) {
 
-      this.characterDown.setX(1425)
+      this.dragonDown.setX(1425)
 
-      this.character.setAlpha(0)
-      this.characterDown.setVisible(true)
-      this.characterDown.anims.play('robot-stabb')
+      this.dragon.setAlpha(0)
+      this.dragonDown.setVisible(true)
+      this.dragonDown.anims.play('robot-stabb')
 
     } else {
       if (type === 1) {
         
-        this.character.play('throw_swords')
+        this.dragon.play('throw_swords')
       }
       else if(type ===3){
-        this.character.setAlpha(0)
-        this.characterFire.setAlpha(100)
-        this.characterFire.play('slide_stab')
+        this.dragon.setAlpha(0)
+        this.dragonFire.setAlpha(100)
+        this.dragonFire.play('slide_stab')
       }
       else{
-        this.character.setAlpha(0)
-        this.characterFthrow.setAlpha(100)
-        this.characterFthrow.play('throw_sword')
+        this.dragon.setAlpha(0)
+        this.dragonFthrow.setAlpha(100)
+        this.dragonFthrow.play('throw_sword')
       }
       store.dispatch(setGameTurn())
 
@@ -165,22 +165,22 @@ export default class Character extends Phaser.Events.EventEmitter {
   }
 
   onDead() {
-    this.character.setAlpha(0)
+    this.dragon.setAlpha(0)
     store.dispatch(setTurnFormat())
-    // this.character.setVisible(true)
+    // this.dragon.setVisible(true)
 
-    // this.character.setRotation(Phaser.Math.PI2 / 2);
+    // this.dragon.setRotation(Phaser.Math.PI2 / 2);
     if (this.owner === 2){
-      this.characterDown.setVisible(true)
-      this.characterDown.anims.play('robot-down')
+      this.dragonDown.setVisible(true)
+      this.dragonDown.anims.play('robot-down')
       store.dispatch(setAtkBtnState(false))
 
     }
       
       
-      // this.characterDown.setScale(-1.2,1.2)
+      // this.dragonDown.setScale(-1.2,1.2)
       
-    // this.character.rotation = Phaser.Math.PI2 / 4;
+    // this.dragon.rotation = Phaser.Math.PI2 / 4;
   }
 
   handleDamageAnim() {}

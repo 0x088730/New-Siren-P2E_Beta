@@ -111,11 +111,8 @@ const UraniumMineModal = ({ open, setOpen }: Props) => {
 
   useEffect(() => {
     if (user.uraniumMine) {
-      console.log(user.uraniumMine)
       const check = new Date('2022-12-30T00:00:00').getTime()
       const miningModule = new Date(user.uraniumMine).getTime()
-
-      console.log('check, miningModule = ', check, miningModule)
 
       const date = new Date()
       const curSec = date.getTime()
@@ -187,7 +184,7 @@ const UraniumMineModal = ({ open, setOpen }: Props) => {
               }}
             >
               {' '}
-              <AllInclusiveIcon /> Earn: 400Siren
+              <AllInclusiveIcon /> Earn: 400Drg
             </p>
             <p
               style={{
@@ -243,7 +240,7 @@ const UraniumMineModal = ({ open, setOpen }: Props) => {
                           color="primary"
                           onClick={(e) => onRequestMining()}
                         >
-                          {URANIUM_MINE.REQUEST} Siren
+                          {URANIUM_MINE.REQUEST} Drg
                         </Button>
                       </>
                     )}
