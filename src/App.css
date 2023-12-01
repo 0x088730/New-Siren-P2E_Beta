@@ -12,9 +12,9 @@
   background: url('./images/background.jpg');
   background-size: cover;
   width: 100%;
-  min-height: 760px;
+  min-height: 900px;
   height: 100vh;
-  min-width: 1200px;
+  min-width: 1800px;
   position: relative;
   overflow: hidden;
 }

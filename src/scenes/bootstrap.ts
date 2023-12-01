@@ -114,9 +114,6 @@ export default class Bootstrap extends Phaser.Scene {
     this.load.image('room-lock-btn', 'assets/images/roomLockBtn.png')
     this.load.image('room-soon-btn', 'assets/images/soonBox.png')
 
-    this.load.image('common-dragon', 'assets/images/dragons/common_dragon.png')
-    this.load.image('rare-dragon', 'assets/images/dragons/rare_dragon.png')
-    this.load.image('legendery-dragon', 'assets/images/dragons/legendery_dragon.png')
 
     for (let i = 1; i <= 3; ++i) {
       this.load.image(`item-gem-${i}`, `assets/item/item-gem-${i}.png`)
