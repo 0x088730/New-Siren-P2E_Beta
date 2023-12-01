@@ -146,7 +146,7 @@ const SelectMeatModal = ({
                                 backgroundColor: 'white'
                             }}
                             name="meatNum"
-                            value={meatNum}
+                            placeholder={`${meatNum}`}
                             size='small'
                             onChange={(e) => onChangeMeatNum(e.target.value)}
                         />

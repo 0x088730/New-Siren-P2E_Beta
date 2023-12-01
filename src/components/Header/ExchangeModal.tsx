@@ -18,6 +18,7 @@ import SelectEggModal from './selectEggModal'
 import DragonChooseModal from './DragonChooseModal'
 import store from '../../store'
 import { setRewards } from '../../common/state/game/reducer'
+import { convertSecToHMS } from '../../utils/tools'
 
 interface Props {
   open: any
@@ -55,19 +56,6 @@ const ExchangeModal = ({
   }
   const [cardImg, setCardImg] = useState(initialState);
   const [rewardValue, setRewardValue] = useState(0);
-
-  var convertSecToHMS = (number: number) => {
-    const toTime = Math.floor(number % 30)
-    const hours = Math.floor(toTime / 3600)
-      .toString()
-      .padStart(2, '0')
-    const minutes = Math.floor((toTime % 3600) / 60)
-      .toString()
-      .padStart(2, '0')
-    const seconds = (toTime % 60).toString().padStart(2, '0')
-    const formattedTime = `${minutes}:${seconds}` /*${hours}:*/
-    return formattedTime
-  }
 
   useEffect(() => {
     let devideTime = remainedTime % 30;

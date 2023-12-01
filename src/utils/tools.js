@@ -210,3 +210,27 @@ export function getWeiString(decimal) {
 export const shortAddress = (address) => {
   return address.substr(0, 6) + '...' + address.substr(address.length - 4)
 }
+
+export const createObject = (obj) => {
+  const currentObj = JSON.stringify(obj);
+  return JSON.parse(currentObj);
+}
+
+export const createRandom = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1 )) + min;
+}
+
+export const convertSecToHMS = (number) => {
+  const toTime = Math.floor(number % 30)
+  const hours = Math.floor(toTime / 3600)
+    .toString()
+    .padStart(2, '0')
+  const minutes = Math.floor((toTime % 3600) / 60)
+    .toString()
+    .padStart(2, '0')
+  const seconds = (toTime % 60).toString().padStart(2, '0')
+  const formattedTime = `${minutes}:${seconds}` /*${hours}:*/
+  return formattedTime
+}
