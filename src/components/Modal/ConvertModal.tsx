@@ -12,6 +12,7 @@ import {
     setCooldown,
     convertDrg,
 } from '../../store/user/actions'
+import { convertSecToHMS } from '../../utils/tools'
 
 interface Props {
     openBird: boolean
@@ -45,18 +46,6 @@ const ConvertModal = ({
     const [convertCooldown, setConvertCooldown] = useState(false);
     const [convertBtn, setConvertBtn] = useState("Start");
 
-
-    var convertSecToHMS = (number: number) => {
-        const hours = Math.floor(number / 3600)
-            .toString()
-            .padStart(2, '0')
-        const minutes = Math.floor((number % 3600) / 60)
-            .toString()
-            .padStart(2, '0')
-        const seconds = (number % 60).toString().padStart(2, '0')
-        const formattedTime = `${minutes}:${seconds}`/*${hours}:*/
-        return formattedTime
-    }
     const handleBirdClose = () => {
         setOpenBird(false);
     }

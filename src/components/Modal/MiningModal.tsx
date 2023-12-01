@@ -33,6 +33,7 @@ import { global } from '../../common/global'
 import { setDefaultResultOrder } from 'dns'
 import userEvent from '@testing-library/user-event'
 import { getProfile } from '../../common/api'
+import { convertSecToHMS } from '../../utils/tools'
 
 interface Props {
   open: boolean
@@ -82,17 +83,6 @@ const MiningModal = ({
   const [upgradeErrorFlag, setUpgradeErrorFlag] = useState(false)
   const [miningStatus, setMiningStatus] = useState(user.miningStatus);
 
-  var convertSecToHMS = (number: number) => {
-    const hours = Math.floor(number / 3600)
-      .toString()
-      .padStart(2, '0')
-    const minutes = Math.floor((number % 3600) / 60)
-      .toString()
-      .padStart(2, '0')
-    const seconds = (number % 60).toString().padStart(2, '0')
-    const formattedTime = `${minutes}:${seconds}`/*${hours}:*/
-    return formattedTime
-  }
   useEffect(() => {  
     if (user.miningStatus === false) {
       setBtnType("BUY")
@@ -155,7 +145,6 @@ const MiningModal = ({
     if (btnType === "BUY") {
       dispatch(
         getMiningStatus(address, (res: any) => {
-          console.log("getMiningStatus", res);
           setBtnType("Start")
           setMiningStatus(true)
           setDrgAmount(res.data.Drg)

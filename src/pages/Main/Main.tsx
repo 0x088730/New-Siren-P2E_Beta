@@ -71,6 +71,13 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
       else navigate("/", { replace: true });
     }, 2000)
   }, [])
+
+  useEffect(() => {
+    setDrg(userModule.user.Drg);
+    setEggs(userModule.user.eggs);
+    setMeat(userModule.user.meat);
+    setWallLevelState(userModule.user.wall)
+  }, [userModule.user.Drg, userModule.user.eggs, userModule.user.meat, userModule.user.wall])
   
   const TEST_MODE = true
 
