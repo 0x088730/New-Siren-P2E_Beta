@@ -94,6 +94,10 @@ const ExchangeModal = ({
         alert("Not Enough Drg")
         return
       }
+      if (rewardAmount === 0) {
+        alert("Please Choose Dragon")
+        return
+      }
       dispatch(
         startMineTownCooldown(address, cooldownCount, rewardAmount, (resp: any) => {
           if (resp.data !== undefined || resp.data !== null) {
@@ -429,6 +433,7 @@ const ExchangeModal = ({
         setDrg={setDrg}
         cardImg={cardImg}
         setCardImg={setCardImg}
+        rewardAmount={rewardAmount}
         setRewardAmount={setRewardAmount}
       />
     </>

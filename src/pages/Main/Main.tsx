@@ -390,14 +390,14 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
               setRockClaim={onRockClaim}
               btnTitle={btnTitle}
             />
-            <DepositModal
+            {/* <DepositModal
               open={openDeposit}
               setOpen={setOpenDeposit}
               meat={meat}
               egg={eggs}
               onExchange={onExchange}
               onExchangeEgg={onExchangeEgg}
-            />
+            /> */}
             <MiningModal
               open={openMining}
               setOpen={setOpenMining}
@@ -432,7 +432,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
                     position: 'absolute',
                     cursor: 'pointer'
                   }}
-                  onClick={() => setOpenUpgradeWall(true)}
+                  // onClick={() => setOpenUpgradeWall(true)}
                   className={styles.item}
                 />
                 <Box

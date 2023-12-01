@@ -17,6 +17,7 @@ interface Props {
   cardImg: any
   setCardImg: any
   setRewardAmount: any
+  rewardAmount: any
 }
 
 const DragonChooseModal = ({
@@ -27,6 +28,7 @@ const DragonChooseModal = ({
   cardImg,
   setCardImg,
   setRewardAmount,
+  rewardAmount,
 }: Props) => {
   const dispatch = useDispatch<any>()
   const { address } = useWeb3Context();
@@ -54,6 +56,11 @@ const DragonChooseModal = ({
     }
   }, [dragonChooseModalOpen])
 
+  useEffect(() => {
+    console.log("rewardAmount", rewardAmount);
+  
+  }, [rewardAmount])
+
   const [buyedGoldDragon, setBuyedGoldDragon] = useState(false);
   const [buyedPinkDragon, setBuyedPinkDragon] = useState(false);
   const [buyedDarkDragon, setBuyedDarkDragon] = useState(false);
@@ -77,35 +84,6 @@ const DragonChooseModal = ({
     }
   }
   const selectDragon = (order: any, url: any) => {
-    let rndValue = Math.floor(Math.random() * 100);
-
-    if(order === "1") {
-      if(rndValue > 70) {
-        setReward1(30);
-      } else if ( rndValue > 20 && rndValue <= 70) {
-        setReward1(20);
-      } else {
-        setReward1(10);
-      }
-    }
-    if(order === "2") {
-      if(rndValue > 50) {
-        setReward2(10);
-      } else if ( rndValue > 30 && rndValue <= 50) {
-        setReward2(20);
-      } else {
-        setReward2(20);
-      }
-    }
-    if(order === "3") {
-      if(rndValue > 50) {
-        setReward3(20);
-      } else if ( rndValue > 30 && rndValue <= 50) {
-        setReward3(30);
-      } else {
-        setReward3(10);
-      }
-    }
     if (cardNum === "1") {
       if (cardImg.second.name === order || cardImg.third.name === order) return
       setCardImg({ ...cardImg, first: { name: order, url } });
@@ -118,9 +96,38 @@ const DragonChooseModal = ({
       if (cardImg.second.name === order || cardImg.first.name === order) return
       setCardImg({ ...cardImg, third: { name: order, url } });
     }
+    let rndValue = Math.floor(Math.random() * 100);
+    if(order === "1") {
+      if(rndValue > 90) {
+        setRewardAmount(rewardAmount + 30);
+      } else if ( rndValue > 70 && rndValue <= 90) {
+        setRewardAmount(rewardAmount + 20);
+      } else {
+        setRewardAmount(rewardAmount + 10);
+      }
+    }
+    else if(order === "2") {
+      if(rndValue < 50) {
+        setRewardAmount(rewardAmount + 10);
+      } else if ( rndValue >= 50 && rndValue < 80) {
+        setRewardAmount(rewardAmount + 20);
+      } else {
+        setRewardAmount(rewardAmount + 30);
+
+      }
+    }
+    else if(order === "3") {
+      if(rndValue >= 70) {
+        setRewardAmount(rewardAmount + 20);
+      } else if ( rndValue >= 20 && rndValue < 70) {
+        setRewardAmount(rewardAmount + 30);
+      } else {
+        setRewardAmount(rewardAmount + 10);
+      }
+    }
     setDragonChooseModalOpen(false);
-    setRewardAmount(reward1 + reward2 + reward3);
   }
+
   const style = {
     position: 'absolute' as const,
     top: '50%',
@@ -211,7 +218,7 @@ const DragonChooseModal = ({
               {
                 buyedGoldDragon === false ?
                   <Button
-                    onClick={() => onBuyDragon("common", 0)}
+                    onClick={() => onBuyDragon("gold_dragon", 0)}
                     sx={{
                       width: '180px',
                       height: '60px',
@@ -309,7 +316,7 @@ const DragonChooseModal = ({
                     </Button>
                     :
                     <Button
-                      onClick={() => onBuyDragon("rare", 1)}
+                      onClick={() => onBuyDragon("pink_dragon", 1)}
                       sx={{
                         width: '180px',
                         height: '60px',
@@ -407,7 +414,7 @@ const DragonChooseModal = ({
                     </Button>
                     :
                     <Button
-                      onClick={() => onBuyDragon("legendery", 2)}
+                      onClick={() => onBuyDragon("dark_dragon", 2)}
                       sx={{
                         width: '180px',
                         height: '60px',

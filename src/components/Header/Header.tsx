@@ -28,6 +28,7 @@ import { ClientRequest } from 'http'
 import InforModal from './InforModal'
 import { setLoadingStatus } from '../../common/state/game/reducer'
 import store from '../../store'
+import DepositModal from '../Modal/DepositModal'
 
 interface HeaderProps {
   showAccount: any
@@ -51,6 +52,8 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
   const [ispremium, setIsPremium] = useState(false)
   const [leftDay, setLeftDay] = useState(0)
   const [show, setShow] = useState(false)
+  const [depositModalOpen, setDepositModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
 
   const { connected, chainID, address, connect } = useWeb3Context()
 
@@ -107,10 +110,15 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
     // store.dispatch(setLoadingStatus(true));
     navigate("/", { replace: true });
   }
+
+  const onDeposit = (title: any) => {
+    setModalTitle(title);
+    setDepositModalOpen(true);
+  }
   const headerList = () => {
     return <Box
       className={styles.Drg}
-      sx={{display: 'flex', flexDirection:"column", alignItems: 'center' }}
+      sx={{ display: 'flex', flexDirection: "column", alignItems: 'center' }}
     >
       {!ispremium && (
         <button
@@ -122,6 +130,8 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
             width: 170,
             height: 35,
             marginRight: 10,
+            fontFamily: 'CubicPixel',
+            fontSize: '20px'
           }}
         >
           Premium
@@ -142,16 +152,18 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
         <button
           onClick={setOpenedAccount}
           style={{
-            marginTop:"10px",
+            marginTop: "10px",
             background: 'url(/images/but_style1.png)',
             width: 170,
             height: 35,
+            fontFamily: 'CubicPixel',
+            fontSize: '20px'
           }}
           className={`px-6 py-1 font-semibold text-white shadow-sm`}
         >
           <span style={{ display: 'flex', alignItems: 'center' }}>
             <span>{shortAddress(address)}</span>
-            <AccountIcon address={address} size={18} />
+            {/* <AccountIcon address={address} size={18} /> */}
           </span>
         </button>
       )}
@@ -188,18 +200,45 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
         />
         {`EGG: ${eggs}`}
       </p>
-      <p
+      <div
         className={styles.meat}
-        style={{ background: 'url(/images/but_style1.png)',justifyContent:"center", width: 170, height: 35, marginLeft: '8px' }}
+        style={{ 
+          background: 'url(/images/but_style1.png)', 
+          justifyContent: "center", 
+          width: 170, 
+          height: 35, 
+          marginLeft: '8px', 
+          cursor: 'pointer',
+          zIndex: '100000' 
+        }}
+        onClick={() => onDeposit("deposit")}
       >
         DEPOSIT
-      </p>
+      </div>
       <p
         className={styles.meat}
-        style={{ background: 'url(/images/but_style1.png)',justifyContent:"center", width: 170, height: 35, marginLeft: '8px' }}
+        style={{ 
+          background: 'url(/images/but_style1.png)', 
+          justifyContent: "center", 
+          width: 170, 
+          height: 35, 
+          marginLeft: '8px', 
+          cursor: 'pointer',
+          zIndex: '100000' 
+        }}
+        onClick={() => onDeposit("withdraw")}
       >
         WITHDRAW
-      </p>
+      </p>      
+      <DepositModal
+        depositModalOpen={depositModalOpen}
+        setDepositModalOpen={setDepositModalOpen}
+        modalTitle={modalTitle}
+        // meat={meat}
+        // egg={eggs}
+        // onExchange={onExchange}
+        // onExchangeEgg={onExchangeEgg}
+      />
     </Box>
   }
 
@@ -219,7 +258,7 @@ const Header = ({ showAccount, setShowAccount, Drg, eggs, meat }: HeaderProps) =
 
         <Box
           className={styles.Drg}
-          sx={{ display: 'flex', position:"absolute", left:"20px", top:"93vh", alignItems: 'center', zIndex:"1000" }}
+          sx={{ display: 'flex', position: "absolute", left: "20px", top: "93vh", alignItems: 'center', zIndex: "1000" }}
         >
           {/* <Link to="/" className="button muted-button"> */}
           <button
