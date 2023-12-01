@@ -120,7 +120,6 @@ export const GamePage = ({
   }, [chainID, connected, address])
 
   useEffect(() => {
-    console.log("loading")
     setTimeout(() => {
       store.dispatch(setLoadingStatus(false));
     }, 2000)

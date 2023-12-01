@@ -72,6 +72,9 @@ export const gameSlice = createSlice({
     },
     setLoadingStatus: (state: GameStateProps, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload
+    },
+    setRewards: (state: GameStateProps, action: PayloadAction<number>) => {
+      state.rewards = action.payload
     }
   },
 })
@@ -91,6 +94,7 @@ export const {
   setSecondTurn,
   setThirdTurn,
   setLoadingStatus,
+  setRewards,
 } = gameSlice.actions
 
 export default gameSlice.reducer

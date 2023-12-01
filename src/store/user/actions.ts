@@ -37,12 +37,13 @@ export function getMeats(address: any, ref: any, cb: any) {
   }
 }
 
-export function startMineTownCooldown(address: any, cooldownCount: number, rewardAmount: number, cb: any) {
+export function startMineTownCooldown(address: any, cooldownCount: number, rewardAmount: number, cardImg: any, cb: any) {
   return async (dispatch: any) => {
     const res = await api(`user/start/mineTown-cooldown`, 'post', {
       walletAddress: address,
       cooldownCount: cooldownCount,
       rewardAmount: rewardAmount,
+      cardImg: cardImg,
     })
     cb(res)
     dispatch({

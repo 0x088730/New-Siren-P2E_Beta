@@ -56,11 +56,6 @@ const DragonChooseModal = ({
     }
   }, [dragonChooseModalOpen])
 
-  useEffect(() => {
-    console.log("rewardAmount", rewardAmount);
-
-  }, [rewardAmount])
-
   const [buyedGoldDragon, setBuyedGoldDragon] = useState(false);
   const [buyedPinkDragon, setBuyedPinkDragon] = useState(false);
   const [buyedDarkDragon, setBuyedDarkDragon] = useState(false);
@@ -85,7 +80,6 @@ const DragonChooseModal = ({
   }
   const getRandomReward = (order: any) => {
     let rndValue = Math.floor(Math.random() * 100);
-    console.log(global.dragons)
     if (order === "1") {
       if (rndValue > 90) {
         setReward1(29 + Number(global.dragons[1].level));
