@@ -48,7 +48,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const [Drg, setDrg] = useState(0)
   const [eggs, setEggs] = useState(0)
   const [meat, setMeat] = useState(0)
-  const [wallLevelState, setWallLevelState] = useState(userModule.user.wall)
+  const [wallLevelState, setWallLevelState] = useState(1)
 
   const [openInstruction, setOpenInstruction] = useState(false)
 
@@ -63,14 +63,15 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
         setDrg(userModule.user.Drg);
         setEggs(userModule.user.eggs);
         setMeat(userModule.user.meat);
+        setWallLevelState(userModule.user.wall)
       })
     }
     setTimeout(() => {
-      if (address) store.dispatch(setLoadingStatus(false));
+      if (address && wallLevelState !== 0) store.dispatch(setLoadingStatus(false));
       else navigate("/", { replace: true });
     }, 2000)
   }, [])
-
+  
   const TEST_MODE = true
 
   const [openSwap, setOpenSwap] = useState(false)
@@ -422,6 +423,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
             >
               <div
                 className="wall-wallet"
+                style={{minWidth: '1800px', minHeight: '900px'}}
               // style={{ backgroundImage:"url('/images/border"+(wallLevelState)+".png')" }}
               >
                 <img
@@ -430,7 +432,9 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
                     width: '100%',
                     height: '100%',
                     position: 'absolute',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    minWidth: '1800px',
+                    minHeight: '900px'
                   }}
                   // onClick={() => setOpenUpgradeWall(true)}
                   className={styles.item}
@@ -438,7 +442,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
                 <Box
                   sx={{
                     width: '50%',
-                    paddingTop: '50vh',
+                    paddingTop: '500px',
                     // transform: 'translateY(-20vh)',                
 
                     justifyContent: 'space-between',
