@@ -73,7 +73,7 @@ const ExchangeModal = ({
     let devideTime = remainedTime % 30;
     let count = Math.floor(remainedTime / 30);
     if (isCooldownStarted === true && devideTime === 0 && count < cooldownCount) {
-      setRewardValue(rewardValue + rewards);
+      setRewardValue(rewardValue + rewardAmount);
     }
   }, [remainedTime])
 
@@ -197,11 +197,12 @@ const ExchangeModal = ({
     setCardNum(order);
     setDragonChooseModalOpen(true);
   }
+  
   useEffect(() => {
     if (open === true && rewardValue === 0) {
       let count = Math.floor(remainedTime / 30) + 1;
       if (count < cooldownCount) {
-        setRewardValue((cooldownCount - count) * rewards);
+        setRewardValue((cooldownCount - count) * rewardAmount);
       }
     }
   }, [remainedTime])
