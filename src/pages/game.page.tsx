@@ -136,7 +136,7 @@ export const GamePage = ({
           <RingLoader color="#36D7B7" loading={isLoading} size={150} style={{ position: 'absolute', top: '40vh', left: '45vw' }} />
         </div>
         :
-        <div className="grid h-full" style={{minWidth: '1800px'}}>
+        <div className="grid h-full" style={{minWidth: '1600px'}}>
           <div className="flex h-full flex-1 flex-col p-8 min-w-[1024px]">
             <InforModal
               openAccount={showAccount}

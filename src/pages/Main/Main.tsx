@@ -423,7 +423,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
             >
               <div
                 className="wall-wallet"
-                style={{minWidth: '1800px', minHeight: '900px'}}
+                style={{minWidth: '1600px', minHeight: '900px'}}
               // style={{ backgroundImage:"url('/images/border"+(wallLevelState)+".png')" }}
               >
                 <img
@@ -433,7 +433,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
                     height: '100%',
                     position: 'absolute',
                     cursor: 'pointer',
-                    minWidth: '1800px',
+                    minWidth: '1600px',
                     minHeight: '900px'
                   }}
                   // onClick={() => setOpenUpgradeWall(true)}

@@ -65,7 +65,7 @@ export const HeaderComponent = ({onModalShow}: HeaderProps) => {
   return (
     <div>
       {!inventoryOpened && !dragonOpened && (
-        <div className="flex justify-between bg-black/30 p-4 backdrop-blur" style={{minWidth: '1800px'}}>
+        <div className="flex justify-between bg-black/30 p-4 backdrop-blur" style={{minWidth: '1600px'}}>
           <div className="flex">
             <div className="flex gap-4 p-3">
               {NavItems.map((item: any, index: number) => (
