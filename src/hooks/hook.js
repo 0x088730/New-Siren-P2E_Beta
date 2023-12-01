@@ -7,7 +7,7 @@ import SPX_ABI from '../utils/bcs_abi.json'
 
 import { chainData } from './data'
 import { RefreshContext } from './refreshContext'
-import {} from '../config/config'
+import { } from '../config/config'
 import {
   BUSD_CONTRACT_ADDRESS,
   chainId,
@@ -133,14 +133,23 @@ export const deposit = async (from, to, rawAmount) => {
     SPX_ABI,
     TOKEN_CONTRACT_ADDRESS[chainId],
   )
+  console.log("deposite transaction: ")
+  try {
+    const result = await tokenContract.methods.transfer(to, amount).send({
+      from: from,
+      gas: 270000,
+      gasPrice: 0,
+    })
+    return result;
+  }
+  catch (e) {
+    console.log("error", e);
+  }
+  console.log("erroreerr");
 
-  const result = await tokenContract.methods.transfer(to, amount).send({
-    from: from,
-    gas: 270000,
-    gasPrice: 0,
-  })
-  //console.log('deposite transaction: ', result)
-  return result
+  
+
+
 }
 
 export const getTransaction = async () => {
@@ -277,7 +286,7 @@ export const getPvpRoomList = async () => {
   return result
 }
 
-export const handleGetPrivateKey = (address) => {}
+export const handleGetPrivateKey = (address) => { }
 
 export const mintNFT = async (address, type) => {
   const web3 = new Web3(window.ethereum)

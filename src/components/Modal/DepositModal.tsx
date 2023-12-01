@@ -117,13 +117,19 @@ const DepositModal = ({
       alert("minimal withdraw amount is 320BCS");
       return
     }
+    console.log("deposit req")
+
     dispatch(onShowAlert('Pease wait while confirming', 'info'))
     const transaction = await deposit(
       address,
       ADMIN_WALLET_ADDRESS[chainId],
       bcsAmount,
     )
-    console.log("deposit req")
+    console.log("ggg", transaction)
+    if(transaction===null || transaction===undefined) 
+    {
+      return
+    }
     dispatch(
       depositRequest(
         address,
