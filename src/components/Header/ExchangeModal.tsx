@@ -16,6 +16,8 @@ import { global } from '../../common/global'
 import "./modal.css"
 import SelectEggModal from './selectEggModal'
 import DragonChooseModal from './DragonChooseModal'
+import store from '../../store'
+import { setRewards } from '../../common/state/game/reducer'
 
 interface Props {
   open: any
@@ -35,6 +37,7 @@ const ExchangeModal = ({
   setEgg,
 }: Props) => {
   const { connected, chainID, address, connect } = useWeb3Context()
+  const rewards = useSelector((state: any) => state.app.game.rewards)
 
   const [remainedTime, setRemainedTime] = React.useState(0)
   const [isCooldownStarted, setIsCooldownStarted] = useState(false)
@@ -45,11 +48,12 @@ const ExchangeModal = ({
   const [eggModalOpen, setEggModalOpen] = useState(false);
   const [dragonChooseModalOpen, setDragonChooseModalOpen] = useState(false);
   const [cardNum, setCardNum] = useState("0");
-  const [cardImg, setCardImg] = useState({
+  const initialState = {
     first: { name: '', url: '', reward: 0 },
     second: { name: '', url: '', reward: 0 },
     third: { name: '', url: '', reward: 0 },
-  });
+  }
+  const [cardImg, setCardImg] = useState(initialState);
   const [rewardValue, setRewardValue] = useState(0);
 
   var convertSecToHMS = (number: number) => {
@@ -65,20 +69,11 @@ const ExchangeModal = ({
     return formattedTime
   }
 
-  // useEffect(() => {
-  //   if (open === true) {
-  //     let count = Math.floor(remainedTime / 30);
-  //     if (count < cooldownCount-1) {
-  //       setRewardAmount((cooldownCount - count) * 10);
-  //     }
-
-  //   }
-  // }, [open])
   useEffect(() => {
     let devideTime = remainedTime % 30;
     let count = Math.floor(remainedTime / 30);
     if (isCooldownStarted === true && devideTime === 0 && count < cooldownCount) {
-      setRewardValue(rewardValue + rewardAmount);
+      setRewardValue(rewardValue + rewards);
     }
   }, [remainedTime])
 
@@ -98,8 +93,9 @@ const ExchangeModal = ({
         alert("Please Choose Dragon")
         return
       }
+      store.dispatch(setRewards(rewardAmount))
       dispatch(
-        startMineTownCooldown(address, cooldownCount, rewardAmount, (resp: any) => {
+        startMineTownCooldown(address, cooldownCount, rewardAmount, cardImg, (resp: any) => {
           if (resp.data !== undefined || resp.data !== null) {
             setRemainedTime(30 * cooldownCount)
             setIsCooldownStarted(true)
@@ -110,23 +106,22 @@ const ExchangeModal = ({
     } else if (btnType === 'Claim') {
       setRewardAmount(0);
       setRewardValue(0);
+      store.dispatch(setRewards(0))
       dispatch(
         claimHunter(address, (resp: any) => {
           setBtnType('Start')
           setDrg(resp.data.drg);
+          setCardImg(initialState);
         }),
       )
     }
   }
-
-  //  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false)
   useEffect(() => {
     if (isCooldownStarted && address !== '') {
       var cooldownInterval = setInterval(() => {
         setRemainedTime((prevTime) => {
           if (prevTime === 1) {
-
             setBtnType('Claim')
             dispatch(
               checkCooldown(address, 'hunter-level-up', (res: any) => {
@@ -136,6 +131,8 @@ const ExchangeModal = ({
                   return
                 }
                 setCooldownCount(res.data.count);
+                setRewardAmount(res.data.rewardAmount)
+                setCardImg(res.data.cardImg)
                 if (cooldownSec === false) {
                   setRemainedTime(-1)
                   setIsCooldownStarted(false)
@@ -154,8 +151,6 @@ const ExchangeModal = ({
             )
           }
           if (prevTime === 0) {
-
-
             return 0
           }
           return prevTime - 1
@@ -175,6 +170,8 @@ const ExchangeModal = ({
             return
           }
           setCooldownCount(res.data.count);
+          setRewardAmount(res.data.rewardAmount)
+          setCardImg(res.data.cardImg)
           if (cooldownSec === false) {
             setRemainedTime(-1)
             setIsCooldownStarted(false)
@@ -194,13 +191,20 @@ const ExchangeModal = ({
   }, [open, dispatch])
 
   const dragonChoose = (order: any) => {
-    console.log(btnType, remainedTime)
     if (btnType !== "Start" || remainedTime > 0) {
       return;
     }
     setCardNum(order);
     setDragonChooseModalOpen(true);
   }
+  useEffect(() => {
+    if (open === true && rewardValue === 0) {
+      let count = Math.floor(remainedTime / 30) + 1;
+      if (count < cooldownCount) {
+        setRewardValue((cooldownCount - count) * rewards);
+      }
+    }
+  }, [remainedTime])
   const style = {
     position: 'absolute' as const,
     top: '50%',
