@@ -93,9 +93,7 @@ const MiningModal = ({
     const formattedTime = `${minutes}:${seconds}`/*${hours}:*/
     return formattedTime
   }
-  useEffect(() => {
-    console.log("user===>", user.miningStatus)
-    
+  useEffect(() => {  
     if (user.miningStatus === false) {
       setBtnType("BUY")
     }
