@@ -15,8 +15,8 @@ import {
 import { convertSecToHMS } from '../../utils/tools'
 
 interface Props {
-    openBird: boolean
-    setOpenBird: any
+    convertModalOpen: boolean
+    setConvertModalOpen: any
     Drg: any
     setDrg: any
     eggs: any
@@ -26,8 +26,8 @@ interface Props {
 }
 
 const ConvertModal = ({
-    openBird,
-    setOpenBird,
+    convertModalOpen,
+    setConvertModalOpen,
     Drg,
     setDrg,
     eggs,
@@ -47,7 +47,7 @@ const ConvertModal = ({
     const [convertBtn, setConvertBtn] = useState("Start");
 
     const handleBirdClose = () => {
-        setOpenBird(false);
+        setConvertModalOpen(false);
     }
 
     useEffect(() => {
@@ -56,7 +56,7 @@ const ConvertModal = ({
             return;
         }
         setBtnStatus(false)
-    }, [openBird])
+    }, [convertModalOpen])
     const onConvert = () => {
         if (convertCooldown === false) {
             setConvertCooldown(true);
@@ -73,7 +73,7 @@ const ConvertModal = ({
                     setDrg(res.data.drg)
                     setConvertBtn('Start')
                     setConvertCooldown(false)
-                    setOpenBird(false)
+                    setConvertModalOpen(false)
                 }))
             }
         }
@@ -119,7 +119,7 @@ const ConvertModal = ({
                 }),
             )
         }
-    }, [openBird])
+    }, [convertModalOpen])
 
     const style = {
         position: 'absolute' as const,
@@ -134,7 +134,7 @@ const ConvertModal = ({
     return (
         <>
             <Modal
-                open={openBird}
+                open={convertModalOpen}
                 // open={true}
                 onClose={handleBirdClose}
                 aria-labelledby="modal-modal-title"
