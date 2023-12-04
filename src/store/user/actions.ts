@@ -53,6 +53,21 @@ export function startMineTownCooldown(address: any, cooldownCount: number, rewar
   }
 }
 
+export function startDragonTownCooldown(address: any, price: any, times: any, cb: any) {
+  return async (dispatch: any) => {
+    const res = await api(`user/start/dragonTown-cooldown`, 'post', {
+      walletAddress: address,
+      price: price,
+      times: times,
+    })
+    cb(res)
+    dispatch({
+      type: RESOURCE_CHANGE_SUCCESS,
+      payload: { data: res },
+    })
+  }
+}
+
 export function stakeDiamond(
   address: any,
   index: number,
@@ -224,6 +239,18 @@ export function convertDrg(address: any, cb: any) {
 export function claimHunter(address: any, cb: any) {
   return async (dispatch: any) => {
     const res = await api(`user/claim/hunter`, 'post', {
+      walletAddress: address,
+    })
+    cb(res)
+    dispatch({
+      type: CLAIM_HUNTER_SUCCESS,
+      payload: { data: res },
+    })
+  }
+}
+export function claimDragonTown(address: any, cb: any) {
+  return async (dispatch: any) => {
+    const res = await api(`user/claim/dragonTown`, 'post', {
       walletAddress: address,
     })
     cb(res)

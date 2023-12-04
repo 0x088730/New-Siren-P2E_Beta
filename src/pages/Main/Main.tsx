@@ -29,6 +29,7 @@ import { getProfile } from '../../common/api'
 import store from '../../store'
 import { setLoadingStatus } from '../../common/state/game/reducer'
 import { RingLoader } from 'react-spinners';
+import DragonTownModal from '../../components/Modal/DragonTownModal'
 
 interface MainProps {
   showAccount: any
@@ -44,7 +45,9 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const { user } = userModule
   const { connected, chainID, address, connect } = useWeb3Context()
 
-  const [openBird, setOpenBird] = React.useState(false)
+  const [convertModalOpen, setConvertModalOpen] = React.useState(false)
+  const [townModalOpen, setTownModalOpen] = useState(false);
+
   const [Drg, setDrg] = useState(0)
   const [eggs, setEggs] = useState(0)
   const [meat, setMeat] = useState(0)
@@ -78,7 +81,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
     setMeat(userModule.user.meat);
     setWallLevelState(userModule.user.wall)
   }, [userModule.user.Drg, userModule.user.eggs, userModule.user.meat, userModule.user.wall])
-  
+
   const TEST_MODE = true
 
   const [openSwap, setOpenSwap] = useState(false)
@@ -204,8 +207,8 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
   const handleOpen = () => setOpenRock(true)
   const handleClose = () => setOpen(false)
 
-  const handleBirdOpen = () => setOpenBird(true)
-  const handleBirdClose = () => setOpenBird(false)
+  const handleBirdOpen = () => setConvertModalOpen(true)
+  const handleBirdClose = () => setConvertModalOpen(false)
   let timer: any = null
   const startTimer = () => {
     if (timer === null) {
@@ -367,8 +370,8 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
             </Modal>
 
             <ConvertModal
-              openBird={openBird}
-              setOpenBird={setOpenBird}
+              convertModalOpen={convertModalOpen}
+              setConvertModalOpen={setConvertModalOpen}
               Drg={Drg}
               setDrg={setDrg}
               eggs={eggs}
@@ -398,14 +401,14 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
               setRockClaim={onRockClaim}
               btnTitle={btnTitle}
             />
-            {/* <DepositModal
-              open={openDeposit}
-              setOpen={setOpenDeposit}
-              meat={meat}
-              egg={eggs}
-              onExchange={onExchange}
-              onExchangeEgg={onExchangeEgg}
-            /> */}
+            <DragonTownModal
+              townModalOpen={townModalOpen}
+              setTownModalOpen={setTownModalOpen}
+              drg={Drg}
+              setDrg={setDrg}
+              eggs={eggs}
+              setEggs={setEggs}
+            />
             <MiningModal
               open={openMining}
               setOpen={setOpenMining}
@@ -430,7 +433,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
             >
               <div
                 className="wall-wallet"
-                style={{minWidth: '1600px', minHeight: '900px'}}
+                style={{ minWidth: '1600px', minHeight: '900px' }}
               // style={{ backgroundImage:"url('/images/border"+(wallLevelState)+".png')" }}
               >
                 <img
@@ -477,7 +480,7 @@ const Main = ({ showAccount, setShowAccount }: MainProps) => {
                       height: 'fit-content',
                       zIndex: 20,
                     }}
-                    onClick={(e) => setOpenDeposit(true)}
+                    onClick={(e) => setTownModalOpen(true)}
                   >
                     <img alt="" src="/images/home.png" style={{ transform: 'translate(-50%, -50%)', maxWidth: '250px' }} className={styles.item} />
                   </Box>
