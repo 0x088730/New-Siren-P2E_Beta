@@ -1,25 +1,20 @@
-import { Grid, Stack } from '@mui/material'
-import { styled } from '@mui/material/styles';
-
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import FormControl from '@mui/material/FormControl';
-import NativeSelect from '@mui/material/NativeSelect';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useWeb3Context } from '../../hooks/web3Context'
 import {
     checkCooldown,
-    setCooldown,
-    convertDrg,
     startDragonTownCooldown,
     claimDragonTown,
 } from '../../store/user/actions'
 import { convertSecToHMS, createObject } from '../../utils/tools'
 import './mainModal.css'
-import * as Spinner from 'react-spinners';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 interface Props {
     townModalOpen: boolean
@@ -63,7 +58,7 @@ const DragonTownModal = ({
                 let j = Number(selectedTimer) - Number(c);
                 console.log(j, presentEggs, eggArray)
                 let eggNum = 0;
-                for(let i=0; i<j-1; i++) {
+                for (let i = 0; i < j - 1; i++) {
                     eggNum = eggNum + Number(eggArray[i].egg);
                 }
                 setPresentEggs(eggNum);
@@ -74,6 +69,10 @@ const DragonTownModal = ({
     const onChangeDrg = (value: any) => {
         if (remainedTime > 0)
             return
+        if (value > drg) {
+            alert("Not Enough Drg!");
+            return
+        }
         setSelectedDrg(value);
     }
     const onChangeTimers = (value: any) => {
@@ -113,7 +112,7 @@ const DragonTownModal = ({
                         setBtnType('Claim')
                         dispatch(
                             checkCooldown(address, 'dragon-town', (res: any) => {
-                                if(res.data === false) return
+                                if (res.data === false) return
                                 let cooldownSec = res.data.time;
                                 setEggArray(res.data.eggArray);
                                 setSelectedDrg(res.data.price);
@@ -148,7 +147,7 @@ const DragonTownModal = ({
         if (townModalOpen === true && address !== '')
             dispatch(
                 checkCooldown(address, 'dragon-town', (res: any) => {
-                    if(res.data === false) return
+                    if (res.data === false) return
                     let cooldownSec = res.data.time;
                     setEggArray(res.data.eggArray);
                     setSelectedDrg(res.data.price);
@@ -177,7 +176,7 @@ const DragonTownModal = ({
         transform: 'translate(-50%, -50%)',
         width: {
             xs: 150,
-            md: 650,
+            md: 660,
         },
     }
 
@@ -238,18 +237,24 @@ const DragonTownModal = ({
                                 <p className='description'>
                                     SELECT PRICE
                                 </p>
-                                <NativeSelect
-                                    defaultValue={10}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    defaultValue={selectedDrg}
                                     value={selectedDrg}
-                                    sx={{ backgroundColor: 'white', borderRadius: '3px' }}
+                                    sx={{
+                                        backgroundColor: 'white',
+                                        borderRadius: '3px',
+                                        height: '40px',
+                                    }}
                                     onChange={(e) => onChangeDrg(e.target.value)}
                                 >
-                                    <option value={10}>10</option>
-                                    <option value={20}>20</option>
-                                    <option value={30}>30</option>
-                                    <option value={40}>40</option>
-                                    <option value={50}>50</option>
-                                </NativeSelect>
+                                    <MenuItem value={10}>10</MenuItem>
+                                    <MenuItem value={20}>20</MenuItem>
+                                    <MenuItem value={30}>30</MenuItem>
+                                    <MenuItem value={40}>40</MenuItem>
+                                    <MenuItem value={50}>50</MenuItem>
+                                </Select>
                                 <p className='description' style={{ fontSize: '15px', letterSpacing: 0 }}>
                                     INCREASE THE AMOUNT INCREASES THE CHANCE GET EGGS
                                 </p>
@@ -260,18 +265,20 @@ const DragonTownModal = ({
                                 <p className='description'>
                                     SELECT TIMES
                                 </p>
-                                <NativeSelect
-                                    defaultValue={1}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    defaultValue={selectedTimer}
                                     value={selectedTimer}
-                                    sx={{ backgroundColor: 'white', borderRadius: '3px' }}
+                                    sx={{ backgroundColor: 'white', borderRadius: '3px', height: '40px' }}
                                     onChange={(e) => onChangeTimers(e.target.value)}
                                 >
-                                    <option value={1}>1</option>
-                                    <option value={2}>2</option>
-                                    <option value={3}>3</option>
-                                    <option value={4}>4</option>
-                                    <option value={5}>5</option>
-                                </NativeSelect>
+                                    <MenuItem value={1}>1</MenuItem>
+                                    <MenuItem value={2}>2</MenuItem>
+                                    <MenuItem value={3}>3</MenuItem>
+                                    <MenuItem value={4}>4</MenuItem>
+                                    <MenuItem value={5}>5</MenuItem>
+                                </Select>
                             </FormControl>
                         </Box>
                         <Box
@@ -317,11 +324,9 @@ const DragonTownModal = ({
                                 display: 'flex',
                                 justifyContent: 'space-evenly',
                                 width: '200px',
-                                marginTop: "15px",
+                                marginTop: "5px",
                             }}
                         >
-                            {/* {
-                                btnStatus === true ? */}
                             <Button onClick={() => onStartMine()}>
                                 <img alt="" src="/assets/images/big-button.png" />
                                 <p
@@ -337,23 +342,6 @@ const DragonTownModal = ({
                                     {remainedTime <= 0 ? btnType : convertSecToHMS(remainedTime)}
                                 </p>
                             </Button>
-                            {/* :
-                                    <Button disabled>
-                                        <img alt="" src="/assets/images/big-button-disable.png" style={{ opacity: '0.7' }} />
-                                        <p
-                                            style={{
-                                                position: 'absolute',
-                                                fontFamily: 'CubicPixel',
-                                                fontSize: '25px',
-                                                textAlign: 'center',
-                                                color: '#e7e1e1',
-                                                opacity: '0.7'
-                                            }}
-                                        >
-                                            Start
-                                        </p>
-                                    </Button>
-                            } */}
                         </Box>
                     </Box>
                 </Box>
