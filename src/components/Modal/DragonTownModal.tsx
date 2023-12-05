@@ -249,11 +249,11 @@ const DragonTownModal = ({
                                     }}
                                     onChange={(e) => onChangeDrg(e.target.value)}
                                 >
-                                    <MenuItem value={10}>10</MenuItem>
-                                    <MenuItem value={20}>20</MenuItem>
-                                    <MenuItem value={30}>30</MenuItem>
-                                    <MenuItem value={40}>40</MenuItem>
-                                    <MenuItem value={50}>50</MenuItem>
+                                    <MenuItem value={10}>10 DRG</MenuItem>
+                                    <MenuItem value={20}>20 DRG</MenuItem>
+                                    <MenuItem value={30}>30 DRG</MenuItem>
+                                    <MenuItem value={40}>40 DRG</MenuItem>
+                                    <MenuItem value={50}>50 DRG</MenuItem>
                                 </Select>
                                 <p className='description' style={{ fontSize: '15px', letterSpacing: 0 }}>
                                     INCREASE THE AMOUNT INCREASES THE CHANCE GET EGGS
@@ -315,7 +315,7 @@ const DragonTownModal = ({
                                 </div>
                             </div>
                             {loading === true ?
-                                <CircularProgress style={{ position: 'absolute', bottom: '107px', right: '210px', color: 'black' }} size={45} />
+                                <CircularProgress style={{ position: 'absolute', bottom: '97px', right: '215px', color: 'black' }} size={45} />
                                 : null
                             }
                         </Box>
